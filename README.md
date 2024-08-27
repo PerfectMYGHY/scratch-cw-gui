@@ -10,7 +10,7 @@ Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 ### 预安装的scratch-blocks
 
-修复了对插件中`%`的误解析，并且花了4小时使得`build.py`能够在`python3.8.5`上运行。
+修复了对插件中百分号的错误解析，并且花了4小时使得`build.py`能够在`python3.8.5`上运行。
 
 ### 预安装的scratch-vm
 
