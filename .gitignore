@@ -4,6 +4,7 @@
 # NPM
 /node_modules
 npm-*
+/.vs
 
 # Testing
 /.nyc_output
@@ -19,10 +20,10 @@ npm-*
 /locale
 
 # Other generated source
-/src/generated
+# /src/generated
 
 # Downloaded during "npm install"
-/static/microbit
+# /static/microbit
 
 # for act
 .secrets
