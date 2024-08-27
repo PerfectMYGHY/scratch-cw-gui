@@ -26,7 +26,8 @@
     "test:lint": "eslint . --ext .js,.jsx",
     "test:unit": "jest test[\\\\/]unit[\\\\/]addons",
     "test:smoke": "jest --runInBand test[\\\\/]smoke",
-    "watch": "webpack --colors --watch"
+    "watch": "webpack --colors --watch",
+    "init:files": "echo 正在复制改编后的scratch-xxx库(用时可能较长) && python copy.py prelibs node_modules && echo 初始化完毕"
   },
   "config": {
     "commitizen": {

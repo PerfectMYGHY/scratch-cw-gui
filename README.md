@@ -6,6 +6,10 @@ Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 2.修改资源路径指向Scratch创世界服务器
 
+## 使用方法
+
+和`scratch-cw-www`库一样：先使用`npm install`安装所有依赖项，然后运行`npm run init:files`以初始化`scratch-xxx`库
+
 下面是原来的README.md
 
 ---
