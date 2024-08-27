@@ -1,8 +1,9 @@
 ## 修改之处
 
-Scratch创世界编辑器，改编自TurboWarp，修改处：
+Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 1.在dist模式的构建结果中，能够导出编辑器的插件的启动函数和 Redux Store 接收器
+
 2.修改资源路径指向Scratch创世界服务器
 
 下面是原来的README.md
