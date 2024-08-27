@@ -1,10 +1,28 @@
 ## 修改之处
 
+### scratch-gui
+
 Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 1.在dist模式的构建结果中，能够导出编辑器的插件的启动函数和 Redux Store 接收器
 
 2.修改资源路径指向Scratch创世界服务器
+
+### 预安装的scratch-blocks
+
+修复了对插件中`%`的误解析，并且花了4小时使得`build.py`能够在`python3.8.5`上运行。
+
+### 预安装的scratch-vm
+
+修改了什么，时间长了忘了，但是是有修改的
+
+### 预安装的@Turbowarp/scratch-l10n
+
+对多语言进行了修复，把原来一直英文的改为中文
+
+### scratch-gui/addons
+
+汉化了整个插件，并且修复了插件的多语言判断的bug。
 
 ## 使用方法
 

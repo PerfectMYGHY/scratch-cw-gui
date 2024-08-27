@@ -1,3 +1,7 @@
+# Scratch创世界/scratch-blocks
+
+修复了对插件中`%`的误解析，并且花了4小时使得`build.py`能够在`python3.8.5`上运行。
+
 # TurboWarp/scratch-blocks
 
 ## Playgrounds
