@@ -10,25 +10,26 @@
     "url": "https://github.com/LLK/scratch-gui.git"
   },
   "main": "./dist/scratch-gui.js",
-  "scripts": {
-    "edit:buildings": "copy dist\\js dist && move-chunks",
-    "build:noE": "npm run clean && webpack --colors --bail",
-    "build": "npm run clean && webpack --colors --bail && npm run edit:buildings",
-    "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
-    "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
-    "prepublish": "node scripts/prepublish.mjs",
-    "prune": "./prune-gh-pages.sh",
-    "i18n:push": "tx-push-src scratch-editor interface translations/en.json",
-    "i18n:src": "rimraf ./translations/messages/src && babel src > tmp.js && rimraf tmp.js && build-i18n-src ./translations/messages/src ./translations/",
-    "start": "webpack-dev-server",
-    "test": "npm run test:lint && npm run test:unit && npm run build && npm run test:integration",
-    "test:integration": "jest --maxWorkers=4 test[\\\\/]integration",
-    "test:lint": "eslint . --ext .js,.jsx",
-    "test:unit": "jest test[\\\\/]unit[\\\\/]addons",
-    "test:smoke": "jest --runInBand test[\\\\/]smoke",
-    "watch": "webpack --colors --watch",
-    "init:files": "echo 正在复制改编后的scratch-xxx库(用时可能较长) && python copy.py prelibs node_modules && echo 初始化完毕"
-  },
+    "scripts": {
+        "edit:buildings:linux": "cp dist\\js dist && bash move-chunks.sh",
+        "edit:buildings": "copy dist\\js dist && move-chunks",
+        "build:noE": "npm run clean && webpack --colors --bail",
+        "build": "npm run clean && webpack --colors --bail && npm run edit:buildings",
+        "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
+        "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
+        "prepublish": "node scripts/prepublish.mjs",
+        "prune": "./prune-gh-pages.sh",
+        "i18n:push": "tx-push-src scratch-editor interface translations/en.json",
+        "i18n:src": "rimraf ./translations/messages/src && babel src > tmp.js && rimraf tmp.js && build-i18n-src ./translations/messages/src ./translations/",
+        "start": "webpack-dev-server",
+        "test": "npm run test:lint && npm run test:unit && npm run build && npm run test:integration",
+        "test:integration": "jest --maxWorkers=4 test[\\\\/]integration",
+        "test:lint": "eslint . --ext .js,.jsx",
+        "test:unit": "jest test[\\\\/]unit[\\\\/]addons",
+        "test:smoke": "jest --runInBand test[\\\\/]smoke",
+        "watch": "webpack --colors --watch",
+        "init:files": "echo 正在复制改编后的scratch-xxx库(用时可能较长) && python copy.py prelibs node_modules && echo 初始化完毕"
+    },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
