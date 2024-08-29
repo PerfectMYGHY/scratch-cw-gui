@@ -67,8 +67,8 @@ const base = {
     },
     output: {
         library: 'GUI',
-        filename: process.env.NODE_ENV === 'production' ? 'js/[name].[contenthash].js' : 'js/[name].js',
-        chunkFilename: process.env.NODE_ENV === 'production' ? 'js/[name].[contenthash].js' : 'js/[name].js',
+        filename: 'chunks/[name].js',
+        chunkFilename: 'chunks/[name].js',
         publicPath: root
     },
     resolve: {
@@ -288,8 +288,8 @@ module.exports = [
             },
             output: {
                 libraryTarget: 'umd',
-                filename: 'js/[name].js',
-                chunkFilename: 'js/[name].js',
+                filename: '[name].js',
+                chunkFilename: '[name].js',
                 path: path.resolve('dist'),
                 publicPath: `${STATIC_PATH}/`
             },
