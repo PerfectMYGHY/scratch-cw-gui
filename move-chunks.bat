@@ -11,11 +11,11 @@ for %%F in ("!sourceDir!\vendors*") do (
 )  
 for %%F in ("!sourceDir!\addon*") do (  
     move "%%F" "!destDir!\"  
-) 
+)
   
 cd dist
 rename "extension worker.js" "extension-worker.js"
 rename "extension worker.js.map" "extension-worker.js.map"
 cd ../
 
-echo ÎÄ¼şÒÆ¶¯Íê³É¡£  
+echo æ–‡ä»¶ç§»åŠ¨å®Œæˆã€‚  
