@@ -7,7 +7,7 @@ set "destDir=dist\chunks"
 if not exist "!destDir!" mkdir "!destDir!"  
   
 for %%F in ("!sourceDir!\vendors*") do (  
-    move "%%F" "!destDir!\"  
+    move "%%F" "!destDir!\"
 )  
 for %%F in ("!sourceDir!\addon*") do (  
     move "%%F" "!destDir!\"  
