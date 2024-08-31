@@ -67,7 +67,7 @@ const base = {
     },
     output: {
         library: 'GUI',
-        filename: 'chunks/[name].js',
+        filename: '[name].js',
         chunkFilename: 'chunks/[name].js',
         publicPath: root
     },
@@ -289,7 +289,7 @@ module.exports = [
             output: {
                 libraryTarget: 'umd',
                 filename: '[name].js',
-                chunkFilename: '[name].js',
+                chunkFilename: 'chunks/[name].js',
                 path: path.resolve('dist'),
                 publicPath: `${STATIC_PATH}/`
             },

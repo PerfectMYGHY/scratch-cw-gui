@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import MenuBarMenu from './menu-bar-menu.jsx';
-import {MenuSection} from '../menu/menu.jsx';
+import {MenuItem, MenuSection} from '../menu/menu.jsx';
+import MenuLabel from './tw-menu-label.jsx';
 import MenuItemContainer from '../../containers/menu-item.jsx';
 import UserAvatar from './user-avatar.jsx';
 import dropdownCaret from './dropdown-caret.svg';
@@ -33,12 +34,10 @@ const AccountNavComponent = ({
     username
 }) => (
     <React.Fragment>
-        <div
-            className={classNames(
-                styles.userInfo,
-                className
-            )}
-            onMouseUp={onClick}
+        <MenuLabel
+            open={isOpen}
+            onClose={onClose}
+            onOpen={onClick}
         >
             {thumbnailUrl ? (
                 <UserAvatar
@@ -56,7 +55,7 @@ const AccountNavComponent = ({
                     draggable={false}
                 />
             </div>
-        </div>
+        </MenuLabel>
         <MenuBarMenu
             className={menuBarMenuClassName}
             open={isOpen}

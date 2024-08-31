@@ -1,8 +1,10 @@
 import { isPaused, setPaused, onPauseChanged, setup } from "../debugger/module.js";
 
 export default async function ({ addon, console, msg }) {
+  // console.log("PAUSE PAUSE !!! LOG:::","正在setup Addon...");
   setup(addon);
 
+  // console.log("PAUSE PAUSE !!! LOG:::","正在创建按钮图像...");
   const img = document.createElement("img");
   img.className = "pause-btn";
   img.draggable = false;
@@ -13,6 +15,7 @@ export default async function ({ addon, console, msg }) {
     img.title = isPaused() ? msg("play") : msg("pause");
   };
   img.addEventListener("click", () => setPaused(!isPaused()));
+  // console.log("PAUSE PAUSE !!! LOG:::","正在设置属性...");
   addon.tab.displayNoneWhileDisabled(img);
   addon.self.addEventListener("disabled", () => setPaused(false));
   setSrc();
@@ -34,11 +37,16 @@ export default async function ({ addon, console, msg }) {
     { capture: true }
   );
 
+  // console.log("PAUSE PAUSE !!! LOG:::","正在加载按钮至区域...");
   while (true) {
+    // console.log("PAUSE PAUSE !!! LOG:::",addon.tab._seenElements.has(document.querySelector("[class^='green-flag']")))
     await addon.tab.waitForElement("[class^='green-flag']", {
       markAsSeen: true,
       reduxEvents: ["scratch-gui/mode/SET_PLAYER", "fontsLoaded/SET_FONTS_LOADED", "scratch-gui/locales/SELECT_LOCALE"],
     });
+    // console.log("PAUSE PAUSE !!! LOG:::","开始添加");
     addon.tab.appendToSharedSpace({ space: "afterGreenFlag", element: img, order: 0 });
+    // break;
+    // console.log("PAUSE PAUSE !!! LOG:::","已添加");
   }
 }

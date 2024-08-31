@@ -241,6 +241,9 @@ class Tab extends EventTargetShim {
     }
 
     waitForElement (selector, {markAsSeen = false, condition, reduxCondition, reduxEvents} = {}) {
+        // if (selector == "[class^='green-flag']"){
+        //     console.log("PAUSE PAUSE !!! LOG:::","进入等待元素函数！！！！！！！！！！！！！！！！！！！",this._seenElements.has(document.querySelector("[class^='green-flag']")));
+        // }
         let externalEventSatisfied = true;
         const evaluateCondition = () => {
             if (!externalEventSatisfied) return false;
@@ -248,15 +251,28 @@ class Tab extends EventTargetShim {
             if (reduxCondition && !reduxCondition(reduxInstance.state)) return false;
             return true;
         };
+        // if (selector == "[class^='green-flag']"){
+        //     console.log("PAUSE PAUSE !!! LOG:::",evaluateCondition(),this._seenElements);
+        // }
 
         if (evaluateCondition()) {
             const firstQuery = document.querySelectorAll(selector);
             for (const element of firstQuery) {
+                // if (selector == "[class^='green-flag']"){
+                //     console.log("PAUSE PAUSE !!! LOG:::",this._seenElements.has(element),element,this._seenElements);
+                // }
                 if (this._seenElements.has(element)) continue;
-                if (markAsSeen) this._seenElements.add(element);
+                if (markAsSeen) {
+                    // console.log(element,markAsSeen,condition,reduxCondition,reduxEvents);
+                    // console.error(new Error("请检查调用路径"));
+                    this._seenElements.add(element);
+                }
                 return Promise.resolve(element);
             }
         }
+        // if (selector == "[class^='green-flag']"){
+        //     console.log("PAUSE PAUSE !!! LOG:::","暂无元素或已看过",this._seenElements);
+        // }
 
         let reduxListener;
         if (reduxEvents) {
@@ -899,22 +915,28 @@ class AddonRunner {
     }
 
     async run () {
+        // console.log(this.id,"执行启动插件函数...");
         if (this.manifest.editorOnly) {
+            // console.log(this.id,"等待回到编辑器");
             await untilInEditor();
+            // console.log(this.id,"等待完毕！");
         }
 
+        // console.log(this.id,addonEntries,"正在执行主函数...");
         const mod = await addonEntries[this.id]();
         this.resources = mod.resources;
 
         if (!this.manifest.noTranslations) {
+            // console.log(this.id,addonMessagesPromise);
             await addonMessagesPromise;
         }
 
-        // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
-        // This number just has to be larger than the maximum number of userstyles in a single addon.
+        // 乘以大数，因为第一个用户样式是+0，第二个是+1，第三个是+2，以此类推。(Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.)
+        // 这个数字必须大于单个插件中用户样式的最大数量。(This number just has to be larger than the maximum number of userstyles in a single addon.)
         const baseStylePrecedence = getPrecedence(this.id) * 100;
 
         if (this.manifest.userstyles) {
+            // console.log(this.id,"加载样式...");
             for (let i = 0; i < this.manifest.userstyles.length; i++) {
                 const userstyle = this.manifest.userstyles[i];
                 const userstylePrecedence = baseStylePrecedence + i;
@@ -938,14 +960,17 @@ class AddonRunner {
         this.updateCssVariables();
 
         if (this.manifest.userscripts) {
+            // console.log(this.id,"执行脚本中...");
             for (const userscript of this.manifest.userscripts) {
                 if (!SettingsStore.evaluateCondition(userscript.if)) {
+                    // console.log(this.id,"跳过执行该脚本");
                     continue;
                 }
                 const fn = this.resources[userscript.url];
                 fn(this.publicAPI);
             }
         }
+        // console.log(this.id,"加载完毕");
 
         this.loading = false;
     }
@@ -976,9 +1001,13 @@ SettingsStore.addEventListener('addon-changed', e => {
     }
 });
 
+// console.log("addons",addons);
+
 for (const id of Object.keys(addons)) {
+    // console.log("该插件是否启用",SettingsStore.getAddonEnabled(id));
     if (!SettingsStore.getAddonEnabled(id)) {
         continue;
     }
+    // console.log("启动插件，ID:",id);
     runAddon(id);
 }

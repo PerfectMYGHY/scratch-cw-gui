@@ -11,7 +11,6 @@ const SpinnerComponent = function (props) {
         small,
         large
     } = props;
-    console.log(level,small,large);
     return (
         <div
             className={classNames(

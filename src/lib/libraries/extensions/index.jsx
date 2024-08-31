@@ -439,7 +439,7 @@ export const galleryLoading = {
             }}
         />
     ),
-    href: 'https://extensions.turbowarp.org/',
+    href: 'http://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (
@@ -465,7 +465,7 @@ export const galleryMore = {
             }}
         />
     ),
-    href: 'https://extensions.turbowarp.org/',
+    href: 'http://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (
@@ -491,7 +491,7 @@ export const galleryError = {
             }}
         />
     ),
-    href: 'https://extensions.turbowarp.org/',
+    href: 'http://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (

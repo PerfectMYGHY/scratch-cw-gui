@@ -48,6 +48,8 @@ import codeIcon from '!../../lib/tw-recolor/build!./icon--code.svg';
 import costumesIcon from '!../../lib/tw-recolor/build!./icon--costumes.svg';
 import soundsIcon from '!../../lib/tw-recolor/build!./icon--sounds.svg';
 
+import SpinnerComponent from '../../components/spinner/spinner.jsx';
+
 const messages = defineMessages({
     addExtension: {
         id: 'gui.gui.addExtension',
@@ -224,6 +226,18 @@ const GUIComponent = props => {
                 }}
                 {...componentProps}
             >
+                {/* <div style={{ // 测试加载圈圈使用
+                    backgroundColor: "#855cd6"
+                }}>
+                    <SpinnerComponent level="primary" small={true} large={false}/>
+                    <SpinnerComponent level="primary" small={false} large={true}/>
+                    <SpinnerComponent level="info" small={true} large={false}/>
+                    <SpinnerComponent level="info" small={false} large={true}/>
+                    <SpinnerComponent level="warn" small={true} large={false}/>
+                    <SpinnerComponent level="warn" small={false} large={true}/>
+                    <SpinnerComponent level="success" small={true} large={false}/>
+                    <SpinnerComponent level="success" small={false} large={true}/>
+                </div> */}
                 {alwaysEnabledModals}
                 {telemetryModalVisible ? (
                     <TelemetryModal

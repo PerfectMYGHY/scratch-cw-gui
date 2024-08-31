@@ -15,6 +15,17 @@ import AddonChannels from './addons/channels';
 import SettingsStore from './addons/settings-store-singleton';
 import AddonHooks from './addons/hooks';
 import runAddons from './addons/entry';
+import downloadBlob from './lib/download-blob.js';
+
+const onExportSettings = settings => {
+    const blob = new Blob([JSON.stringify(settings)]);
+    downloadBlob('turbowarp-addon-settings.json', blob);
+};
+
+const LoadSettings = () => {
+    const Settings = require('./addons/settings/settings.jsx');
+    return Settings;
+};
 
 const guiReducers = {
     locales: LocalesReducer,
@@ -40,5 +51,7 @@ export {
     AddonChannels,
     SettingsStore,
     AddonHooks,
-    runAddons
+    runAddons,
+    LoadSettings,
+    onExportSettings
 };

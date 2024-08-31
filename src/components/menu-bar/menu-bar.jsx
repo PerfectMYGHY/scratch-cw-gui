@@ -1057,11 +1057,6 @@ class MenuBar extends React.Component {
                                     </div>
                                 </a>
                                 <AccountNav
-                                    className={classNames(
-                                        styles.menuBarItem,
-                                        styles.hoverable,
-                                        { [styles.active]: this.props.accountMenuOpen }
-                                    )}
                                     isOpen={this.props.accountMenuOpen}
                                     isRtl={this.props.isRtl}
                                     menuBarMenuClassName={classNames(styles.menuBarMenu)}
