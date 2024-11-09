@@ -33,21 +33,21 @@ const manifest = {
       "name": "Show experimental keys",
       "id": "experimentalKeys",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "dynamic": true,
       "name": "Show Shift keys",
       "id": "shiftKeys",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "dynamic": true,
       "name": "Show TurboWarp keys",
       "id": "twKeys",
       "type": "boolean",
-      "default": false
+      "default": true
     }
   ],
   "userscripts": [
@@ -55,6 +55,7 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "dynamicDisable": true
+  "dynamicDisable": true,
+  "enabledByDefault": true
 };
 export default manifest;

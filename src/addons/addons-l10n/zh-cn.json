@@ -20,6 +20,7 @@
     "find-bar/list-local": "局部列表 {name}",
     "find-bar/var-global": "全局变量 {name}",
     "find-bar/var-local": "局部变量 {name}",
+    "find-bar/key": "按键",
     "_general/blocks/green-flag": "绿旗",
     "middle-click-popup/start-typing": "开始打字…",
     "editor-searchable-dropdowns/createBroadcast": "建立广播信息{name}",

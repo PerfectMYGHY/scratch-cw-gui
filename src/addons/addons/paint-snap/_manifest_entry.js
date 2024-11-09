@@ -50,7 +50,7 @@ const manifest = {
       "type": "boolean",
       "id": "pageCorners",
       "name": "Snap to page corners",
-      "default": false
+      "default": true
     },
     {
       "type": "boolean",
@@ -74,7 +74,7 @@ const manifest = {
       "type": "boolean",
       "id": "objectCorners",
       "name": "Snap to object corners",
-      "default": false
+      "default": true
     },
     {
       "type": "boolean",
@@ -86,13 +86,13 @@ const manifest = {
       "type": "boolean",
       "id": "boxCorners",
       "name": "Snap from selection box corners",
-      "default": false
+      "default": true
     },
     {
       "type": "boolean",
       "id": "boxEdgeMids",
       "name": "Snap from selection box edge midpoints",
-      "default": false
+      "default": true
     },
     {
       "type": "positive_integer",
@@ -103,6 +103,7 @@ const manifest = {
       "max": 100
     }
   ],
-  "dynamicDisable": true
+  "dynamicDisable": true,
+  "enabledByDefault": true
 };
 export default manifest;

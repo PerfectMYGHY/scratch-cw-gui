@@ -1001,13 +1001,10 @@ SettingsStore.addEventListener('addon-changed', e => {
     }
 });
 
-// console.log("addons",addons);
 
 for (const id of Object.keys(addons)) {
-    // console.log("该插件是否启用",SettingsStore.getAddonEnabled(id));
     if (!SettingsStore.getAddonEnabled(id)) {
         continue;
     }
-    // console.log("启动插件，ID:",id);
     runAddon(id);
 }

@@ -56,27 +56,6 @@ import audio_processingIconURL from './audio_processing/audio_processing.png';
 import audio_processingInsetIconURL from './audio_processing/audio_processing-small.svg';
 
 export default [
-    //{
-    //    name: (
-    //        <FormattedMessage
-    //            defaultMessage="高级音频处理"
-    //            description="Name for the 'AudioProcessing' extension"
-    //            id="gui.extension.AudioProcessing.name"
-    //        />
-    //    ),
-    //    extensionId: 'AudioProcessing',
-    //    iconURL: audio_processingIconURL,
-    //    insetIconURL: audio_processingInsetIconURL,
-    //    description: (
-    //        <FormattedMessage
-    //            defaultMessage="一个面对专业人士的高级音频处理模块。小白请慎重选择。"
-    //            description="Description for the 'AudioProcessing' extension"
-    //            id="gui.extension.AudioProcessing.description"
-    //        />
-    //    ),
-    //    tags: ['tw'],
-    //    featured: true
-    //},
     {
         name: (
             <FormattedMessage

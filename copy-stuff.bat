@@ -7,4 +7,4 @@ copy build ..\scratch\node_modules\scratch-gui\build
 copy dist\chunks ..\scratch\static\scratch-gui-chunks
 cd ..\scratch
 echo 打包Scratch WWW
-temp
+temp | echo 非一次性打包模式

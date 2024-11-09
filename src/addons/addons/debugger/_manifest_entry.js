@@ -37,21 +37,21 @@ const manifest = {
       "name": "Clear logs on green flag",
       "id": "log_clear_greenflag",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "dynamic": true,
       "name": "Log green flag clicks",
       "id": "log_greenflag",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "dynamic": true,
       "name": "Log clone creation",
       "id": "log_clone_create",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "name": "Log when clone limit exceeded",
@@ -64,7 +64,7 @@ const manifest = {
       "name": "Log broadcasts",
       "id": "log_broadcasts",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "name": "Log when max list length exceeded",
@@ -76,15 +76,16 @@ const manifest = {
       "name": "Log invalid cloud variable values",
       "id": "log_invalid_cloud_data",
       "type": "boolean",
-      "default": false
+      "default": true
     },
     {
       "name": "Animated graphs (may affect performance)",
       "id": "fancy_graphs",
       "type": "boolean",
-      "default": false
+      "default": true
     }
   ],
-  "tags": []
+  "tags": [],
+  "enabledByDefault": true
 };
 export default manifest;

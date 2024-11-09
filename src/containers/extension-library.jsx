@@ -83,7 +83,7 @@ const fetchLibrary = async () => {
         }),
         docsURI: extension.docs ? `${process.env.EXTENSION_HOST}/${extension.slug}` : null,
         samples: extension.samples ? extension.samples.map(sample => ({
-            href: `${process.env.ROOT}editor?project_url=${process.env.EXTENSION_HOST}/samples/${encodeURIComponent(sample)}.sb3`,
+            href: `/projects/editor?project_url=${process.env.EXTENSION_HOST}/samples/${encodeURIComponent(sample)}.sb3`,
             text: sample
         })) : null,
         incompatibleWithScratch: true,

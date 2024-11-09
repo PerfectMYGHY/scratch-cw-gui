@@ -171,6 +171,7 @@ const manifest = {
       "name": "World_Languages"
     }
   ],
-  "dynamicDisable": true
+  "dynamicDisable": true,
+  "enabledByDefault": true
 };
 export default manifest;

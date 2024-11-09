@@ -89,6 +89,7 @@ import styles from './menu-bar.css';
 
 import helpIcon from '../../lib/assets/icon--tutorials.svg';
 import mystuffIcon from './icon--mystuff.png';
+import messagesIcon from './icon--messages.png'
 import profileIcon from './icon--profile.png';
 import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
@@ -239,6 +240,29 @@ class MenuBar extends React.Component {
             'getSaveToComputerHandler',
             'restoreOptionMessage'
         ]);
+        this.state = {
+            messageCount: 0,
+            startedInterval: false
+        }
+    }
+    startMessageCountLoop () {
+        console.log(this.props.username && !this.state.startedInterval);
+        if (this.props.username && !this.state.startedInterval) {
+            console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
+            const base = this;
+            setInterval(() => {
+                fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`)
+                    .then(response => response.json())
+                    .then(response => {
+                        base.setState({
+                            messageCount: response.count
+                        });
+                    });
+            }, 500);
+            this.setState({
+                startedInterval: true
+            });
+        }
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
@@ -484,6 +508,7 @@ class MenuBar extends React.Component {
                 {remixMessage}
             </Button>
         );
+        this.startMessageCountLoop();
         // Show the About button only if we have a handler for it (like in the desktop app)
         const aboutButton = this.buildAboutMenu(this.props.onClickAbout);
         return (
@@ -1042,6 +1067,26 @@ class MenuBar extends React.Component {
                         this.props.username ? (
                             // ************ user is logged in ************
                             <React.Fragment>
+                                <a href="/messages/">
+                                    <div
+                                        className={classNames(
+                                            styles.menuBarItem,
+                                            styles.hoverable,
+                                            styles.messagesButton
+                                        )}
+                                    >
+                                        <img
+                                            className={styles.messagesIcon}
+                                            src={messagesIcon}
+                                        />
+                                        <span
+                                            className={classNames(
+                                                styles['message-count'],
+                                                this.state.messageCount > 0 && styles['show']
+                                            )}
+                                        >{this.state.messageCount}</span>
+                                    </div>
+                                </a>
                                 <a href="/mystuff/">
                                     <div
                                         className={classNames(

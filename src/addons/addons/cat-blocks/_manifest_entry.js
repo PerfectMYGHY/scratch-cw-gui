@@ -29,13 +29,13 @@ const manifest = {
     {
       "id": "watch",
       "name": "Watch mouse cursor",
-      "default": false,
+      "default": true,
       "type": "boolean"
     }
   ],
   "tags": [
     "theme"
   ],
-  "enabledByDefault": false
+  "enabledByDefault": true
 };
 export default manifest;

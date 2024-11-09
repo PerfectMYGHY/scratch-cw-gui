@@ -220,6 +220,7 @@ export default async function ({ addon, msg, console }) {
       let myBlocksByProcCode = {};
 
       let topBlocks = this.workspace.getTopBlocks();
+      let allBlocks = this.workspace.getAllBlocks();
 
       /**
        * @param cls
@@ -256,6 +257,25 @@ export default async function ({ addon, msg, console }) {
           }
         }
         return desc;
+      }
+
+      function getDescFromFields(root, getParamText = (id) => { return ""; }) {
+          let inputs = root.inputList;
+          let desc;
+          let i = 0;
+          for (const fields of inputs) {
+              for (const fieldRow of fields.fieldRow) {
+                  desc = desc ? desc + " " : "";
+                  if (fieldRow instanceof Blockly.FieldImage && fieldRow.src_.endsWith("green-flag.svg")) {
+                      desc += msg("/_general/blocks/green-flag");
+                  } else {
+                      desc += fieldRow.getText();
+                  }
+              }
+              desc += " " + getParamText(i);
+              i++;
+          }
+          return desc;
       }
 
       for (const root of topBlocks) {
@@ -297,7 +317,34 @@ export default async function ({ addon, msg, console }) {
           addBlock("event", getDescFromField(root), root); // "when I start as a clone"
           continue;
         }
-      }
+        }
+
+        for (const root of allBlocks) {
+            if (root.type === "sensing_keypressed") {
+                addBlock("sensing", getDescFromFields(root, (id) => {
+                    if (id == 0) {
+                        return msg("key");
+                    }
+                    return "";
+                }), root); // "is key [key] down?"
+                continue;
+            }
+
+            if (root.type === "sensing_mousedown") {
+                addBlock("sensing", getDescFromField(root), root); // "mouse down?"
+                continue;
+            }
+
+            if (root.type === "sensing_mousex") {
+                addBlock("sensing", getDescFromField(root), root); // "mouse x"
+                continue;
+            }
+
+            if (root.type === "sensing_mousey") {
+                addBlock("sensing", getDescFromField(root), root); // "mouse y"
+                continue;
+            }
+        }
 
       let map = this.workspace.getVariableMap();
 
@@ -482,6 +529,7 @@ export default async function ({ addon, msg, console }) {
         LIST: "data-lists",
         costume: "looks",
         sound: "sounds",
+        sensing: "sensing",
       };
       if (proc.cls === "flag") {
         item.className = "sa-find-flag";
