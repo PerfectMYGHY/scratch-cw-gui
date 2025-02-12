@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\menu-bar",
+    "\\src\\lib"
   ],
-  "SelectedNode": "\\src\\index.js",
+  "SelectedNode": "\\src\\components\\menu-bar\\menu-bar.jsx",
   "PreviewInSolutionExplorer": false
 }

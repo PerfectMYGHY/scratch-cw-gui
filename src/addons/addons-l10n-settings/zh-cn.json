@@ -1,5 +1,5 @@
 {
-    "expanded-backpack/@name": "背包中有多排",
+    "expanded-backpack/@name": "多行背包",
     "expanded-backpack/@description": "将编辑器背包中的内容排列成可扩展的双向网格，类似于服装库，并增加某些缩略图的大小。",
     "expanded-backpack/@settings-name-rows": "显示的行数",
     "expanded-backpack/@settings-name-upscale": "较大的服装和脚本缩略图",

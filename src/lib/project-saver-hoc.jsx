@@ -244,6 +244,32 @@ const ProjectSaverHOC = function (WrappedComponent) {
                     })
                 )
             )
+            //return new Promise((resolve, reject) => {
+            //    (async () => {
+            //        let i = 0;
+            //        const length = this.props.vm.assets.filter(asset => !asset.clean).length;
+            //        for (const asset of this.props.vm.assets.filter(asset => !asset.clean)) {
+            //            console.log(`正在上传第${i + 1}个资源，共${length}个。信息：${i}/${length}，百分比：${Math.round(i/length*10000)/100}%`);
+            //            await storage.store(
+            //                asset.assetType,
+            //                asset.dataFormat,
+            //                asset.data,
+            //                asset.assetId
+            //            ).then(response => {
+            //                // Asset servers respond with {status: ok} for successful POSTs
+            //                if (response.status !== 'ok') {
+            //                    // Errors include a `code` property, e.g. "Forbidden"
+            //                    return reject(response.code);
+            //                }
+            //                asset.clean = true;
+            //            }).catch((e) => {
+            //                reject(e);
+            //            });
+            //            i++;
+            //        }
+            //        resolve();
+            //    })();
+            //})
                 .then(() => this.props.onUpdateProjectData(projectId, savedVMState, requestParams))
                 .then(response => {
                     this.props.onSetProjectUnchanged();

@@ -241,16 +241,16 @@ class MenuBar extends React.Component {
             'restoreOptionMessage'
         ]);
         this.state = {
-            messageCount: 0,
-            startedInterval: false
+            messageCount: 0
         }
+        this.interval = null;
     }
     startMessageCountLoop () {
-        console.log(this.props.username && !this.state.startedInterval);
-        if (this.props.username && !this.state.startedInterval) {
-            console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
+        //console.log(this.props.username && !this.state.startedInterval);
+        if (this.props.username && this.interval == null) {
+            //console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
             const base = this;
-            setInterval(() => {
+            this.interval = setInterval(() => {
                 fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`)
                     .then(response => response.json())
                     .then(response => {
@@ -258,10 +258,7 @@ class MenuBar extends React.Component {
                             messageCount: response.count
                         });
                     });
-            }, 500);
-            this.setState({
-                startedInterval: true
-            });
+            }, 30000);
         }
     }
     componentDidMount () {
