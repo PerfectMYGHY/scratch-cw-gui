@@ -90,7 +90,7 @@ if (AddonChannels.changeChannel) {
     });
 }
 
-//runAddons();
+// runAddons();
 
 const Footer = () => (
     <footer className={styles.footer}>
@@ -221,7 +221,7 @@ class Interface extends React.Component {
             >
                 {isHomepage ? (
                     <div className={styles.menu}>
-                            {/*onClickAddonSettings={handleClickAddonSettings}*/}
+                        {/* onClickAddonSettings={handleClickAddonSettings}*/}
                         <WrappedMenuBar
                             canChangeLanguage
                             canManageFiles
@@ -244,9 +244,29 @@ class Interface extends React.Component {
                     <GUI
                         onClickAddonSettings={handleClickAddonSettings}
                         onUpdateProjectTitle={this.handleUpdateProjectTitle}
-                        backpackVisible
-                        backpackHost="_local_"
+                        // backpackVisible
+                        // backpackHost="_local_"
                         {...props}
+
+                        assetHost="http://127.0.0.1:8006/assets"
+                        authorId={18}
+                        authorUsername="webmaster"
+                        backpackHost="http://127.0.0.1:8006/backpack"
+                        backpackVisible
+                        basePath="/"
+                        canCreateCopy
+                        canCreateNew
+                        canEditTitle
+                        canRemix
+                        canSave
+                        canShare
+                        // className="gui"
+                        // cloudHost="wss://scratch-cw.top:8765"
+                        // hasCloudPermission
+                        // canUseCloud
+                        // isShared={false}
+                        // projectHost="http://127.0.0.1:8006"
+                        // projectToken="abcdefghhijklmn"
                     />
                     {isHomepage ? (
                         <React.Fragment>

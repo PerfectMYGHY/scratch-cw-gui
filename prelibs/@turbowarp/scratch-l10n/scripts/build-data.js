@@ -40,61 +40,61 @@ Missing locales are ignored, react-intl will use the default messages for them.
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import {sync as mkdirpSync} from 'mkdirp';
+// import {sync as mkdirpSync} from 'mkdirp';
+import pkg from 'mkdirp';
+const {sync: mkdirpSync} = pkg;
 import defaultsDeep from 'lodash.defaultsdeep';
 import locales from '../src/supported-locales.js';
 
 const MSGS_DIR = './locales/';
 mkdirpSync(MSGS_DIR);
-let missingLocales = [];
+const missingLocales = [];
 
-const combineJson = (component) => {
-    return Object.keys(locales).reduce((collection, lang) => {
-        try {
-            let langData = JSON.parse(
-                fs.readFileSync(path.resolve('editor', component, lang + '.json'), 'utf8')
-            );
-            collection[lang] = langData;
-        } catch (e) {
-            missingLocales.push(component + ':' + lang + '\n');
-        }
-        return collection;
-    }, {});
-};
+const combineJson = component => Object.keys(locales).reduce((collection, lang) => {
+    try {
+        const langData = JSON.parse(
+            fs.readFileSync(path.resolve('editor', component, `${lang}.json`), 'utf8')
+        );
+        collection[lang] = langData;
+    } catch (e) {
+        missingLocales.push(`${component}:${lang}\n`);
+    }
+    return collection;
+}, {});
 
 // generate the blocks messages: files are plain key-value JSON
-let blocksMessages = combineJson('blocks');
-let blockData =
-    '// GENERATED FILE:\n' +
-    'export default ' +
-    JSON.stringify(blocksMessages, null, 2) +
-    ';\n';
+const blocksMessages = combineJson('blocks');
+const blockData =
+    `// GENERATED FILE:\n` +
+    `export default ${
+        JSON.stringify(blocksMessages, null, 2)
+    };\n`;
 
-fs.writeFileSync(MSGS_DIR + 'blocks-msgs.js', blockData);
+fs.writeFileSync(`${MSGS_DIR}blocks-msgs.js`, blockData);
 
 // generate messages for gui components - all files are plain key-value JSON
-let components = ['interface', 'extensions', 'paint-editor'];
-let editorMsgs = {};
-components.forEach((component) => {
-    let messages = combineJson(component);
-    let data =
-        '// GENERATED FILE:\n' +
-        'export default ' +
-        JSON.stringify(messages, null, 2) +
-        ';\n';
-    fs.writeFileSync(MSGS_DIR + component + '-msgs.js', data);
+const components = ['interface', 'extensions', 'paint-editor'];
+const editorMsgs = {};
+components.forEach(component => {
+    const messages = combineJson(component);
+    const data =
+        `// GENERATED FILE:\n` +
+        `export default ${
+            JSON.stringify(messages, null, 2)
+        };\n`;
+    fs.writeFileSync(`${MSGS_DIR + component}-msgs.js`, data);
     defaultsDeep(editorMsgs, messages);
 });
 
 // generate combined editor-msgs file
-let editorData =
-    '// GENERATED FILE:\n' +
-    'export default ' +
-    JSON.stringify(editorMsgs, null, 2) +
-    ';\n';
-fs.writeFileSync(MSGS_DIR + 'editor-msgs.js', editorData);
+const editorData =
+    `// GENERATED FILE:\n` +
+    `export default ${
+        JSON.stringify(editorMsgs, null, 2)
+    };\n`;
+fs.writeFileSync(`${MSGS_DIR}editor-msgs.js`, editorData);
 
 if (missingLocales.length > 0) {
-    process.stdout.write('missing locales:\n' + missingLocales.toString());
+    process.stdout.write(`missing locales:\n${missingLocales.toString()}`);
     process.exit(1);
 }

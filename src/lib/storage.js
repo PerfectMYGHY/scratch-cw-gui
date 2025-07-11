@@ -1,4 +1,4 @@
-import ScratchStorage from '@turbowarp/scratch-storage';
+import ScratchStorage from 'scratch-storage';
 
 import defaultProject from './default-project';
 
@@ -27,6 +27,7 @@ class Storage extends ScratchStorage {
             this.getAssetCreateConfig.bind(this),
             this.getAssetCreateConfig.bind(this)
         );
+        this.eventEmitter.emit('addOfficialScratchWebStores');
     }
     setProjectHost (projectHost) {
         this.projectHost = projectHost;
@@ -55,7 +56,11 @@ class Storage extends ScratchStorage {
         this.assetHost = assetHost;
     }
     getAssetGetConfig (asset) {
-        return `${this.assetHost||"https://assets.scratch.mit.edu"}/internalapi/asset/${asset.assetId}.${asset.dataFormat}/get/`;
+        return {
+            url: `${this.assetHost}/internalapi/asset/${asset.assetId}.${asset.dataFormat}/get/`,
+            storage: this,
+            asset: asset.assetId
+        };
     }
     getAssetCreateConfig (asset) {
         return {
@@ -65,7 +70,12 @@ class Storage extends ScratchStorage {
             // Then when storage finds this config to use for the "update", still POSTs
             method: 'post',
             url: `${this.assetHost}/${asset.assetId}.${asset.dataFormat}`,
-            withCredentials: true
+            withCredentials: true,
+            storage: this,
+            asset: `${asset.assetId}.${asset.dataFormat}`,
+            assetType: asset.assetType,
+            assetId: asset.assetId,
+            dataFormat: asset.dataFormat
         };
     }
     setTranslatorFunction (translator) {

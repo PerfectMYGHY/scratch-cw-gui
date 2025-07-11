@@ -64,12 +64,17 @@ class Backpack extends React.Component {
 
         // If a host is given, add it as a web source to the storage module
         // TODO remove the hacky flag that prevents double adding
+        console.log(props.host, LOCAL_API, props.host !== LOCAL_API, props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API);
         if (props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API) {
-            storage.addWebSource(
-                [storage.AssetType.ImageVector, storage.AssetType.ImageBitmap, storage.AssetType.Sound],
-                this.getBackpackAssetURL
-            );
-            storage._hasAddedBackpackSource = true;
+            storage.eventEmitter.on('addOfficialScratchWebStores', () => {
+                console.log('add websource!!!!');
+                console.log(props.host, LOCAL_API, props.host !== LOCAL_API, props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API);
+                storage.addWebSource(
+                    [storage.AssetType.ImageVector, storage.AssetType.ImageBitmap, storage.AssetType.Sound],
+                    this.getBackpackAssetURL
+                );
+                storage._hasAddedBackpackSource = true;
+            });
         }
     }
     componentDidMount () {
@@ -81,7 +86,11 @@ class Backpack extends React.Component {
         this.props.vm.removeListener('BLOCK_DRAG_UPDATE', this.handleBlockDragUpdate);
     }
     getBackpackAssetURL (asset) {
-        return `${this.props.host}/${asset.assetId}.${asset.dataFormat}`;
+        return {
+            url: `${this.props.host}/${asset.assetId}.${asset.dataFormat}`,
+            storage,
+            asset: asset.assetId
+        };
     }
     handleToggle () {
         const newState = !this.state.expanded;
@@ -126,6 +135,7 @@ class Backpack extends React.Component {
         this.setState({loading: true}, () => {
             payloader(dragInfo.payload, this.props.vm)
                 .then(payload => {
+                    storage.currentAssetFrom = 'backpack';
                     // Force the asset to save to the asset server before storing in backpack
                     // Ensures any asset present in the backpack is also on the asset server
                     if (presaveAsset && !presaveAsset.clean && !this.props.host === LOCAL_API) {

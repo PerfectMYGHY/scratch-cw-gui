@@ -89,7 +89,7 @@ import styles from './menu-bar.css';
 
 import helpIcon from '../../lib/assets/icon--tutorials.svg';
 import mystuffIcon from './icon--mystuff.png';
-import messagesIcon from './icon--messages.png'
+import messagesIcon from './icon--messages.png';
 import profileIcon from './icon--profile.png';
 import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
@@ -110,15 +110,15 @@ import sharedMessages from '../../lib/shared-messages';
 
 import SeeInsideButton from './tw-see-inside.jsx';
 import {notScratchDesktop} from '../../lib/isScratchDesktop.js';
-import { APP_NAME } from '../../lib/brand.js';
+import {APP_NAME} from '../../lib/brand.js';
 
-//import Settings from '../../addons/settings/settings.jsx';
-//const onExportSettings = settings => {
+// import Settings from '../../addons/settings/settings.jsx';
+// const onExportSettings = settings => {
 //    const blob = new Blob([JSON.stringify(settings)]);
 //    downloadBlob('turbowarp-addon-settings.json', blob);
-//};
-////import { Modal, Button as BootstrapButton } from 'react-bootstrap';
-//import Modal from 'react-modal';
+// };
+// //import { Modal, Button as BootstrapButton } from 'react-bootstrap';
+// import Modal from 'react-modal';
 
 const ariaMessages = defineMessages({
     tutorials: {
@@ -242,13 +242,13 @@ class MenuBar extends React.Component {
         ]);
         this.state = {
             messageCount: 0
-        }
+        };
         this.interval = null;
     }
     startMessageCountLoop () {
-        //console.log(this.props.username && !this.state.startedInterval);
+        // console.log(this.props.username && !this.state.startedInterval);
         if (this.props.username && this.interval == null) {
-            //console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
+            // console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
             const base = this;
             this.interval = setInterval(() => {
                 fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`)
@@ -815,7 +815,7 @@ class MenuBar extends React.Component {
                                             )}
                                         </MenuItem>
                                     )}</FramerateChanger>
-                                    {/*<ChangeUsername>{changeUsername => (*/}
+                                    {/* <ChangeUsername>{changeUsername => (*/}
                                     {/*    <MenuItem onClick={changeUsername}>*/}
                                     {/*        <FormattedMessage*/}
                                     {/*            defaultMessage="Change Username"*/}
@@ -823,7 +823,7 @@ class MenuBar extends React.Component {
                                     {/*            id="tw.menuBar.changeUsername"*/}
                                     {/*        />*/}
                                     {/*    </MenuItem>*/}
-                                    {/*)}</ChangeUsername>*/}
+                                    {/* )}</ChangeUsername>*/}
                                     <CloudVariablesToggler>{(toggleCloudVariables, {enabled, canUseCloudVariables}) => (
                                         <MenuItem
                                             className={classNames({[styles.disabled]: !canUseCloudVariables})}
@@ -1036,7 +1036,7 @@ class MenuBar extends React.Component {
                         ) : []))}
                     </div>
                     {/* tw: add a feedback button */}
-                    {/*<div className={styles.menuBarItem}>*/}
+                    {/* <div className={styles.menuBarItem}>*/}
                     {/*    <a*/}
                     {/*        className={styles.feedbackLink}*/}
                     {/*        href="https://scratch.mit.edu/users/GarboMuffin/#comments"*/}
@@ -1055,7 +1055,7 @@ class MenuBar extends React.Component {
                     {/*            />*/}
                     {/*        </Button>*/}
                     {/*    </a>*/}
-                    {/*</div>*/}
+                    {/* </div>*/}
                 </div>
 
                 <div className={styles.accountInfoGroup}>
@@ -1079,7 +1079,7 @@ class MenuBar extends React.Component {
                                         <span
                                             className={classNames(
                                                 styles['message-count'],
-                                                this.state.messageCount > 0 && styles['show']
+                                                this.state.messageCount > 0 && styles.show
                                             )}
                                         >{this.state.messageCount}</span>
                                     </div>
@@ -1306,65 +1306,6 @@ MenuBar.propTypes = {
     vm: PropTypes.instanceOf(VM).isRequired
 };
 
-//var contrl = {};
-//function AddonSettingsModal(props) {
-//    const [show, setShow] = React.useState(false);
-
-//    const handleClose = () => setShow(false);
-//    const handleShow = () => setShow(true);
-
-//    contrl.show = () => handleShow();
-//    contrl.close = () => handleClose();
-
-//    //return (
-//    //    <>
-//    //        <Modal show={show} onHide={handleClose}>
-//    //            <div style={{
-//    //                position: "relative",
-//    //                "z-index": "999"
-//    //            }}>
-//    //                <Modal.Header closeButton>
-//    //                    <Modal.Title>{props.title}</Modal.Title>
-//    //                </Modal.Header>
-//    //                <Modal.Body>
-//    //                    {props.children}
-//    //                </Modal.Body>
-//    //                {props.footer && <Modal.Footer>
-//    //                    {props.footer}
-//    //                </Modal.Footer>}
-//    //            </div>
-//    //        </Modal>
-//    //    </>
-//    //);
-//    return (
-//        <Modal isOpen={show} style={{
-//            overlay: {
-//                zIndex: 500
-//            }
-//        }} contentLabel={props.title}>
-//            <button onClick={handleClose} style={{
-//                position: "absolute",
-//                right: "10px",
-//                top: "10px",
-//                zIndex:100
-//            }}>x</button>
-//            {props.children}
-//        </Modal>  
-//    );
-//}
-
-//function init() {
-//    var root = document.createElement("div");
-//    root.id = "addon_settings_modal";
-//    document.body.appendChild(root);
-//    ReactDom.render(
-//        <AddonSettingsModal title="插件设置">
-//            <Settings />
-//        </AddonSettingsModal>
-//    , root);
-//};
-//setTimeout(init, 3000); // 自定义设置页面
-
 MenuBar.defaultProps = {
     onShare: () => { },
     showComingSoon: true,
@@ -1372,14 +1313,14 @@ MenuBar.defaultProps = {
     onClickAddonSettings: addonId => {
         // addonId might be a string of the addon to focus on, undefined, or an event (treat like undefined)
         const path = process.env.ROUTING_STYLE === 'wildcard' ? 'addons' : 'addons.html';
-        const url = `${process.env.ROOT || ""}${path}${typeof addonId === 'string' ? `#${addonId}` : ''}`;
+        const url = `${process.env.ROOT || ''}${path}${typeof addonId === 'string' ? `#${addonId}` : ''}`;
         window.open(url);
-        //if (typeof addonId === 'string') {
+        // if (typeof addonId === 'string') {
         //    window.location.href = `#${addonId}`;
-        //} else {
+        // } else {
         //    window.location.href = "#";
-        //}
-        //contrl.show();
+        // }
+        // contrl.show();
     }
 };
 

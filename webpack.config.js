@@ -20,15 +20,18 @@ if (root.length > 0 && !root.endsWith('/')) {
 }
 
 // ENV设置
-process.env.PROJECT_HOST = "https://scratch-cw.top:8006";
-process.env.API_HOST = "https://scratch-cw.top:8006";
-process.env.ASSET_HOST = "https://scratch-cw.top:8006/assets";
-process.env.BACKPACK_HOST = "https://scratch-cw.top:8006/backpack";
-process.env.STATIC_HOST = "https://scratch-cw.top:8006/staticServer";
-process.env.BASE_HOST = "https://scratch-cw.top:80";
-process.env.CLOUDDATA_HOST = "ws://scratch-cw.top:8765";
-process.env.EXTENSION_HOST = "https://scratch-cw.top:8007";
-process.env.EXTENSION_HOST_OLD = "https://scratch-cw.top:8007";
+const PROJECT_SERVER = 'https://projects.scratch-cw.top';
+const ASSET_SERVER = 'https://assets1.scratch-cw.top';
+// const PROJECT_SERVER = 'http://127.0.0.1:8006';
+process.env.PROJECT_HOST = PROJECT_SERVER;
+process.env.API_HOST = PROJECT_SERVER;
+process.env.ASSET_HOST = `${ASSET_SERVER}/assets`;
+process.env.BACKPACK_HOST = `${PROJECT_SERVER}/backpack`;
+process.env.STATIC_HOST = `${PROJECT_SERVER}/staticServer`;
+process.env.BASE_HOST = 'https://www.scratch-cw.top';
+process.env.CLOUDDATA_HOST = 'ws://cloud.scratch-cw.top:8765';
+process.env.EXTENSION_HOST = 'https://extensions.scratch-cw.top';
+process.env.EXTENSION_HOST_OLD = 'https://extensions.scratch-cw.top';
 // process.env.EXTENSION_HOST = "http://extensions.scratch-cw.top";
 
 // process.env.PROJECT_HOST = "http://192.168.8.104:8006";
@@ -144,7 +147,9 @@ const base = {
             'process.env.ROOT': JSON.stringify(root),
             'process.env.ROUTING_STYLE': JSON.stringify(process.env.ROUTING_STYLE || 'filehash'),
             'process.env.API_HOST': `"${process.env.API_HOST || 'https://api.scratch.mit.edu'}"`,
-            'process.env.RECAPTCHA_SITE_KEY': `"${process.env.RECAPTCHA_SITE_KEY || '6Lf6kK4UAAAAABKTyvdSqgcSVASEnMrCquiAkjVW'}"`,
+            'process.env.RECAPTCHA_SITE_KEY': `"${
+                process.env.RECAPTCHA_SITE_KEY || '6Lf6kK4UAAAAABKTyvdSqgcSVASEnMrCquiAkjVW'
+            }"`,
             'process.env.ASSET_HOST': `"${process.env.ASSET_HOST || 'https://assets.scratch.mit.edu'}"`,
             'process.env.BACKPACK_HOST': `"${process.env.BACKPACK_HOST || 'https://backpack.scratch.mit.edu'}"`,
             'process.env.CLOUDDATA_HOST': `"${process.env.CLOUDDATA_HOST || 'clouddata.scratch.mit.edu'}"`,
@@ -152,8 +157,8 @@ const base = {
             'process.env.STATIC_HOST': `"${process.env.STATIC_HOST || 'https://uploads.scratch.mit.edu'}"`,
             'process.env.SCRATCH_ENV': `"${process.env.SCRATCH_ENV || 'development'}"`,
             'process.env.BASE_HOST': `"${process.env.BASE_HOST}"`,
-            'EXTENSION_HOST': `"${process.env.EXTENSION_HOST || 'https://extensions.turbowarp.org'}"`,
-            'EXTENSION_HOST_OLD': `"${process.env.EXTENSION_HOST_OLD || 'https://extensions.turbowarp.org'}"`,
+            'process.env.EXTENSION_HOST': `"${process.env.EXTENSION_HOST || 'https://extensions.turbowarp.org'}"`,
+            'process.env.EXTENSION_HOST_OLD': `"${process.env.EXTENSION_HOST_OLD || 'https://extensions.turbowarp.org'}"`
         }),
         new CopyWebpackPlugin({
             patterns: [
@@ -169,6 +174,10 @@ const base = {
                     from: 'src/lib/themes/blocks/high-contrast-media/blocks-media',
                     to: 'static/blocks-media/high-contrast',
                     force: true
+                },
+                {
+                    from: 'node_modules/scratch-storage/dist/web/chunks',
+                    to: 'chunks'
                 }
             ]
         })

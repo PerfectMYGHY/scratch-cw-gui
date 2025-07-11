@@ -74,7 +74,7 @@ import zu from './locale-data/zu';
 
 import {customLocales} from './supported-locales.js';
 
-let localeData = [].concat(
+const localeData = [].concat(
     en,
     af,
     am,

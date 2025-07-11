@@ -418,7 +418,7 @@ export const galleryLoading = {
             }}
         />
     ),
-    href: 'http://extensions.scratch-cw.top/',
+    href: 'https://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (
@@ -444,7 +444,7 @@ export const galleryMore = {
             }}
         />
     ),
-    href: 'http://extensions.scratch-cw.top/',
+    href: 'https://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (
@@ -470,7 +470,7 @@ export const galleryError = {
             }}
         />
     ),
-    href: 'http://extensions.scratch-cw.top/',
+    href: 'https://extensions.scratch-cw.top/',
     extensionId: 'gallery',
     iconURL: galleryIcon,
     description: (

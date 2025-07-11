@@ -12,6 +12,11 @@ const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
     case SET_FULL_SCREEN:
+        if (state.isEmbedded && action.isFullScreen) {
+            window.parent.postMessage("ScratchEmbedSetFullScreen", "*");
+        } else if (state.isEmbedded && !action.isFullScreen) {
+            window.parent.postMessage("ScratchEmbedSetExitFullScreen", "*");
+        }
         return Object.assign({}, state, {
             isFullScreen: action.isFullScreen
         });

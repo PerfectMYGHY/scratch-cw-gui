@@ -41,13 +41,6 @@ const translateGalleryItem = (extension, locale) => ({
 
 let cachedGallery = null;
 
-var process = {
-    env: {
-        EXTENSION_HOST: (EXTENSION_HOST) || "https://scratch-cw.top:8007",
-        ROOT: ""
-    }
-};
-
 const fetchLibrary = async () => {
     const res = await fetch(`${process.env.EXTENSION_HOST}/generated-metadata/extensions-v0.json`);
     if (!res.ok) {

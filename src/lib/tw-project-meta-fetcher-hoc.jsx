@@ -8,7 +8,7 @@ import {setAuthor, setDescription} from '../reducers/tw';
 
 export const fetchProjectMeta = async projectId => {
     const urls = [
-        `${process.env.PROJECT_HOST || "https://scratch-cw.top:8006"}/projects/${projectId}`,
+        `${process.env.PROJECT_HOST || 'https://scratch-cw.top:8006'}/projects/${projectId}`,
         `https://projects.turbowarp.org/${projectId}`
     ];
     let firstError;
@@ -74,8 +74,8 @@ const TWProjectMetaFetcherHOC = function (WrappedComponent) {
                             this.props.onSetProjectTitle(title);
                         }
                         const authorName = data.author.username;
-                        //const authorThumbnail = `https://trampoline.turbowarp.org/avatars/${data.author.id}`;
-                        const authorThumbnail = data.author.profile.images["32x32"];
+                        // const authorThumbnail = `https://trampoline.turbowarp.org/avatars/${data.author.id}`;
+                        const authorThumbnail = data.author.profile.images['32x32'];
                         this.props.onSetAuthor(authorName, authorThumbnail);
                         const instructions = data.instructions || '';
                         const credits = data.description || '';

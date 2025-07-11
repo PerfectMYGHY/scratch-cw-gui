@@ -2,10 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\components",
     "\\src\\components\\menu-bar",
-    "\\src\\lib"
+    "\\src\\lib",
+    "\\src\\lib\\alerts"
   ],
-  "SelectedNode": "\\src\\components\\menu-bar\\menu-bar.jsx",
+  "SelectedNode": "\\src\\lib\\alerts\\index.jsx",
   "PreviewInSolutionExplorer": false
 }
