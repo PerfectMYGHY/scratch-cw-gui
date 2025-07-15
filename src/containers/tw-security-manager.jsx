@@ -17,13 +17,6 @@ const manuallyTrustExtension = url => {
     extensionsTrustedByUser.add(url);
 };
 
-var process = {
-    env: {
-        EXTENSION_HOST: (EXTENSION_HOST) || "https://scratch-cw.top:8007",
-        EXTENSION_HOST_OLD: (EXTENSION_HOST_OLD) || "http://scratch-cw.top:8007"
-    }
-};
-
 /**
  * Trusted extensions are loaded automatically and without a sandbox.
  * @param {string} url URL as a string.
