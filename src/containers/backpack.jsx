@@ -67,8 +67,6 @@ class Backpack extends React.Component {
         console.log(props.host, LOCAL_API, props.host !== LOCAL_API, props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API);
         if (props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API) {
             storage.eventEmitter.on('addOfficialScratchWebStores', () => {
-                console.log('add websource!!!!');
-                console.log(props.host, LOCAL_API, props.host !== LOCAL_API, props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API);
                 storage.addWebSource(
                     [storage.AssetType.ImageVector, storage.AssetType.ImageBitmap, storage.AssetType.Sound],
                     this.getBackpackAssetURL
