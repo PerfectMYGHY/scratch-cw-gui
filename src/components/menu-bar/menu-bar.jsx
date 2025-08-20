@@ -246,12 +246,12 @@ class MenuBar extends React.Component {
         this.interval = null;
     }
     startMessageCountLoop () {
-        // console.log(this.props.username && !this.state.startedInterval);
         if (this.props.username && this.interval == null) {
-            // console.log(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`);
             const base = this;
             this.interval = setInterval(() => {
-                fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`)
+                fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`, {
+                    credentials: 'include'
+                })
                     .then(response => response.json())
                     .then(response => {
                         base.setState({

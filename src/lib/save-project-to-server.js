@@ -2,6 +2,39 @@ import queryString from 'query-string';
 import xhr from 'xhr';
 import storage from '../lib/storage';
 
+const CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+function bytesSum(hexStr) {
+  const bytes = new Uint8Array(hexStr.match(/../g).map(h => parseInt(h, 16)));
+  return Array.from(bytes).reduce((sum, b) => sum + b, 0);
+}
+
+function caesarEncrypt(text, shift) {
+  return text.split('').map(c => {
+    const idx = CHARS.indexOf(c);
+    const newIdx = (idx + shift) % 36;
+    return CHARS[newIdx];
+  }).join('');
+}
+
+const verify = async (opts) => {
+    // 1. 获取验证Cookie
+    const {varifycode} = await fetch(`${new URL(opts.uri).origin}/api/verify/`, {
+        credentials: 'include'
+    }).then(res => res.json());
+  
+    // 2. 读取Cookie并计算
+    const verifyCode = varifycode;
+    const byteSum = bytesSum(verifyCode);
+    const secretKey = (byteSum % 102456 * 76332) % 78093;
+    const encrypted = caesarEncrypt(verifyCode, secretKey);
+
+    // 3. 获取CSRF Token
+    return await fetch(`${new URL(opts.uri).origin}/api/csrf_token/?verifycode=${verifyCode}&test=${encrypted}`, {
+            credentials: 'include'
+        }).then(res => res.json());
+};
+
 /**
  * Save a project JSON to the project server.
  * This should eventually live in scratch-www.
@@ -43,21 +76,28 @@ export default function (projectId, vmState, params) {
         });
     }
     return new Promise((resolve, reject) => {
-        xhr(opts, (err, response) => {
-            if (err) return reject(err);
-            if (response.statusCode !== 200) return reject(response.statusCode);
-            let body;
-            try {
-                // Since we didn't set json: true, we have to parse manually
-                body = JSON.parse(response.body);
-            } catch (e) {
-                return reject(e);
-            }
-            body.id = projectId;
-            if (creatingProject) {
-                body.id = body['content-name'];
-            }
-            resolve(body);
-        });
+        verify({uri: opts.url}).then(({csrf_token}) => {
+            Object.assign(opts, {
+                headers: {
+                    'X-CSRFToken': csrf_token
+                }
+            });
+            xhr(opts, (err, response) => {
+                if (err) return reject(err);
+                if (response.statusCode !== 200) return reject(response.statusCode);
+                let body;
+                try {
+                    // Since we didn't set json: true, we have to parse manually
+                    body = JSON.parse(response.body);
+                } catch (e) {
+                    return reject(e);
+                }
+                body.id = projectId;
+                if (creatingProject) {
+                    body.id = body['content-name'];
+                }
+                resolve(body);
+            });
+        })
     });
 }

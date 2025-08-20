@@ -248,10 +248,10 @@ class Interface extends React.Component {
                         // backpackHost="_local_"
                         {...props}
 
-                        assetHost="http://127.0.0.1:8006/assets"
+                        assetHost="http://asset1.scratch-cw.top/assets"
                         authorId={18}
                         authorUsername="webmaster"
-                        backpackHost="http://127.0.0.1:8006/backpack"
+                        backpackHost="http://projects.scratch-cw.top/backpack"
                         backpackVisible
                         basePath="/"
                         canCreateCopy

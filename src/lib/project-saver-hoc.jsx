@@ -261,7 +261,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
                     return response;
                 })
                 .catch(err => {
-                    log.error(err);
+                    console.error(err);
                     throw err; // pass the error up the chain
                 });
         }

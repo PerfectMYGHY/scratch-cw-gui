@@ -114,7 +114,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 if (!projectUrl.startsWith('http:') && !projectUrl.startsWith('https:')) {
                     projectUrl = `https://${projectUrl}`;
                 }
-                assetPromise = fetch(projectUrl)
+                assetPromise = fetch(projectUrl, {
+                    credentials: 'include'
+                })
                     .then(r => {
                         if (!r.ok) {
                             throw new Error(`Request returned status ${r.status}`);

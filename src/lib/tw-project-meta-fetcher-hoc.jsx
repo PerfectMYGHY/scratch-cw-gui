@@ -15,9 +15,7 @@ export const fetchProjectMeta = async projectId => {
     for (const url of urls) {
         try {
             const res = await fetch(url, {
-                headers: {
-                    user: window.cannotletuserknowverb_username_forturbowarprequester
-                }
+                credentials: 'include'
             });
             const data = await res.json();
             if (res.ok) {
