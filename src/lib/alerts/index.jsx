@@ -141,6 +141,37 @@ const alerts = [
         level: AlertLevels.WARN
     },
     {
+        alertId: 'savingErrorByFileLimit',
+        clearList: ['createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',
+            'createRemixSuccess', 'creatingRemix', 'saveSuccess', 'saving'],
+        showDownload: true,
+        showSaveNow: true,
+        closeButton: true,
+        content: (
+            <FormattedMessage
+                defaultMessage="Project could not save. The project assets size exceeds the file size limit (10MB). Please reduce the project assets size and try again."
+                description="Message indicating that project could not be saved"
+                id="gui.alerts.savingErrorByFileLimit"
+                values={{
+                    learnToResize: (
+                        <a
+                            href="https://www.scratch-cw.top/howtoresize/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <FormattedMessage
+                                defaultMessage="Learn how to resize"
+                                description="Link text to learn how to resize project assets"
+                                id="gui.alerts.learnToResize"
+                            />
+                        </a>
+                    )
+                }}
+            />
+        ),
+        level: AlertLevels.WARN
+    },
+    {
         alertId: 'saveSuccess',
         alertType: AlertTypes.INLINE,
         clearList: ['saveSuccess', 'saving', 'savingError', 'twSaveToDiskSuccess',
