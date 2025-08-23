@@ -164,7 +164,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
                 .catch(err => {
                     // Always show the savingError alert because it gives the
                     // user the chance to download or retry the save manually.
-                    if (err === 'ASSET_TOO_LARGE') {
+                    if (err instanceof Array && err[0] === 'ASSET_TOO_LARGE') {
                         this.props.onShowAlert('savingErrorByFileLimit');
                     } else {
                         this.props.onShowAlert('savingError');
@@ -225,15 +225,17 @@ const ProjectSaverHOC = function (WrappedComponent) {
             this.clearAutoSaveTimeout();
 
             // 检查资源大小
+            let lastAsset = null;
             const oversizedAssets = this.props.vm.assets
                 .filter(asset => !asset.clean)
                 .filter(asset => {
-                    const max_size = asset.dataFormat === 'svg' ? 2 * 1024 * 1024 : 10 * 1024 * 1024;
+                    lastAsset = asset;
+                    const max_size = asset.dataFormat === 'svg' ? 2 * 1024 * 1024 : (asset.dataFormat === 'wav' ? 5 * 1024 * 1024 : 10 * 1024 * 1024);
                     return asset.data && asset.data.length > max_size;
                 }); // 检查大小
 
             if (oversizedAssets.length > 0) {
-                return Promise.reject('ASSET_TOO_LARGE');
+                return Promise.reject(['ASSET_TOO_LARGE', lastAsset]);
             }
 
             // Serialize VM state now before embarking on

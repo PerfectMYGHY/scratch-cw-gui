@@ -149,7 +149,7 @@ const alerts = [
         closeButton: true,
         content: (
             <FormattedMessage
-                defaultMessage="Project could not save. The project assets size exceeds the file size limit (10MB). Please reduce the project assets size and try again."
+                defaultMessage="Project could not save. The project assets size exceeds the file size limit (2MB For Image, 5MB For WAV File, 10MB For Other Audio Files). Please reduce the project assets size and try again."
                 description="Message indicating that project could not be saved"
                 id="gui.alerts.savingErrorByFileLimit"
                 values={{
