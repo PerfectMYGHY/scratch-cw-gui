@@ -40,6 +40,7 @@ import GUIComponent from '../components/gui/gui.jsx';
 import {setIsScratchDesktop} from '../lib/isScratchDesktop.js';
 import TWFullScreenResizerHOC from '../lib/tw-fullscreen-resizer-hoc.jsx';
 import TWThemeManagerHOC from './tw-theme-manager-hoc.jsx';
+import runAddons from '../addons/entry';
 
 const {RequestMetadata, setMetadata, unsetMetadata} = storage.scratchFetch;
 
@@ -59,6 +60,7 @@ class GUI extends React.Component {
         this.props.onStorageInit(storage);
         this.props.onVmInit(this.props.vm);
         setProjectIdMetadata(this.props.projectId);
+        runAddons();
     }
     componentDidUpdate (prevProps) {
         if (this.props.projectId !== prevProps.projectId) {

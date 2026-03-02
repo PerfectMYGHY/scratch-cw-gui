@@ -4,13 +4,12 @@ Nearly identical code appears in scratch-www, and the two should
 eventually be consolidated.
 */
 
-import classNames from 'classnames';
 import {FormattedMessage} from 'react-intl';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import MenuBarMenu from './menu-bar-menu.jsx';
-import {MenuItem, MenuSection} from '../menu/menu.jsx';
+import {MenuSection} from '../menu/menu.jsx';
 import MenuLabel from './tw-menu-label.jsx';
 import MenuItemContainer from '../../containers/menu-item.jsx';
 import UserAvatar from './user-avatar.jsx';
@@ -19,7 +18,6 @@ import dropdownCaret from './dropdown-caret.svg';
 import styles from './account-nav.css';
 
 const AccountNavComponent = ({
-    className,
     classroomId,
     isEducator,
     isOpen,
@@ -31,7 +29,7 @@ const AccountNavComponent = ({
     onLogOut,
     profileUrl,
     thumbnailUrl,
-    username
+    nickname
 }) => (
     <React.Fragment>
         <MenuLabel
@@ -46,7 +44,7 @@ const AccountNavComponent = ({
                 />
             ) : null}
             <span className={styles.profileName}>
-                {username}
+                {nickname}
             </span>
             <div className={styles.dropdownCaretPosition}>
                 <img
@@ -117,7 +115,6 @@ const AccountNavComponent = ({
 );
 
 AccountNavComponent.propTypes = {
-    className: PropTypes.string,
     classroomId: PropTypes.string,
     isEducator: PropTypes.bool,
     isOpen: PropTypes.bool,
@@ -129,7 +126,7 @@ AccountNavComponent.propTypes = {
     onLogOut: PropTypes.func,
     profileUrl: PropTypes.string,
     thumbnailUrl: PropTypes.string,
-    username: PropTypes.string
+    nickname: PropTypes.string
 };
 
 export default AccountNavComponent;

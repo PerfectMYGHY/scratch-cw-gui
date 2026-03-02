@@ -29,7 +29,7 @@ AccountNav.propTypes = {
     isStudent: PropTypes.bool,
     profileUrl: PropTypes.string,
     thumbnailUrl: PropTypes.string,
-    username: PropTypes.string
+    nickname: PropTypes.string
 };
 
 const mapStateToProps = state => ({
@@ -41,8 +41,8 @@ const mapStateToProps = state => ({
         `/users/${state.session.session.user.username}` : '',
     thumbnailUrl: state.session && state.session.session && state.session.session.user ?
         state.session.session.user.thumbnailUrl : null,
-    username: state.session && state.session.session && state.session.session.user ?
-        state.session.session.user.username : ''
+    nickname: state.session && state.session.session && state.session.session.user ?
+        state.session.session.user.nickname : ''
 });
 
 const mapDispatchToProps = () => ({});
