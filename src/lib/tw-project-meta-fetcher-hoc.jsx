@@ -8,8 +8,8 @@ import {setAuthor, setDescription} from '../reducers/tw';
 
 export const fetchProjectMeta = async projectId => {
     const urls = [
-        `${process.env.PROJECT_HOST || 'https://scratch-cw.top:8006'}/projects/${projectId}`,
-        `https://projects.turbowarp.org/${projectId}`
+        `${process.env.PROJECT_HOST || 'https://projects.scratch-cw.top'}/projects/${projectId}`,
+        `${process.env.PROJECT_HOST || 'https://projects.scratch-cw.top'}/projects/${projectId}`
     ];
     let firstError;
     for (const url of urls) {
