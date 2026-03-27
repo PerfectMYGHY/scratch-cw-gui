@@ -6,11 +6,14 @@ import log from './log';
 import {setProjectTitle} from '../reducers/project-title';
 import {setAuthor, setDescription} from '../reducers/tw';
 
+import storage from './storage';
+
 export const fetchProjectMeta = async projectId => {
     const urls = [
-        `${process.env.PROJECT_HOST || 'https://projects.scratch-cw.top'}/projects/${projectId}`,
-        `${process.env.PROJECT_HOST || 'https://projects.scratch-cw.top'}/projects/${projectId}`
-    ];
+        `${storage.projectHost || 'https://projects.scratch-cw.top'}/projects/${projectId}`,
+        `${storage.projectHost || 'https://projects.scratch-cw.top'}/projects/${projectId}`,
+        `${storage.projectHost || 'https://projects.scratch-cw.top'}/projects/${projectId}`
+    ]; // 三次重试
     let firstError;
     for (const url of urls) {
         try {

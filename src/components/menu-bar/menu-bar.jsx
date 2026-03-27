@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import bowser from 'bowser';
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import VM from 'scratch-vm';
 
@@ -32,7 +31,6 @@ import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
 import FramerateChanger from '../../containers/tw-framerate-changer.jsx';
-import ChangeUsername from '../../containers/tw-change-username.jsx';
 import CloudVariablesToggler from '../../containers/tw-cloud-toggler.jsx';
 import TWSaveStatus from './tw-save-status.jsx';
 
@@ -87,7 +85,6 @@ import collectMetadata from '../../lib/collect-metadata';
 
 import styles from './menu-bar.css';
 
-import helpIcon from '../../lib/assets/icon--tutorials.svg';
 import mystuffIcon from './icon--mystuff.png';
 import messagesIcon from './icon--messages.png';
 import profileIcon from './icon--profile.png';
@@ -110,23 +107,8 @@ import sharedMessages from '../../lib/shared-messages';
 
 import SeeInsideButton from './tw-see-inside.jsx';
 import {notScratchDesktop} from '../../lib/isScratchDesktop.js';
-import {APP_NAME} from '../../lib/brand.js';
 
-// import Settings from '../../addons/settings/settings.jsx';
-// const onExportSettings = settings => {
-//    const blob = new Blob([JSON.stringify(settings)]);
-//    downloadBlob('turbowarp-addon-settings.json', blob);
-// };
-// //import { Modal, Button as BootstrapButton } from 'react-bootstrap';
-// import Modal from 'react-modal';
-
-const ariaMessages = defineMessages({
-    tutorials: {
-        id: 'gui.menuBar.tutorialsLibrary',
-        defaultMessage: 'Tutorials',
-        description: 'accessibility text for the tutorials button'
-    }
-});
+import storage from '../../lib/storage';
 
 const twMessages = defineMessages({
     compileError: {
@@ -238,34 +220,34 @@ class MenuBar extends React.Component {
             'handleKeyPress',
             'handleRestoreOption',
             'getSaveToComputerHandler',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
+            'startMessageCountLoop'
         ]);
         this.state = {
             messageCount: 0
         };
         this.interval = null;
     }
-    startMessageCountLoop () {
-        if (this.props.username && this.interval == null) {
-            const base = this;
-            this.interval = setInterval(() => {
-                fetch(`${process.env.PROJECT_HOST}/users/${this.props.username}/messages/count`, {
-                    credentials: 'include'
-                })
-                    .then(response => response.json())
-                    .then(response => {
-                        base.setState({
-                            messageCount: response.count
-                        });
-                    });
-            }, 30000);
-        }
-    }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
     }
     componentWillUnmount () {
         document.removeEventListener('keydown', this.handleKeyPress);
+    }
+    startMessageCountLoop () {
+        if (this.props.username && this.interval === null) {
+            this.interval = setInterval(() => {
+                fetch(`${storage.projectHost}/users/${this.props.username}/messages/count`, {
+                    credentials: 'include'
+                })
+                    .then(response => response.json())
+                    .then(response => {
+                        this.setState({
+                            messageCount: response.count
+                        });
+                    });
+            }, 30000);
+        }
     }
     handleClickNew () {
         // if the project is dirty, and user owns the project, we will autosave.
@@ -815,15 +797,6 @@ class MenuBar extends React.Component {
                                             )}
                                         </MenuItem>
                                     )}</FramerateChanger>
-                                    {/* <ChangeUsername>{changeUsername => (*/}
-                                    {/*    <MenuItem onClick={changeUsername}>*/}
-                                    {/*        <FormattedMessage*/}
-                                    {/*            defaultMessage="Change Username"*/}
-                                    {/*            description="Menu bar item for changing the username"*/}
-                                    {/*            id="tw.menuBar.changeUsername"*/}
-                                    {/*        />*/}
-                                    {/*    </MenuItem>*/}
-                                    {/* )}</ChangeUsername>*/}
                                     <CloudVariablesToggler>{(toggleCloudVariables, {enabled, canUseCloudVariables}) => (
                                         <MenuItem
                                             className={classNames({[styles.disabled]: !canUseCloudVariables})}
@@ -1294,12 +1267,6 @@ MenuBar.defaultProps = {
         const path = process.env.ROUTING_STYLE === 'wildcard' ? 'addons' : 'addons.html';
         const url = `${process.env.ROOT || ''}${path}${typeof addonId === 'string' ? `#${addonId}` : ''}`;
         window.open(url);
-        // if (typeof addonId === 'string') {
-        //    window.location.href = `#${addonId}`;
-        // } else {
-        //    window.location.href = "#";
-        // }
-        // contrl.show();
     }
 };
 
