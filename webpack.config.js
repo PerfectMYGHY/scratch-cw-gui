@@ -20,9 +20,9 @@ if (root.length > 0 && !root.endsWith('/')) {
 }
 
 // ENV设置
-if (process.env.USING_DEV_SERVER) {
-    const PROJECT_SERVER = 'http://127.0.0.1:8000';
-    const ASSET_SERVER = 'http://127.0.0.1:8000';
+if (process.env.NODE_ENV === 'production') {
+    const PROJECT_SERVER = 'https://projects.scratch-cw.top';
+    const ASSET_SERVER = 'https://assets1.scratch-cw.top';
     process.env.PROJECT_HOST = PROJECT_SERVER;
     process.env.API_HOST = PROJECT_SERVER;
     process.env.ASSET_HOST = `${ASSET_SERVER}/assets`;
@@ -33,8 +33,8 @@ if (process.env.USING_DEV_SERVER) {
     process.env.EXTENSION_HOST = 'https://extensions.scratch-cw.top';
     process.env.EXTENSION_HOST_OLD = 'https://extensions.scratch-cw.top';
 } else {
-    const PROJECT_SERVER = 'https://projects.scratch-cw.top';
-    const ASSET_SERVER = 'https://assets1.scratch-cw.top';
+    const PROJECT_SERVER = 'http://127.0.0.1:8000';
+    const ASSET_SERVER = 'http://127.0.0.1:8000';
     process.env.PROJECT_HOST = PROJECT_SERVER;
     process.env.API_HOST = PROJECT_SERVER;
     process.env.ASSET_HOST = `${ASSET_SERVER}/assets`;

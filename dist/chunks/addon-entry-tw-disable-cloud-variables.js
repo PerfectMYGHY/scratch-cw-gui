@@ -1,1 +1,1 @@
-(window.webpackJsonpGUI=window.webpackJsonpGUI||[]).push([[53],{1601:function(n,s,t){"use strict";t.r(s),t.d(s,"resources",(function(){return c}));const c={"userscript.js":async function(n){let{addon:s}=n;s.tab.redux.dispatch({type:"tw/SET_CLOUD",cloud:!1})}}}}]);
+(window.webpackJsonpGUI=window.webpackJsonpGUI||[]).push([[53],{1524:function(n,s,c){"use strict";c.r(s),c.d(s,"resources",function(){return t});const t={"userscript.js":async function(n){n.addon.tab.redux.dispatch({type:"tw/SET_CLOUD",cloud:!1})}}}}]);

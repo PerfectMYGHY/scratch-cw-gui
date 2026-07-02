@@ -40,7 +40,6 @@ import CloudVariableBadge from '../containers/tw-cloud-variable-badge.jsx';
 import {isBrowserSupported} from '../lib/tw-environment-support-prober';
 import AddonChannels from '../addons/channels';
 import {loadServiceWorker} from './load-service-worker';
-import runAddons from '../addons/entry';
 import {APP_NAME} from '../lib/brand.js';
 
 import styles from './interface.css';
@@ -89,8 +88,6 @@ if (AddonChannels.changeChannel) {
         SettingsStore.setStoreWithVersionCheck(e.data);
     });
 }
-
-// runAddons();
 
 const Footer = () => (
     <footer className={styles.footer}>
@@ -244,14 +241,12 @@ class Interface extends React.Component {
                     <GUI
                         onClickAddonSettings={handleClickAddonSettings}
                         onUpdateProjectTitle={this.handleUpdateProjectTitle}
-                        // backpackVisible
-                        // backpackHost="_local_"
                         {...props}
 
-                        assetHost="http://asset1.scratch-cw.top/assets"
+                        assetHost={process.env.ASSET_HOST}
                         authorId={18}
                         authorUsername="webmaster"
-                        backpackHost="http://projects.scratch-cw.top/backpack"
+                        backpackHost={process.env.BACKPACK_HOST}
                         backpackVisible
                         basePath="/"
                         canCreateCopy
@@ -260,13 +255,7 @@ class Interface extends React.Component {
                         canRemix
                         canSave
                         canShare
-                        // className="gui"
-                        // cloudHost="wss://scratch-cw.top:8765"
-                        // hasCloudPermission
-                        // canUseCloud
-                        // isShared={false}
-                        // projectHost="http://127.0.0.1:8006"
-                        // projectToken="abcdefghhijklmn"
+                        projectHost={process.env.PROJECT_HOST}
                     />
                     {isHomepage ? (
                         <React.Fragment>

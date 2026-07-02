@@ -230,8 +230,9 @@ const ProjectSaverHOC = function (WrappedComponent) {
                 .filter(asset => !asset.clean)
                 .filter(asset => {
                     lastAsset = asset;
-                    const max_size = asset.dataFormat === 'svg' ? 2 * 1024 * 1024 : (asset.dataFormat === 'wav' ? 5 * 1024 * 1024 : 10 * 1024 * 1024);
-                    return asset.data && asset.data.length > max_size;
+                    const maxSize = asset.dataFormat === 'svg' ? 2 * 1024 * 1024 :
+                        (asset.dataFormat === 'wav' ? 5 * 1024 * 1024 : 10 * 1024 * 1024);
+                    return asset.data && asset.data.length > maxSize;
                 }); // 检查大小
 
             if (oversizedAssets.length > 0) {

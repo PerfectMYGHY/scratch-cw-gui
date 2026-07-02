@@ -1,1 +1,1 @@
-(window.webpackJsonpGUI=window.webpackJsonpGUI||[]).push([[54],{1602:function(n,s,t){"use strict";t.r(s),t.d(s,"resources",(function(){return e}));const e={"userscript.js":async function(n){let{addon:s}=n;s.tab.traps.vm.setCompilerOptions({enabled:!1})}}}}]);
+(window.webpackJsonpGUI=window.webpackJsonpGUI||[]).push([[54],{1525:function(n,s,o){"use strict";o.r(s),o.d(s,"resources",function(){return t});const t={"userscript.js":async function(n){n.addon.tab.traps.vm.setCompilerOptions({enabled:!1})}}}}]);
