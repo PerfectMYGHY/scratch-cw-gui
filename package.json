@@ -13,8 +13,8 @@
   "scripts": {
     "edit:buildings:linux": "cp dist/js dist && bash move-chunks.sh",
     "edit:buildings": "copy dist\\js dist && move-chunks",
-    "build:cp": "npm run clean && cross-env NODE_ENV=production webpack --colors --bail && copy-stuff",
-    "build": "npm run clean && cross-env NODE_ENV=production webpack --colors --bail",
+    "build:cp": "npm run clean && cross-env NODE_ENV=production SOURCEMAP=cheap-module-source-map webpack --colors --bail && copy-stuff",
+    "build": "npm run clean && cross-env NODE_ENV=production SOURCEMAP=cheap-module-source-map webpack --colors --bail",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
     "prune": "./prune-gh-pages.sh",

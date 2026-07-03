@@ -1,1 +1,2 @@
 (window.webpackJsonpGUI=window.webpackJsonpGUI||[]).push([[53],{1593:function(n,s,c){"use strict";c.r(s),c.d(s,"resources",function(){return t});const t={"userscript.js":async function(n){n.addon.tab.redux.dispatch({type:"tw/SET_CLOUD",cloud:!1})}}}}]);
+//# sourceMappingURL=addon-entry-tw-disable-cloud-variables.js.map
