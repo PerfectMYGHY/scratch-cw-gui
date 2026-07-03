@@ -1,9 +1,0 @@
-# transifex
-/.tx
-# dotfiles
-.babelrc
-.eslint*
-.jshintrc
-.npmignore
-.travis.yml
-webpack.config.js

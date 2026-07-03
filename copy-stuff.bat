@@ -4,16 +4,6 @@ rename "dist\extension worker.js" extension-worker.js
 echo 复制Map...
 copy extension-worker.js.map dist\extension-worker.js.map
 copy scratch-gui.js.map dist\scratch-gui.js.map
-echo 清空目标dist目录...
-rmdir ..\scratch\node_modules\scratch-gui\dist /s /q
-mkdir ..\scratch\node_modules\scratch-gui\dist
-echo 复制dist目录...
-xcopy dist ..\scratch\node_modules\scratch-gui\dist /s /e
-echo 清空目标build目录...
-rmdir ..\scratch\node_modules\scratch-gui\build /s /q
-mkdir ..\scratch\node_modules\scratch-gui\build
-echo 复制build目录...
-xcopy build ..\scratch\node_modules\scratch-gui\build /s /e
 echo 清空目标chunks目录...
 rmdir ..\scratch\scratch-gui-chunks /s /q
 mkdir ..\scratch\scratch-gui-chunks
@@ -36,8 +26,3 @@ for %%F in ("%SOURCE%\fetch-worker.*.js") do (
 )
 
 echo 操作完成！
-
-cd ..\scratch
-echo 打包Scratch WWW
-pause
-.\temp

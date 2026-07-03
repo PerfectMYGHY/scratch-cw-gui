@@ -64,7 +64,6 @@ class Backpack extends React.Component {
 
         // If a host is given, add it as a web source to the storage module
         // TODO remove the hacky flag that prevents double adding
-        console.log(props.host, LOCAL_API, props.host !== LOCAL_API, props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API);
         if (props.host && !storage._hasAddedBackpackSource && props.host !== LOCAL_API) {
             storage.eventEmitter.on('addOfficialScratchWebStores', () => {
                 storage.addWebSource(
