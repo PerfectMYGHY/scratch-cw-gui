@@ -1,6 +1,6 @@
-## 修改之处
+# scratch-gui
 
-### scratch-gui
+## 修改之处
 
 Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
@@ -8,25 +8,17 @@ Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 2.修改资源路径指向Scratch创世界服务器
 
-### 预安装的scratch-blocks
-
-修复了对插件中百分号的错误解析，并且花了4小时使得`build.py`能够在`python3.8.5`上运行。
-
-### 预安装的scratch-vm
-
-修改了什么，时间长了忘了，但是是有修改的
-
-### 预安装的@Turbowarp/scratch-l10n
-
-对多语言进行了修复，把原来一直英文的改为中文
-
-### scratch-gui/addons
+## scratch-gui/addons
 
 汉化了整个插件，并且修复了插件的多语言判断的bug。
 
 ## 使用方法
 
-和`scratch-cw-www`库一样：先使用`npm install`安装所有依赖项，然后运行`npm run init:files`以初始化`scratch-xxx`库
+本库中的`package.json`使用的是本地链接安装，请提前克隆好其他仓库，再执行：
+
+```bash
+npm install
+```
 
 下面是原来的README.md
 
