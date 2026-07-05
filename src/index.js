@@ -11,6 +11,7 @@ import SettingsStore from './addons/settings-store-singleton';
 import AddonHooks from './addons/hooks';
 import runAddons from './addons/entry';
 import downloadBlob from './lib/download-blob.js';
+import defaultProject from './lib/default-project/index.js';
 
 const onExportSettings = settings => {
     const blob = new Blob([JSON.stringify(settings)]);
@@ -48,5 +49,6 @@ export {
     AddonHooks,
     runAddons,
     LoadSettings,
-    onExportSettings
+    onExportSettings,
+    defaultProject as getDefaultProjectData
 };
