@@ -310,11 +310,14 @@ module.exports = [
                 'react': 'react',
                 'react-dom': 'react-dom',
                 'scratch-cw-verify': {
+                    import: 'scratch-cw-verify',
                     commonjs: 'scratch-cw-verify', // 用于 Node.js/CommonJS
                     commonjs2: 'scratch-cw-verify', // 同上
                     amd: 'scratch-cw-verify', // 用于 AMD
                     root: 'CsrfVerifier' // 用于浏览器全局变量（假设你的库暴露为 window.CsrfVerifier）
-                }
+                },
+                'react-redux': 'react-redux',
+                'redux': 'redux'
             },
             module: {
                 rules: base.module.rules.concat([
