@@ -11,6 +11,8 @@ import SettingsStore from './addons/settings-store-singleton';
 import AddonHooks from './addons/hooks';
 import runAddons from './addons/entry';
 import downloadBlob from './lib/download-blob.js';
+import {detectLocale} from './lib/detect-locale';
+import locales from 'scratch-l10n';
 
 const onExportSettings = settings => {
     const blob = new Blob([JSON.stringify(settings)]);
@@ -28,8 +30,18 @@ const guiReducers = {
     scratchPaint: ScratchPaintReducer
 };
 
+const getInitializedLocales = () => {
+    let initializedLocales = localesInitialState;
+    const locale = detectLocale(Object.keys(locales));
+    if (locale !== 'en') {
+        initializedLocales = initLocale(initializedLocales, locale);
+    }
+    return initializedLocales;
+};
+
+export default GUI;
+
 export {
-    GUI as default,
     AppStateHOC,
     setAppElement,
     guiReducers,
@@ -48,5 +60,6 @@ export {
     AddonHooks,
     runAddons,
     LoadSettings,
-    onExportSettings
+    onExportSettings,
+    getInitializedLocales
 };

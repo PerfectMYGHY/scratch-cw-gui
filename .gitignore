@@ -27,3 +27,9 @@ npm-*
 
 # for act
 .secrets
+
+# Log Files
+*.log
+
+# Downloaded Assets
+assets/
