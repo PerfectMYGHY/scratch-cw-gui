@@ -23,6 +23,7 @@ const fs = require('fs');
 const childProcess = require('child_process');
 const rimraf = require('rimraf');
 const pathUtil = require('path');
+// let {addons, newAddons} = require('./addons.js'); // removed by CW
 
 const walk = dir => {
     const children = fs.readdirSync(dir);
@@ -51,7 +52,11 @@ if (!process.argv.includes('-')) {
 }
 
 let {newAddons} = require('./addons.js'); // CW
-const addons = require(pathUtil.resolve(repoPath, 'addons', 'addons.json')); // CW
+/**
+ * 插件列表
+ * @type {string[]}
+ */
+let addons = require(pathUtil.resolve(repoPath, 'addons', 'addons.json')); // CW
 
 for (const folder of ['addons', 'addons-l10n', 'addons-l10n-settings', 'libraries']) {
     const path = pathUtil.resolve(__dirname, folder);
@@ -480,10 +485,9 @@ for (const addon of addons) { // CW
     cache.push(addon); // CW
 } // CW
 
+addons = addons.filter(addon => !addon.startsWith('//')); // CW
+
 for (const addon of addons) {
-    if (addon.startsWith('//')) { // CW
-        continue; // CW
-    } // CW
     const oldDirectory = pathUtil.resolve(__dirname, 'ScratchAddons', 'addons', addon);
     const newDirectory = pathUtil.resolve(__dirname, 'addons', addon);
     processAddon(addon, oldDirectory, newDirectory);
