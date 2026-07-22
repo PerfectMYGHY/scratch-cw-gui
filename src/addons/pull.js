@@ -23,7 +23,6 @@ const fs = require('fs');
 const childProcess = require('child_process');
 const rimraf = require('rimraf');
 const pathUtil = require('path');
-const {addons, newAddons} = require('./addons.js');
 
 const walk = dir => {
     const children = fs.readdirSync(dir);
@@ -50,6 +49,9 @@ if (!process.argv.includes('-')) {
     rimraf.sync(repoPath);
     childProcess.execSync(`git clone --depth=1 --branch=tw https://github.com/TurboWarp/addons ${repoPath}`);
 }
+
+let {newAddons} = require('./addons.js'); // CW
+const addons = require(pathUtil.resolve(repoPath, 'addons', 'addons.json')); // CW
 
 for (const folder of ['addons', 'addons-l10n', 'addons-l10n-settings', 'libraries']) {
     const path = pathUtil.resolve(__dirname, folder);
@@ -464,7 +466,24 @@ const generateManifestEntries = () => generateEntries(
     })
 );
 
+let cache = []; // CW
+
+for (const addon of addons) { // CW
+    if (addon.startsWith('//')) { // CW
+        switch (addon) { // CW
+        case '// NEW ADDONS ABOVE THIS ↑↑': // CW
+            newAddons = cache; // CW
+            cache = []; // CW
+            break; // CW
+        } // CW
+    } // CW
+    cache.push(addon); // CW
+} // CW
+
 for (const addon of addons) {
+    if (addon.startsWith('//')) { // CW
+        continue; // CW
+    } // CW
     const oldDirectory = pathUtil.resolve(__dirname, 'ScratchAddons', 'addons', addon);
     const newDirectory = pathUtil.resolve(__dirname, 'addons', addon);
     processAddon(addon, oldDirectory, newDirectory);
