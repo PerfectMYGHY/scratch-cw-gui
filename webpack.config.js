@@ -107,6 +107,17 @@ const base = {
             }
         },
         {
+            test: /\.js$/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    plugins: [
+                        '@babel/plugin-syntax-import-meta'
+                    ]
+                }
+            }
+        },
+        {
             test: /\.css$/,
             use: [{
                 loader: 'style-loader'
@@ -209,7 +220,7 @@ module.exports = [
         module: {
             rules: base.module.rules.concat([
                 {
-                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2)$/,
+                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2|avif)$/,
                     loader: 'url-loader',
                     options: {
                         limit: 2048,
@@ -322,7 +333,7 @@ module.exports = [
             module: {
                 rules: base.module.rules.concat([
                     {
-                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2)$/,
+                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2|avif)$/,
                         loader: 'url-loader',
                         options: {
                             limit: 2048,

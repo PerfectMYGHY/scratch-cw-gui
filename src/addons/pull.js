@@ -112,6 +112,9 @@ const matchAll = (str, regex) => {
     return matches;
 };
 
+// eslint-disable-next-line max-len
+const ILReg = /import +(?:(?:{[\s\S]*}|.*) +from +)?["'](?:!css-loader!)?(?:\.\/)?\.\.\/\.\.\/libraries\/([\w\d_./-]+(?:\.esm)?\.(js|css))["'];/gs; // CW
+
 const includeImportedLibraries = contents => {
     // Parse things like:
     // import { normalizeHex, getHexRegex } from "../../libraries/normalize-color.js";
@@ -119,13 +122,19 @@ const includeImportedLibraries = contents => {
     // import "../../libraries/thirdparty/cs/chart.min.js";
     const matches = matchAll(
         contents,
-        /import +(?:(?:{.*}|.*) +from +)?["']\.\.\/\.\.\/libraries\/([\w\d_./-]+(?:\.esm)?\.js)["'];/g
+        ILReg // CW
     );
     for (const match of matches) {
         const libraryFile = match[1];
         const oldLibraryPath = pathUtil.resolve(__dirname, 'ScratchAddons', 'libraries', libraryFile);
         const newLibraryPath = pathUtil.resolve(__dirname, 'libraries', libraryFile);
         const libraryContents = fs.readFileSync(oldLibraryPath, 'utf-8');
+        if (matchAll( // CW
+            libraryContents, // CW
+            ILReg // CW
+        ).length > 0) { // CW
+            includeImportedLibraries(libraryContents); // CW
+        } // CW
         const newLibraryDirName = pathUtil.dirname(newLibraryPath);
         fs.mkdirSync(newLibraryDirName, {
             recursive: true
@@ -283,6 +292,16 @@ const generateRuntimeEntry = (id, manifest, assets) => {
     return result;
 };
 
+/**
+ * 修复ESModule的bug
+ * @param {string} content 文件内容
+ * @returns {string} 修复后文件内容
+ */
+const fixESBug = content => content.replace( // CW
+    /import\.meta\.url \+ "([^"]+)"/g, // CW
+    (_full, path) => `require("${path.startsWith('/../') ? path.slice(4) : path}")` // CW
+); // CW
+
 const addonIdToManifest = {};
 const processAddon = (id, oldDirectory, newDirectory) => {
     const files = walk(oldDirectory);
@@ -310,7 +329,9 @@ const processAddon = (id, oldDirectory, newDirectory) => {
             fs.writeFileSync(settingsEntryPath, generateManifestEntry(id, parsedManifest));
 
             const runtimeEntryPath = pathUtil.join(newDirectory, '_runtime_entry.js');
-            fs.writeFileSync(runtimeEntryPath, generateRuntimeEntry(id, parsedManifest, assets));
+            const runtimeEntryContent = generateRuntimeEntry(id, parsedManifest, assets); // CW
+            fs.writeFileSync(runtimeEntryPath, runtimeEntryContent); // CW
+            includeImportedLibraries(runtimeEntryContent); // CW
             continue;
         }
 
@@ -318,6 +339,7 @@ const processAddon = (id, oldDirectory, newDirectory) => {
             contents = contents.toString('utf-8');
 
             if (file.endsWith('.js')) {
+                contents = fixESBug(contents); // CW
                 includeImportedLibraries(contents);
                 contents = includePolyfills(contents);
                 contents = rewriteAssetImports(contents);
@@ -527,6 +549,9 @@ fs.writeFileSync(pathUtil.resolve(generatedPath, 'l10n-entries.js'), generateL10
 fs.writeFileSync(pathUtil.resolve(generatedPath, 'l10n-settings-entries.js'), generateL10nSettingsEntries(languages));
 fs.writeFileSync(pathUtil.resolve(generatedPath, 'addon-entries.js'), generateRuntimeEntries(languages));
 fs.writeFileSync(pathUtil.resolve(generatedPath, 'addon-manifests.js'), generateManifestEntries(languages));
+
+fs.cpSync(pathUtil.resolve(repoPath, 'images'), pathUtil.resolve(__dirname, 'images'), {recursive: true}); // CW
+fs.cpSync(pathUtil.resolve(repoPath, 'libraries'), pathUtil.resolve(__dirname, 'libraries'), {recursive: true}); // CW
 
 const upstreamMetaPath = pathUtil.resolve(generatedPath, 'upstream-meta.json');
 fs.writeFileSync(upstreamMetaPath, JSON.stringify({
