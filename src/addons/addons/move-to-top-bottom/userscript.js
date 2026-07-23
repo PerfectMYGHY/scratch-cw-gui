@@ -1,5 +1,5 @@
 export default async ({ addon, console, msg }) => {
-  const types = ["sound", "costume"];
+  const types = ["costume", "sound"];
 
   addon.tab.createEditorContextMenu(
     (ctx) => {

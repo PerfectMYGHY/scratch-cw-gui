@@ -89,9 +89,7 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "tags": [
-    "beta"
-  ],
+  "tags": [],
   "enabledByDefault": false
 };
 export default manifest;

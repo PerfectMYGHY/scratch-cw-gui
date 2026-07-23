@@ -3,7 +3,7 @@ const manifest = {
   "editorOnly": true,
   "noTranslations": true,
   "name": "Move sprite to front layer",
-  "description": "Shift+Click a sprite within the sprite pane to move it to the front (top layer) of the stage.",
+  "description": "Move a sprite to the front (top layer) of the stage from its context menu or by Shift+Clicking it.",
   "credits": [
     {
       "name": "Norbiros",
@@ -20,6 +20,8 @@ const manifest = {
     }
   ],
   "dynamicDisable": true,
-  "tags": []
+  "tags": [
+    "new"
+  ]
 };
 export default manifest;

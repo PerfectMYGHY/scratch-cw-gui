@@ -56,9 +56,11 @@ export default async function ({ addon, msg }) {
           ]
         );
       }
+      // TW: add setting for more keys
       if (addon.settings.get("twKeys")) {
         keys.push(
           ...[
+            // TW: TODO: translate
             ["backspace", "backspace"],
             ["delete", "delete"],
             ["shift", "shift"],
@@ -92,7 +94,7 @@ export default async function ({ addon, msg }) {
   }
 
   const updateExistingBlocks = () => {
-    const workspace = Blockly.getMainWorkspace();
+    const workspace = addon.tab.traps.getWorkspace();
     const flyout = workspace && workspace.getFlyout();
     if (workspace && flyout) {
       const allBlocks = [...workspace.getAllBlocks(), ...flyout.getWorkspace().getAllBlocks()];

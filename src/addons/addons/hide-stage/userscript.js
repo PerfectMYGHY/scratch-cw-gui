@@ -3,6 +3,7 @@ export default async function ({ addon, console, msg }) {
   let bodyWrapper;
   let smallStageButton;
   let largeStageButton;
+  // TW: we have a third stage-size button
   let fullStageButton;
 
   function hideStage() {
@@ -12,6 +13,7 @@ export default async function ({ addon, console, msg }) {
     // Inner class is applied to body wrapper so that it won't affect the project page.
     bodyWrapper.classList.add("sa-stage-hidden");
     hideStageButton.setAttribute("aria-pressed", true);
+    // TW: we have a third stage-size button
     if (smallStageButton) smallStageButton.setAttribute("aria-pressed", false);
     if (largeStageButton) largeStageButton.setAttribute("aria-pressed", false);
     if (fullStageButton) fullStageButton.setAttribute("aria-pressed", false);
@@ -28,6 +30,7 @@ export default async function ({ addon, console, msg }) {
       const clickedButton = e.target.closest("button");
       if (clickedButton) clickedButton.setAttribute("aria-pressed", true);
     } else if (addon.tab.redux.state) {
+      // TW: we have a third stage-size button
       const selectedStageSize = addon.tab.redux.state.scratchGui.stageSize.stageSize;
       if (smallStageButton) smallStageButton.setAttribute("aria-pressed", selectedStageSize === "small");
       if (largeStageButton) largeStageButton.setAttribute("aria-pressed", selectedStageSize === "large");
@@ -43,7 +46,7 @@ export default async function ({ addon, console, msg }) {
   });
   hideStageButton.setAttribute("aria-label", msg("hide-stage"));
   hideStageButton.setAttribute("aria-pressed", false);
-  const hideStageIcon = Object.assign(addon.tab.recolorable(), {
+  const hideStageIcon = Object.assign(document.createElement("img"), {
     className: addon.tab.scratchClass("stage-header_stage-button-icon"),
     src: addon.self.getResource("/icon.svg") /* rewritten by pull.js */,
     draggable: false,
@@ -73,6 +76,7 @@ export default async function ({ addon, console, msg }) {
     );
     bodyWrapper = document.querySelector("[class*='gui_body-wrapper_']");
 
+    // TW: we have a third stage-size button
     const stageButtons = Array.from(stageControls.querySelectorAll("button"));
     smallStageButton = stageButtons[0];
     largeStageButton = stageButtons.length === 3 ? stageButtons[1] : null;
@@ -82,6 +86,7 @@ export default async function ({ addon, console, msg }) {
     if (stageHidden) hideStage();
     else unhideStage();
 
+    // TW: we have a third stage-size button
     if (smallStageButton) smallStageButton.addEventListener("click", unhideStage);
     if (largeStageButton) largeStageButton.addEventListener("click", unhideStage);
     if (fullStageButton) fullStageButton.addEventListener("click", unhideStage);

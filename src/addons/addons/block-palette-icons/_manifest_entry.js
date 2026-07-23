@@ -4,7 +4,8 @@ const manifest = {
   "name": "Block palette category icons",
   "description": "Adds icons inside the colored circles that identify block categories.",
   "tags": [
-    "theme"
+    "theme",
+    "new"
   ],
   "enabledByDefault": false,
   "dynamicDisable": true,
@@ -19,7 +20,7 @@ const manifest = {
       "link": "https://scratch.mit.edu/users/--Explosion--/"
     },
     {
-      "name": "RedGuy7",
+      "name": "cobalt",
       "link": "https://scratch.mit.edu/users/RedGuy7/"
     }
   ]

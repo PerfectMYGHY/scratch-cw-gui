@@ -4,7 +4,12 @@ const manifest = {
   "noTranslations": true,
   "name": "Block transparency",
   "description": "Adjust the transparency for blocks in the editor, with separate options for orphaned blocks (those without a hat block at the top) and blocks that are being dragged.",
-  "tags": [],
+  "tags": [
+    "new"
+  ],
+  "relatedAddons": [
+    "editor-theme3"
+  ],
   "dynamicDisable": true,
   "credits": [
     {
@@ -42,6 +47,11 @@ const manifest = {
       "min": 0,
       "max": 100,
       "default": 25
+    }
+  ],
+  "userscripts": [
+    {
+      "url": "userscript.js"
     }
   ],
   "userstyles": [

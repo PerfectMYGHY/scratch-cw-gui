@@ -52,6 +52,7 @@ const manifest = {
     {
       "id": "opacityStep",
       "name": "Opacity Step (%)",
+      "description": "Sets how much the overlays fade out with each consecutive costume.",
       "type": "integer",
       "min": 0,
       "max": 100,
@@ -65,7 +66,7 @@ const manifest = {
       "potentialValues": [
         {
           "id": "front",
-          "name": "Front"
+          "name": "In front"
         },
         {
           "id": "behind",
@@ -103,7 +104,8 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended"
+    "recommended",
+    "new"
   ],
   "dynamicDisable": true,
   "enabledByDefault": true

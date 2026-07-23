@@ -4,7 +4,8 @@ const manifest = {
   "name": "Remove curved stage border",
   "description": "Removes the curved border around the stage, allowing you to see the corners.",
   "tags": [
-    "theme"
+    "theme",
+    "new"
   ],
   "credits": [
     {

@@ -1,3 +1,22 @@
+// TW: converted to ESM module directly w/o globalThis
+/*
+import * as _textColor from "./text-color.js";
+const {
+  parseHex,
+  convertToHex,
+  convertFromHsv,
+  convertToHsv,
+  brightness,
+  textColor,
+  multiply,
+  brighten,
+  alphaBlend,
+  removeAlpha,
+  makeHsv,
+  recolorFilter,
+} = globalThis.__scratchAddonsTextColor;
+*/
+
 function parseHex(hex) {
   return {
     r: parseInt(hex.substring(1, 3), 16),

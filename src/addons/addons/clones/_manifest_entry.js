@@ -43,8 +43,13 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended"
+    "recommended",
+    "new"
   ],
-  "enabledByDefault": true
+  "relatedAddons": [
+    "fps",
+    "debugger"
+  ],
+  "enabledByDefault": false
 };
 export default manifest;

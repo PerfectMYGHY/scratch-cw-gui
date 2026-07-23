@@ -1,0 +1,5 @@
+.account-nav .dropdown > li:nth-last-child(2),
+ul.user-nav > li:nth-last-child(2),
+[class*="menu-bar_account-info-group_"] [class*="menu_menu_"] > [class*="menu_menu-item_"]:nth-last-child(2) {
+  text-transform: capitalize;
+}

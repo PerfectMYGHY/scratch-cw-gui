@@ -1,0 +1,63 @@
+.u-progress-bar-outer {
+  width: 100%;
+  height: calc(1px * var(--progressBar-height));
+  position: relative;
+}
+.u-progress-bar-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  opacity: 0.25;
+  border-radius: calc(1px * var(--progressBar-height));
+}
+.u-progress-bar-inner {
+  position: absolute;
+  width: 0;
+  height: 100%;
+  background-color: currentColor;
+  border-radius: calc(1px * var(--progressBar-height));
+}
+
+.u-progress-bar-top {
+  position: fixed;
+  z-index: 1000000; /* a lot */
+  top: 0;
+  left: 0;
+  width: 100%;
+  border: none;
+  transition: opacity 0.2s;
+  pointer-events: none; /* bar should be non-interactive */
+}
+.u-progress-bar-top .u-progress-bar-inner {
+  transition: width 0.2s;
+  border-radius: 0px;
+}
+.u-progress-bar-top .u-progress-bar-background,
+.u-progress-bar-top .u-progress-bar-inner {
+  background-color: var(--darkWww-navbar-text, white);
+}
+.sa-editor .u-progress-bar-top .u-progress-bar-background,
+.sa-editor .u-progress-bar-top .u-progress-bar-inner {
+  background-color: var(--editorDarkMode-menuBar-text, white);
+}
+
+.u-progress-bar-caption {
+  margin: 5px 0;
+  height: 20px;
+}
+
+[class^="loader_background"] .u-progress-bar-integrated {
+  margin: auto;
+  width: 250px;
+}
+[class^="inline-message_inline-message"] .u-progress-bar-integrated,
+[class^="alert_alert"] .u-progress-bar-integrated {
+  min-width: 100px;
+  margin-top: 2px;
+}
+.remix-button .u-progress-bar-integrated {
+  /* Align left edge with remix icon */
+  margin-left: 3px;
+  width: calc(100% - 3px);
+}

@@ -8,6 +8,7 @@ const getScaleTool = (tool) => {
   return tool.boundingBoxTool._modeMap.SCALE;
 };
 
+// TW: pass vm for custom stage size
 export const updateScaleTool = (paper, tool, vm) => {
   const lib = loadModules(paper, vm);
   const {

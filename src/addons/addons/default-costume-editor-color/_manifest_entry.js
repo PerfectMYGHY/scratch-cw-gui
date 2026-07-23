@@ -40,13 +40,16 @@ const manifest = {
     },
     {
       "dynamic": true,
-      "name": "Use previous color instead of resetting after switching tools",
+      "name": "Remember previously used color",
       "id": "persistence",
+      "description": "Fixes a Scratch issue where the fill/outline colors sometimes reset back to the defaults when switching tools.",
       "type": "boolean",
       "default": true
     }
   ],
-  "tags": [],
+  "tags": [
+    "new"
+  ],
   "dynamicDisable": true,
   "enabledByDefault": false
 };

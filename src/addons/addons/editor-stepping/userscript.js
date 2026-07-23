@@ -4,7 +4,7 @@ import Highlighter from "./highlighter.js";
 export default async function ({ addon, console }) {
   const vm = addon.tab.traps.vm;
 
-  const highlighter = new Highlighter(0, addon.settings.get("highlight-color"));
+  const highlighter = new Highlighter(addon, 0, addon.settings.get("highlight-color"));
   addon.settings.addEventListener("change", () => {
     highlighter.setColor(addon.settings.get("highlight-color"));
   });
@@ -19,6 +19,7 @@ export default async function ({ addon, console }) {
     if (!addon.self.disabled) {
       const runningThread = getRunningThread();
       const threads = vm.runtime.threads.filter(
+        // TW: never highlight in compiled threads, it won't work
         (thread) => thread !== runningThread && !thread.target.blocks.forceNoGlow && !thread.isCompiled
       );
       highlighter.setGlowingThreads(threads);

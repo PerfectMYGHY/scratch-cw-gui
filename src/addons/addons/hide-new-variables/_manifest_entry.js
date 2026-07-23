@@ -14,7 +14,9 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "tags": [],
+  "tags": [
+    "new"
+  ],
   "dynamicDisable": true
 };
 export default manifest;

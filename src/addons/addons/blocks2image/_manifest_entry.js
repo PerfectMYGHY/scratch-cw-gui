@@ -2,11 +2,23 @@
 const manifest = {
   "editorOnly": true,
   "name": "Save blocks as image",
-  "description": "Right click the code area to export blocks as SVG/PNG images.",
-  "tags": [],
+  "description": "Right click on the code area or a stack of blocks to copy it to the clipboard or save it as a PNG or SVG file.",
+  "tags": [
+    "new"
+  ],
+  "relatedAddons": [
+    "mediarecorder"
+  ],
   "credits": [
     {
       "name": "summerscar"
+    },
+    {
+      "name": "Jazza",
+      "link": "https://scratch.mit.edu/users/greeny--231"
+    },
+    {
+      "name": "World_Languages"
     }
   ],
   "dynamicDisable": true,
@@ -15,6 +27,13 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "enabledByDefault": true
+  "userstyles": [
+    {
+      "url": "style.css"
+    }
+  ],
+  "enabledByDefault": false
 };
+import {clipboardSupported} from "../../environment";
+if (!clipboardSupported) manifest.unsupported = true;
 export default manifest;

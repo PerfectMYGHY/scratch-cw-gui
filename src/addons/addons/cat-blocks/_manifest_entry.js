@@ -34,7 +34,8 @@ const manifest = {
     }
   ],
   "tags": [
-    "theme"
+    "theme",
+    "new"
   ],
   "enabledByDefault": true
 };

@@ -23,7 +23,11 @@ const manifest = {
   "dynamicDisable": true,
   "enabledByDefault": true,
   "tags": [
-    "recommended"
+    "recommended",
+    "new"
+  ],
+  "relatedAddons": [
+    "vol-slider"
   ]
 };
 export default manifest;

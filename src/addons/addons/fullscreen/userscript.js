@@ -3,6 +3,7 @@
  * and for hiding the scrollbar in full screen.
  */
 export default async function ({ addon, console }) {
+  // TW: custom stage size
   const vm = addon.tab.traps.vm;
   const updateStageSize = () => {
     document.documentElement.style.setProperty('--sa-fullscreen-width', vm.runtime.stageWidth);
@@ -11,8 +12,9 @@ export default async function ({ addon, console }) {
   updateStageSize();
   vm.on('STAGE_SIZE_CHANGED', updateStageSize);
 
-  // In Electron, after running requestFullscreen() a resize event can be fired before
-  // document.fullscreenElement is updated. We want to ignore that event.
+  // TW: Electron fullscreen quirk workaround
+  // TW: Specifically, after running requestFullscreen() a resize event can be fired before
+  // TW: document.fullscreenElement is updated. We want to ignore that event.
   let isEnteringFullscreen = false;
 
   // "Browser fullscreen" is defined as the mode that hides the browser UI.
@@ -21,6 +23,7 @@ export default async function ({ addon, console }) {
       // If Scratch fullscreen is enabled, then browser fullscreen should also
       // be enabled, and vice versa for disabling.
       if (addon.tab.redux.state.scratchGui.mode.isFullScreen && document.fullscreenElement === null) {
+        // TW: Electron fullscreen quirk workaround
         isEnteringFullscreen = true;
         document.documentElement.requestFullscreen()
           .then(() => {
@@ -106,20 +109,11 @@ export default async function ({ addon, console }) {
 
   updatePhantomHeader();
 
-  async function setPageScrollbar() {
-    const body = await addon.tab.waitForElement(".sa-body-editor");
-    if (addon.tab.redux.state.scratchGui.mode.isFullScreen) {
-      body.classList.add("sa-fullscreen");
-    } else {
-      body.classList.remove("sa-fullscreen");
-    }
-  }
-
   // Properly resize the canvas and scale variable monitors on stage resize.
   let monitorScaler, resizeObserver, stage;
   async function initScaler() {
     monitorScaler = await addon.tab.waitForElement("[class*=monitor-list_monitor-list-scaler]");
-    stage = await addon.tab.waitForElement('[class*="stage-wrapper_full-screen"] [class*="stage_stage"]');
+    stage = await addon.tab.waitForElement('.sa-fullscreen [class*="stage_stage"] canvas');
     resizeObserver = new ResizeObserver(() => {
       const stageSize = stage.getBoundingClientRect();
       // When switching between project page and editor, the canvas
@@ -131,6 +125,7 @@ export default async function ({ addon, console }) {
       if (renderer) renderer.resize(stageSize.width, stageSize.height);
       // Scratch uses the `transform` CSS property on a stage overlay element
       // to control the scaling of variable monitors.
+      // TW: custom stage size
       const scale = stageSize.width / vm.runtime.stageWidth;
       monitorScaler.style.transform = `scale(${scale}, ${scale})`;
     });
@@ -141,7 +136,6 @@ export default async function ({ addon, console }) {
 
   // Running this on page load handles the case of the project initially
   // loading in Scratch fullscreen mode.
-  setPageScrollbar();
   updateBrowserFullscreen();
 
   // Changing to or from Scratch fullscreen is signified by a state change
@@ -151,12 +145,12 @@ export default async function ({ addon, console }) {
     if (e.detail.action.type === "scratch-gui/mode/SET_FULL_SCREEN") {
       initScaler();
       updateBrowserFullscreen();
-      setPageScrollbar();
       updatePhantomHeader();
     }
   });
   // Changing to or from browser fullscreen is signified by a window resize.
   window.addEventListener("resize", () => {
+    // TW: Electron fullscreen quirk workaround
     if (!isEnteringFullscreen) {
       updateScratchFullscreen();
     }

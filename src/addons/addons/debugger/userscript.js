@@ -114,7 +114,7 @@ export default async function ({ addon, console, msg }) {
     });
   });
   compilerWarning.className = "sa-debugger-log sa-debugger-compiler-warning";
-  compilerWarning.textContent = "禁用编译器时，调试器的工作效果最好。";
+  compilerWarning.textContent = msg("debuger-complier-warning");
   const updateCompilerWarningVisibility = () => {
     compilerWarning.hidden = !vm.runtime.compilerOptions.enabled;
   };

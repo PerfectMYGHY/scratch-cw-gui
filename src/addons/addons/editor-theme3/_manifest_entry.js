@@ -13,10 +13,128 @@ const manifest = {
       "link": "https://scratch.mit.edu/users/TheColaber/"
     },
     {
-      "name": "DNin01"
+      "name": "DNin01",
+      "link": "https://github.com/DNin01"
+    },
+    {
+      "name": "Shock59",
+      "link": "https://github.com/shock59"
+    },
+    {
+      "name": "0znzw",
+      "link": "https://scratch.mit.edu/users/0znzw"
+    },
+    {
+      "name": "Jazza",
+      "link": "https://scratch.mit.edu/users/greeny--231"
     }
   ],
+  "info": [
+    {
+      "id": "disablesMenuBar",
+      "type": "notice",
+      "text": "If you want to access Scratch's \"Color Mode\" menu, disable this feature."
+    },
+    {
+      "id": "aboutHighContrast",
+      "type": "info",
+      "text": "The High Contrast block colors are available as a preset below."
+    }
+  ],
+  "relatedAddons": [
+    "editor-dark-mode",
+    "custom-block-shape",
+    "transparent-orphans",
+    "zebra-striping",
+    "recolor-custom-blocks"
+  ],
   "customCssVariables": [
+    {
+      "name": "inputColor-text",
+      "value": {
+        "type": "alphaThreshold",
+        "source": {
+          "type": "settingValue",
+          "settingId": "input-color"
+        },
+        "opaque": {
+          "type": "textColor",
+          "source": {
+            "type": "settingValue",
+            "settingId": "input-color"
+          }
+        },
+        "transparent": {
+          "type": "map",
+          "source": {
+            "type": "settingValue",
+            "settingId": "text"
+          },
+          "options": {
+            "white": "#ffffff",
+            "black": "#575e75",
+            "colorOnWhite": "#575e75",
+            "colorOnBlack": "#ffffff"
+          }
+        }
+      }
+    },
+    {
+      "name": "inputColor-blackText",
+      "value": {
+        "type": "alphaThreshold",
+        "source": {
+          "type": "settingValue",
+          "settingId": "input-color"
+        },
+        "opaque": {
+          "type": "textColor",
+          "black": "#000000",
+          "source": {
+            "type": "settingValue",
+            "settingId": "input-color"
+          }
+        },
+        "transparent": {
+          "type": "map",
+          "source": {
+            "type": "settingValue",
+            "settingId": "text"
+          },
+          "options": {
+            "white": "#ffffff",
+            "black": "#000000",
+            "colorOnWhite": "#000000",
+            "colorOnBlack": "#ffffff"
+          }
+        }
+      }
+    },
+    {
+      "name": "inputColor-editableLabel",
+      "value": {
+        "type": "alphaBlend",
+        "opaqueSource": {
+          "type": "map",
+          "source": {
+            "type": "settingValue",
+            "settingId": "text"
+          },
+          "options": {
+            "colorOnWhite": "#ffffff",
+            "colorOnBlack": "#282828"
+          },
+          "default": {
+            "type": "settingValue",
+            "settingId": "custom-color"
+          }
+        },
+        "transparentSource": {
+          "type": "settingValue",
+          "settingId": "input-color"
+        }
+      }
+    },
     {
       "name": "commentText",
       "value": {
@@ -50,6 +168,47 @@ const manifest = {
         "r": 0.7,
         "g": 0.7,
         "b": 0.7
+      }
+    },
+    {
+      "name": "commentTopBar",
+      "value": {
+        "type": "multiply",
+        "source": {
+          "type": "settingValue",
+          "settingId": "comment-color"
+        },
+        "r": 0.9,
+        "g": 0.9,
+        "b": 0.9
+      }
+    },
+    {
+      "name": "commentFilter",
+      "value": {
+        "type": "textColor",
+        "black": "none",
+        "white": "brightness(0) invert(1)",
+        "source": {
+          "type": "settingValue",
+          "settingId": "comment-color"
+        }
+      }
+    },
+    {
+      "name": "text-shadow",
+      "value": {
+        "type": "map",
+        "source": {
+          "type": "settingValue",
+          "settingId": "text"
+        },
+        "options": {
+          "black": "rgba(0, 0, 0, 0.15)",
+          "colorOnWhite": "rgba(0, 0, 0, 0.15)",
+          "colorOnBlack": "#000000"
+        },
+        "default": "rgba(0, 0, 0, 0.4)"
       }
     }
   ],
@@ -86,6 +245,9 @@ const manifest = {
           "text": "colorOnBlack"
         }
       }
+    },
+    {
+      "url": "insertion_marker.css"
     }
   ],
   "settings": [
@@ -201,6 +363,7 @@ const manifest = {
     {
       "dynamic": true,
       "name": "Comments",
+      "description": "When using colored text on a black/white background this setting affects the borders of standalone comments.",
       "id": "comment-color",
       "type": "color",
       "default": "#FEF49C"
@@ -229,6 +392,91 @@ const manifest = {
           "name": "Colored on black background"
         }
       ]
+    },
+    {
+      "name": "Change the colors of variables and lists on the stage",
+      "id": "monitors",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "Change the colors of blocks in the forums",
+      "id": "forums",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "Insertion marker style",
+      "description": "When dragging a block, an \"insertion marker\" is the shadow that appears when moved near to other blocks.",
+      "id": "fillStyle",
+      "type": "select",
+      "default": "gray",
+      "potentialValues": [
+        {
+          "id": "none",
+          "name": "None"
+        },
+        {
+          "id": "gray",
+          "name": "Gray"
+        },
+        {
+          "id": "colored",
+          "name": "Colored"
+        }
+      ]
+    },
+    {
+      "name": "Insertion marker opacity",
+      "id": "fillOpacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "if": {
+        "settings": {
+          "fillStyle": [
+            "gray",
+            "colored"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Insertion marker outline",
+      "id": "strokeStyle",
+      "type": "select",
+      "default": "none",
+      "potentialValues": [
+        {
+          "id": "none",
+          "name": "None"
+        },
+        {
+          "id": "gray",
+          "name": "Gray"
+        },
+        {
+          "id": "colored",
+          "name": "Colored"
+        }
+      ]
+    },
+    {
+      "name": "Insertion marker outline opacity",
+      "id": "strokeOpacity",
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "if": {
+        "settings": {
+          "strokeStyle": [
+            "gray",
+            "colored"
+          ]
+        }
+      }
     }
   ],
   "tags": [
@@ -255,7 +503,12 @@ const manifest = {
         "sa-color": "#34E4D0",
         "comment-color": "#FEF49C",
         "input-color": "#FFFFFF",
-        "text": "black"
+        "text": "black",
+        "monitors": true,
+        "fillStyle": "gray",
+        "fillOpacity": 20,
+        "strokeStyle": "none",
+        "strokeOpacity": 50
       }
     },
     {
@@ -277,7 +530,12 @@ const manifest = {
         "sa-color": "#2A797C",
         "comment-color": "#423F24",
         "input-color": "#FFFFFF",
-        "text": "white"
+        "text": "white",
+        "monitors": false,
+        "fillStyle": "gray",
+        "fillOpacity": 20,
+        "strokeStyle": "none",
+        "strokeOpacity": 50
       }
     },
     {
@@ -299,7 +557,12 @@ const manifest = {
         "sa-color": "#166966",
         "comment-color": "#423f24",
         "input-color": "#202020",
-        "text": "white"
+        "text": "white",
+        "monitors": false,
+        "fillStyle": "gray",
+        "fillOpacity": 20,
+        "strokeStyle": "none",
+        "strokeOpacity": 50
       }
     },
     {
@@ -321,7 +584,12 @@ const manifest = {
         "sa-color": "#29BEB8",
         "comment-color": "#FEF49C",
         "input-color": "#FFFFFF",
-        "text": "white"
+        "text": "white",
+        "monitors": false,
+        "fillStyle": "gray",
+        "fillOpacity": 20,
+        "strokeStyle": "none",
+        "strokeOpacity": 50
       }
     },
     {
@@ -343,7 +611,12 @@ const manifest = {
         "sa-color": "#29beb8",
         "comment-color": "#FFFFD2",
         "input-color": "#ffffff",
-        "text": "white"
+        "text": "white",
+        "monitors": false,
+        "fillStyle": "gray",
+        "fillOpacity": 20,
+        "strokeStyle": "none",
+        "strokeOpacity": 50
       }
     },
     {
@@ -365,7 +638,12 @@ const manifest = {
         "sa-color": "#34E4D0",
         "comment-color": "#FEF49C",
         "input-color": "#202020",
-        "text": "colorOnBlack"
+        "text": "colorOnBlack",
+        "monitors": false,
+        "fillStyle": "colored",
+        "fillOpacity": 5,
+        "strokeStyle": "colored",
+        "strokeOpacity": 50
       }
     }
   ]

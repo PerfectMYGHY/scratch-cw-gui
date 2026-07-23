@@ -32,28 +32,49 @@
   border-top-right-radius: 0;
   border-top-left-radius: 0.5rem;
 }
-[dir="ltr"] [class^="blocks_blocks_C530M"] .injectionDiv,
+[dir="ltr"] [class^="blocks_blocks"] .injectionDiv,
 [dir="ltr"] [class^="asset-panel_wrapper"] {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0.5rem;
 }
-[dir="ltr"] [class^="gui_extension-button-container"] {
+[dir="ltr"] [class^="extension-button_extension-button-container"] {
   border-bottom-left-radius: 0.5rem;
+}
+[dir="ltr"] [class^="selector_wrapper"],
+[dir="ltr"] [class^="selector_new-buttons"]::before {
+  border-bottom-left-radius: calc(0.5rem - 1px);
 }
 
 [dir="rtl"] [class^="backpack_backpack-header"] {
   border-top-left-radius: 0;
   border-top-right-radius: 0.5rem;
 }
-[dir="rtl"] [class^="blocks_blocks_C530M"] .injectionDiv,
+[dir="rtl"] [class^="blocks_blocks"] .injectionDiv,
 [dir="rtl"] [class^="asset-panel_wrapper"] {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0.5rem;
 }
-[dir="rtl"] [class^="gui_extension-button-container"] {
+[dir="rtl"] [class^="extension-button_extension-button-container"] {
   border-bottom-right-radius: 0.5rem;
+}
+[dir="rtl"] [class^="selector_wrapper"],
+[dir="rtl"] [class^="selector_new-buttons"]::before {
+  border-bottom-right-radius: calc(0.5rem - 1px);
+}
+
+/* Move delete button confirmation to the right side */
+.ReactModal__Content[style*="width: 300px"] {
+  /* 300px (popup width)
+   + 25px (padding)
+   + 70px (sprite selector item width)
+   + 25px (padding) */
+  margin-left: 420px !important;
+}
+[class*="delete-confirmation-prompt_arrow-container_"] {
+  order: -1;
+  transform: scaleX(-1);
 }
 
 .Popover {
@@ -79,22 +100,14 @@
   padding-inline-start: calc(240px + 1.125rem);
 }
 
-/* related to TW changes to headers */
-[dir="ltr"] [class^="stage-header_stage-header-wrapper_"] {
-  right: initial;
-  left: 0;
+/* search-sprites compatibility */
+
+.sa-small-stage [dir="ltr"] .sa-search-sprites-container {
+  right: auto;
+  left: calc(100% - 7.5rem);
 }
-[dir="rtl"] [class^="stage-header_stage-header-wrapper_"] {
-  right: 0;
-  left: initial;
-}
-[class*="stage-wrapper_offset-controls_"] {
-  z-index: 10;
-}
-[dir="rtl"] [class^="stage-header_stage-header-wrapper_"] {
-  right: 0 !important;
-}
-[dir="rtl"] .sa-stage-hidden [class*="stage-header_stage-size-row"] {
-  right: 0.5rem !important;
-  left: 0 !important;
+
+.sa-small-stage [dir="rtl"] .sa-search-sprites-container {
+  left: auto;
+  right: calc(100% - 7.5rem);
 }

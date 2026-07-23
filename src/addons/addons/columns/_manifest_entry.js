@@ -13,6 +13,11 @@ const manifest = {
   "tags": [
     "theme"
   ],
+  "relatedAddons": [
+    "data-category-tweaks-v2",
+    "editor-stage-left",
+    "editor-compact"
+  ],
   "dynamicDisable": true,
   "userscripts": [
     {

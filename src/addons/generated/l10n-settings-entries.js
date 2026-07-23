@@ -16,5 +16,5 @@ export default {
   "sl": () => require("../addons-l10n-settings/sl.json"),
   "tr": () => require("../addons-l10n-settings/tr.json"),
   "zh-cn": () => require("../addons-l10n-settings/zh-cn.json"),
-    "zh-tw": () => require("../addons-l10n-settings/zh-tw.json"),
+  "zh-tw": () => require("../addons-l10n-settings/zh-tw.json"),
 };

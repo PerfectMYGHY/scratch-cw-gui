@@ -1,3 +1,5 @@
+// TW: converted to ESM module directly
+
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
 

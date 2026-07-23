@@ -4,7 +4,8 @@ const manifest = {
   "name": "Collapsing sprite properties",
   "description": "Hides the sprite properties panel by default, like in Scratch 2.0. Use the info button on the currently selected sprite or double-click a sprite to show the properties panel again. To re-hide it, use the collapse button in the properties panel or double-click a sprite.",
   "tags": [
-    "recommended"
+    "recommended",
+    "new"
   ],
   "credits": [
     {
@@ -43,8 +44,9 @@ const manifest = {
   "settings": [
     {
       "dynamic": true,
-      "name": "Automatically collapse when mouse leaves sprite panel",
+      "name": "Collapse automatically",
       "id": "autoCollapse",
+      "description": "Automatically collapse the sprite properties panel when the mouse cursor leaves the sprite pane.",
       "type": "boolean",
       "default": false
     },

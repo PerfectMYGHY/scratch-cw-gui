@@ -3,6 +3,12 @@ export default async function ({ addon, console, msg }) {
   // amount of CPU time so let's delay that for as long as possible.
   await addon.tab.traps.getPaper();
 
+  if (!("colorIndex" in addon.tab.redux.state.scratchPaint.fillMode)) {
+    console.error("Detected new paint editor; this will be supported in future versions.");
+    return;
+  }
+
+  // TW: round here so that alpha channel converts correctly
   const hexComponent = (str) => Math.round(+str).toString(16).toUpperCase().padStart(2, "0");
 
   const parseColor = (color) => {
@@ -10,17 +16,19 @@ export default async function ({ addon, console, msg }) {
       return null;
     }
     if (typeof color === "string") {
-      // TW natively supports hex color codes with or without transparency
+      // Scratch natively supports hex color codes without transparency
       if (color.startsWith("#")) {
+        // TW: we also support native transparency, actually
         return color.substring(0, 9).toUpperCase();
       }
       // Sometimes paper gives us rgb() colors which have to be converted to hex
+      // It can also return rgba() sometimes but we won't parse that because Scratch doesn't support transparency anyways
       const rgbMatch = color.match(/^rgb\((\d+)\s*,(\d+)\s*,(\d+)\)$/);
       if (rgbMatch) {
         const [_, r, g, b] = rgbMatch;
         return `#${hexComponent(r)}${hexComponent(g)}${hexComponent(b)}`;
       }
-      // It can also give us rgba() colors
+      // TW: actually, we handle rgba() colors
       const rgbaMatch = color.match(/^rgba\((\d+)\s*,(\d+)\s*,(\d+),([\d.]+)\)$/);
       if (rgbaMatch) {
         const [_, r, g, b, a] = rgbaMatch;

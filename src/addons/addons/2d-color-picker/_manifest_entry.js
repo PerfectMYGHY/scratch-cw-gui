@@ -3,10 +3,13 @@ const manifest = {
   "editorOnly": true,
   "name": "2D color picker",
   "description": "Replaces saturation and brightness sliders in the costume editor with a 2D color picker. Hold Shift while dragging the cursor to change the values on a single axis.",
-  "tags": [],
+  "tags": [
+    "new"
+  ],
   "credits": [
     {
-      "name": "Ucrash"
+      "name": "Ucrash",
+      "link": "https://scratch.mit.edu/users/UcrashReal/"
     }
   ],
   "userscripts": [

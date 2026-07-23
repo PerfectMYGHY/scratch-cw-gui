@@ -20,7 +20,7 @@ import dataURLToBlob from '../lib/data-uri-to-blob';
 import EventTargetShim from './event-target';
 import AddonHooks from './hooks';
 import addons from './generated/addon-manifests';
-import addonMessages from './addons-l10n/zh-cn.json';
+import addonMessages from './addons-l10n/en.json';
 import l10nEntries from './generated/l10n-entries';
 import addonEntries from './generated/addon-entries';
 import {addContextMenu} from './contextmenu';
@@ -115,16 +115,24 @@ const getEditorMode = () => {
     return 'editor';
 };
 
-var language = reduxInstance.state.locales.locale.split('-')[0];
-if (!l10nEntries[language]) {
-    language = reduxInstance.state.locales.locale;
-}
+let language;
+
+const updateLanguage = () => {
+    language = reduxInstance.state.locales.locale.split('-')[0];
+    if (!l10nEntries[language]) {
+        language = reduxInstance.state.locales.locale;
+    }
+};
+
+updateLanguage();
+
 const getTranslations = async () => {
     if (l10nEntries[language]) {
         const localeMessages = await l10nEntries[language]();
         Object.assign(addonMessages, localeMessages);
     }
 };
+
 const addonMessagesPromise = getTranslations();
 
 const untilInEditor = () => {
@@ -241,9 +249,6 @@ class Tab extends EventTargetShim {
     }
 
     waitForElement (selector, {markAsSeen = false, condition, reduxCondition, reduxEvents} = {}) {
-        // if (selector == "[class^='green-flag']"){
-        //     console.log("PAUSE PAUSE !!! LOG:::","进入等待元素函数！！！！！！！！！！！！！！！！！！！",this._seenElements.has(document.querySelector("[class^='green-flag']")));
-        // }
         let externalEventSatisfied = true;
         const evaluateCondition = () => {
             if (!externalEventSatisfied) return false;
@@ -251,28 +256,17 @@ class Tab extends EventTargetShim {
             if (reduxCondition && !reduxCondition(reduxInstance.state)) return false;
             return true;
         };
-        // if (selector == "[class^='green-flag']"){
-        //     console.log("PAUSE PAUSE !!! LOG:::",evaluateCondition(),this._seenElements);
-        // }
 
         if (evaluateCondition()) {
             const firstQuery = document.querySelectorAll(selector);
             for (const element of firstQuery) {
-                // if (selector == "[class^='green-flag']"){
-                //     console.log("PAUSE PAUSE !!! LOG:::",this._seenElements.has(element),element,this._seenElements);
-                // }
                 if (this._seenElements.has(element)) continue;
                 if (markAsSeen) {
-                    // console.log(element,markAsSeen,condition,reduxCondition,reduxEvents);
-                    // console.error(new Error("请检查调用路径"));
                     this._seenElements.add(element);
                 }
                 return Promise.resolve(element);
             }
         }
-        // if (selector == "[class^='green-flag']"){
-        //     console.log("PAUSE PAUSE !!! LOG:::","暂无元素或已看过",this._seenElements);
-        // }
 
         let reduxListener;
         if (reduxEvents) {
@@ -765,7 +759,6 @@ class AddonRunner {
 
     _msg (key, vars, handler) {
         const namespacedKey = key.startsWith('/') ? key.substring(1) : `${this.id}/${key}`;
-        //console.log(namespacedKey, addonMessages);
         if (this.messageCache[namespacedKey]) {
             return this.messageCache[namespacedKey].format(vars);
         }
@@ -791,9 +784,17 @@ class AddonRunner {
 
     getResource (path) {
         const withoutSlash = path.substring(1);
-        const url = this.resources[withoutSlash];
+        let url = this.resources[withoutSlash];
         if (typeof url !== 'string') {
-            throw new Error(`Unknown asset: ${path}`);
+            for (const [key, value] of Object.entries(this.resources)) {
+                if (key.replaceAll('\\', '/') === withoutSlash.replaceAll('\\', '/')) {
+                    url = value;
+                    break;
+                }
+            }
+            if (typeof url !== 'string') {
+                throw new Error(`Unknown asset: ${path}`);
+            }
         }
         return url;
     }
@@ -915,28 +916,22 @@ class AddonRunner {
     }
 
     async run () {
-        // console.log(this.id,"执行启动插件函数...");
         if (this.manifest.editorOnly) {
-            // console.log(this.id,"等待回到编辑器");
             await untilInEditor();
-            // console.log(this.id,"等待完毕！");
         }
 
-        // console.log(this.id,addonEntries,"正在执行主函数...");
         const mod = await addonEntries[this.id]();
         this.resources = mod.resources;
 
         if (!this.manifest.noTranslations) {
-            // console.log(this.id,addonMessagesPromise);
             await addonMessagesPromise;
         }
 
-        // 乘以大数，因为第一个用户样式是+0，第二个是+1，第三个是+2，以此类推。(Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.)
-        // 这个数字必须大于单个插件中用户样式的最大数量。(This number just has to be larger than the maximum number of userstyles in a single addon.)
+        // 乘以大数，因为第一个用户样式是+0，第二个是+1，第三个是+2，以此类推。
+        // 这个数字必须大于单个插件中用户样式的最大数量。
         const baseStylePrecedence = getPrecedence(this.id) * 100;
 
         if (this.manifest.userstyles) {
-            // console.log(this.id,"加载样式...");
             for (let i = 0; i < this.manifest.userstyles.length; i++) {
                 const userstyle = this.manifest.userstyles[i];
                 const userstylePrecedence = baseStylePrecedence + i;
@@ -960,17 +955,14 @@ class AddonRunner {
         this.updateCssVariables();
 
         if (this.manifest.userscripts) {
-            // console.log(this.id,"执行脚本中...");
             for (const userscript of this.manifest.userscripts) {
                 if (!SettingsStore.evaluateCondition(userscript.if)) {
-                    // console.log(this.id,"跳过执行该脚本");
                     continue;
                 }
                 const fn = this.resources[userscript.url];
                 fn(this.publicAPI);
             }
         }
-        // console.log(this.id,"加载完毕");
 
         this.loading = false;
     }

@@ -13,6 +13,9 @@ const manifest = {
   "credits": [
     {
       "name": "GarboMuffin"
+    },
+    {
+      "name": "Valmontechno"
     }
   ],
   "userscripts": [
@@ -26,7 +29,8 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended"
+    "recommended",
+    "new"
   ],
   "enabledByDefault": true
 };

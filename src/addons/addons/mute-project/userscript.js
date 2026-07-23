@@ -9,6 +9,7 @@ export default async function ({ addon, console }) {
   icon.src = addon.self.getResource("/mute.svg") /* rewritten by pull.js */;
   icon.className = "sa-mute-project-icon";
   icon.style.userSelect = "none";
+  icon.draggable = false;
   addon.tab.displayNoneWhileDisabled(icon);
 
   const updateIcon = () => {

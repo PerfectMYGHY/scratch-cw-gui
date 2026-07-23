@@ -9,6 +9,10 @@ const manifest = {
     },
     {
       "name": "GarboMuffin"
+    },
+    {
+      "name": "Google",
+      "link": "https://fonts.google.com/icons?icon.set=Material+Icons"
     }
   ],
   "userscripts": [
@@ -22,7 +26,9 @@ const manifest = {
     }
   ],
   "dynamicDisable": true,
-  "tags": [],
-  "enabledByDefault": true
+  "tags": [
+    "new"
+  ],
+  "enabledByDefault": false
 };
 export default manifest;

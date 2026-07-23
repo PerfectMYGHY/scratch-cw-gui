@@ -1,3 +1,6 @@
+// TW: sanitize at import-time
+import {sanitizeSvg} from '@turbowarp/scratch-svg-renderer';
+
 export default async function ({ addon, console, msg }) {
   const paper = await addon.tab.traps.getPaper();
 
@@ -11,9 +14,16 @@ export default async function ({ addon, console, msg }) {
     // The check can technically fail when Redux isn't supported (rare cases)
     // Just ignore in this case
   }
-  const paperCanvas =
-    paintEditorCanvasContainer[addon.tab.traps.getInternalKey(paintEditorCanvasContainer)].child.child.child.stateNode;
+  let reactInternalInstance = paintEditorCanvasContainer[addon.tab.traps.getInternalKey(paintEditorCanvasContainer)];
+  while (!reactInternalInstance.stateNode?.recalibrateSize) {
+    reactInternalInstance = reactInternalInstance.child;
+  }
+  const paperCanvas = reactInternalInstance.stateNode;
 
+  // TW: this is now unused because we recompute it as-needed
+  /*
+  let paperCenter;
+  */
   const storedOnionLayers = [];
 
   const parseHexColor = (color) => {
@@ -38,6 +48,7 @@ export default async function ({ addon, console, msg }) {
     afterTint: parseHexColor(addon.settings.get("afterTint")),
   };
 
+  // TW: recompute paper center as needed due to custom stage size
   const getPaperCenter = () => {
     const backgroundGuideLayer = paper.project.layers.find((i) => i.data.isBackgroundGuideLayer);
     return backgroundGuideLayer.children[0].position;
@@ -300,6 +311,9 @@ export default async function ({ addon, console, msg }) {
 
   const makeVectorOnion = (opacity, costume, asset, isBefore) =>
     new Promise((resolve, reject) => {
+      // TW: sanitize before import
+      asset = sanitizeSvg.sanitizeSvgText(asset);
+
       const { rotationCenterX, rotationCenterY } = costume;
       // https://github.com/scratchfoundation/scratch-paint/blob/cdf0afc217633e6cfb8ba90ea4ae38b79882cf6c/src/containers/paper-canvas.jsx#L196-L218
       asset = asset.split(/<\s*svg:/).join("<");
@@ -361,6 +375,7 @@ export default async function ({ addon, console, msg }) {
           });
         }
 
+        // TW: custom stage size
         const paperCenter = getPaperCenter();
         // https://github.com/scratchfoundation/scratch-paint/blob/cdf0afc217633e6cfb8ba90ea4ae38b79882cf6c/src/containers/paper-canvas.jsx#L277-L287
         if (typeof rotationCenterX !== "undefined" && typeof rotationCenterY !== "undefined") {
@@ -395,6 +410,7 @@ export default async function ({ addon, console, msg }) {
 
       const image = new Image();
       image.onload = () => {
+        // TW: custom stage size
         const paperCenter = getPaperCenter();
         const width = Math.min(paperCenter.x * 2, image.width);
         const height = Math.min(paperCenter.y * 2, image.height);
@@ -569,14 +585,15 @@ export default async function ({ addon, console, msg }) {
     const el = document.createElement("img");
     el.className = "sa-onion-image";
     el.draggable = false;
-    el.dataset.image = name;
+    // TW: load the images lazily because we are able to
+    // TW: TODO: upstream?
     el.loading = "lazy";
     el.src = addon.self.getResource("/" + name + ".svg") /* rewritten by pull.js */;
     return el;
   };
 
   const toggleControlsGroup = createGroup();
-  addon.tab.displayNoneWhileDisabled(toggleControlsGroup, { display: "flex" });
+  addon.tab.displayNoneWhileDisabled(toggleControlsGroup);
 
   const toggleButton = createButton();
   toggleButton.dataset.enabled = settings.enabled;
@@ -587,6 +604,7 @@ export default async function ({ addon, console, msg }) {
   const settingButton = createButton();
   settingButton.addEventListener("click", () => setSettingsOpen(!areSettingsOpen()));
   settingButton.title = msg("settings");
+  settingButton.classList.add("sa-onion-arrow");
   settingButton.appendChild(createButtonImage("settings"));
 
   document.body.addEventListener("click", (e) => {

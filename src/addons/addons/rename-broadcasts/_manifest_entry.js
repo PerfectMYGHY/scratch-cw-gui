@@ -13,7 +13,9 @@ const manifest = {
       "name": "GarboMuffin"
     }
   ],
-  "tags": [],
+  "tags": [
+    "new"
+  ],
   "userscripts": [
     {
       "url": "userscript.js"

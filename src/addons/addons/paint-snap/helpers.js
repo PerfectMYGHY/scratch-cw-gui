@@ -1,3 +1,4 @@
+// TW: pass vm for custom stage size
 export function loadModules(paper, vm) {
   // https://github.com/scratchfoundation/scratch-paint/blob/2a9fb2356d961200dc849b5b0a090d33f473c0b5/src/helper/math.js
 
@@ -43,6 +44,7 @@ export function loadModules(paper, vm) {
   // Vectors are imported and exported at SVG_ART_BOARD size.
   // Once they are imported however, both SVGs and bitmaps are on
   // canvases of ART_BOARD size.
+  // TW: custom stage size - these are now not const
   let SVG_ART_BOARD_WIDTH;
   let SVG_ART_BOARD_HEIGHT;
   let ART_BOARD_WIDTH;
@@ -50,7 +52,6 @@ export function loadModules(paper, vm) {
   let CENTER;
   let ART_BOARD_BOUNDS;
   let MAX_WORKSPACE_BOUNDS;
-
   const updateStageSize = () => {
     SVG_ART_BOARD_WIDTH = vm.runtime.stageWidth;
     SVG_ART_BOARD_HEIGHT = vm.runtime.stageHeight;
@@ -63,7 +64,7 @@ export function loadModules(paper, vm) {
       -ART_BOARD_HEIGHT / 4,
       ART_BOARD_WIDTH * 1.5,
       ART_BOARD_HEIGHT * 1.5
-    );  
+    );
   };
   vm.on("STAGE_SIZE_CHANGED", updateStageSize);
   updateStageSize();
@@ -77,7 +78,7 @@ export function loadModules(paper, vm) {
     if (isBitmap) {
       return ART_BOARD_BOUNDS;
     }
-    return paper.view.bounds.unite(ART_BOARD_BOUNDS);
+    return paper.view.bounds.unite(ART_BOARD_BOUNDS).intersect(MAX_WORKSPACE_BOUNDS);
   };
 
   const setDefaultGuideStyle = function (item) {
@@ -113,6 +114,7 @@ export function loadModules(paper, vm) {
       snapDeltaToAngle,
     },
     layer: { CROSSHAIR_FULL_OPACITY, getDragCrosshairLayer, getLayer: _getLayer },
+    // TW: convert these into getters as the underlying can change
     view: {
       get CENTER () {
         return CENTER;

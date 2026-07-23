@@ -3,7 +3,8 @@ const manifest = {
   "name": "Customizable block text style",
   "description": "Lets you customize the style of text on blocks, including adjusting the size, using bold text, or adding a shadow.",
   "tags": [
-    "theme"
+    "theme",
+    "new"
   ],
   "credits": [
     {
@@ -14,8 +15,13 @@ const manifest = {
       "link": "https://scratch.mit.edu/users/_nix/"
     },
     {
-      "name": "DNin01"
+      "name": "DNin01",
+      "link": "https://scratch.mit.edu/users/D-ScratchNinja/"
     }
+  ],
+  "relatedAddons": [
+    "editor-theme3",
+    "custom-block-shape"
   ],
   "userscripts": [
     {

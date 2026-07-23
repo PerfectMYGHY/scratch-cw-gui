@@ -297,10 +297,12 @@ const generateRuntimeEntry = (id, manifest, assets) => {
  * @param {string} content 文件内容
  * @returns {string} 修复后文件内容
  */
-const fixESBug = content => content.replace( // CW
+const fixESBug = content => content.replaceAll( // CW
     /import\.meta\.url \+ "([^"]+)"/g, // CW
     (_full, path) => `require("${path.startsWith('/../') ? path.slice(4) : path}")` // CW
 ); // CW
+
+const fixAssetsBug = content => content.replaceAll('%addon-self-dir%', '.');
 
 const addonIdToManifest = {};
 const processAddon = (id, oldDirectory, newDirectory) => {
@@ -340,6 +342,7 @@ const processAddon = (id, oldDirectory, newDirectory) => {
 
             if (file.endsWith('.js')) {
                 contents = fixESBug(contents); // CW
+                contents = fixAssetsBug(contents); // CW
                 includeImportedLibraries(contents);
                 contents = includePolyfills(contents);
                 contents = rewriteAssetImports(contents);

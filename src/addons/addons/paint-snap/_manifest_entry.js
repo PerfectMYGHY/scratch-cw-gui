@@ -2,7 +2,12 @@
 const manifest = {
   "name": "Costume editor snapping",
   "description": "Snap objects in the costume editor to bounding boxes and vector nodes.",
-  "tags": [],
+  "tags": [
+    "new"
+  ],
+  "relatedAddons": [
+    "script-snap"
+  ],
   "userscripts": [
     {
       "url": "userscript.js"
@@ -38,6 +43,7 @@ const manifest = {
       "type": "boolean",
       "id": "pageAxes",
       "name": "Snap to page x and y axes",
+      "description": "Allow objects to snap to the midlines of the canvas.",
       "default": true
     },
     {
@@ -50,7 +56,7 @@ const manifest = {
       "type": "boolean",
       "id": "pageCorners",
       "name": "Snap to page corners",
-      "default": true
+      "default": false
     },
     {
       "type": "boolean",
@@ -74,28 +80,31 @@ const manifest = {
       "type": "boolean",
       "id": "objectCorners",
       "name": "Snap to object corners",
-      "default": true
+      "default": false
     },
     {
       "type": "boolean",
       "id": "boxCenter",
       "name": "Snap from selection box center",
+      "description": "Allow the center of the selected group of objects to snap to other objects.",
       "default": true
     },
     {
       "type": "boolean",
       "id": "boxCorners",
       "name": "Snap from selection box corners",
-      "default": true
+      "description": "Allow the corners of the selected group of objects to snap to other objects.",
+      "default": false
     },
     {
       "type": "boolean",
       "id": "boxEdgeMids",
       "name": "Snap from selection box edge midpoints",
-      "default": true
+      "description": "Allow the edge midpoints of the selected group of objects to snap to other objects.",
+      "default": false
     },
     {
-      "type": "positive_integer",
+      "type": "integer",
       "id": "threshold",
       "name": "Snapping distance",
       "default": 10,
@@ -103,7 +112,6 @@ const manifest = {
       "max": 100
     }
   ],
-  "dynamicDisable": true,
-  "enabledByDefault": true
+  "dynamicDisable": true
 };
 export default manifest;

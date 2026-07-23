@@ -7,6 +7,7 @@ const getMoveTool = (tool) => {
   return tool.boundingBoxTool._modeMap.MOVE;
 };
 
+// TW: pass vm for custom stage size
 export const updateSelectTool = (paper, tool, vm) => {
   const lib = loadModules(paper, vm);
   const {
