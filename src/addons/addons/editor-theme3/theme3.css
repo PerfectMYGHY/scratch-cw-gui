@@ -1,4 +1,4 @@
-@import url("%addon-self-dir%/../../libraries/common/cs/setting-managed-by-sa.css");
+@import url("./../../libraries/common/cs/setting-managed-by-sa.css");
 
 /* Styles for .high-contrast-theme aren't necessary
    because the addon sets the theme name to "default". */

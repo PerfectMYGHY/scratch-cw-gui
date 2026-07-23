@@ -302,7 +302,7 @@ const fixESBug = content => content.replaceAll( // CW
     (_full, path) => `require("${path.startsWith('/../') ? path.slice(4) : path}")` // CW
 ); // CW
 
-const fixAssetsBug = content => content.replaceAll('%addon-self-dir%', '.');
+const fixAssetsBug = content => content.replaceAll('%addon-self-dir%', '.'); // CW
 
 const addonIdToManifest = {};
 const processAddon = (id, oldDirectory, newDirectory) => {
@@ -339,10 +339,10 @@ const processAddon = (id, oldDirectory, newDirectory) => {
 
         if (file.endsWith('.js') || file.endsWith('.css')) {
             contents = contents.toString('utf-8');
+            contents = fixAssetsBug(contents); // CW
 
             if (file.endsWith('.js')) {
                 contents = fixESBug(contents); // CW
-                contents = fixAssetsBug(contents); // CW
                 includeImportedLibraries(contents);
                 contents = includePolyfills(contents);
                 contents = rewriteAssetImports(contents);

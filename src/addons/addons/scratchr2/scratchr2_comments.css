@@ -1,4 +1,4 @@
-@import url("%addon-self-dir%/../../libraries/common/cs/spinner.css");
+@import url("./../../libraries/common/cs/spinner.css");
 
 #comments #comments-loading,
 #comments .posting {

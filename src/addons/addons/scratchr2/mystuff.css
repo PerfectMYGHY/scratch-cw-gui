@@ -1,4 +1,4 @@
-@import url("%addon-self-dir%/../../libraries/common/cs/spinner.css");
+@import url("./../../libraries/common/cs/spinner.css");
 
 #content {
   padding-top: 204px;
@@ -58,13 +58,13 @@
   width: 18px;
   height: 48px;
   background-color: var(--darkWww-border, rgba(0, 0, 0, 0.15));
-  -webkit-mask-image: url("%addon-self-dir%/assets/dots.svg");
-  mask-image: url("%addon-self-dir%/assets/dots.svg");
+  -webkit-mask-image: url("./assets/dots.svg");
+  mask-image: url("./assets/dots.svg");
   pointer-events: none;
 }
 #sidebar li:not(.sub-list) + li.sub-list::before {
-  -webkit-mask-image: url("%addon-self-dir%/assets/dots_first.svg");
-  mask-image: url("%addon-self-dir%/assets/dots_first.svg");
+  -webkit-mask-image: url("./assets/dots_first.svg");
+  mask-image: url("./assets/dots_first.svg");
 }
 #sidebar li.sub-list a {
   margin: 0;
@@ -90,18 +90,18 @@
   border-radius: 4px;
   transition: border-color 0.5s ease;
   background-color: var(--darkWww-input, #fafafa);
-  background-image: var(--darkWww-input-caret, url("%addon-self-dir%/assets/caret.svg"));
+  background-image: var(--darkWww-input-caret, url("./assets/caret.svg"));
   background-repeat: no-repeat;
   background-position: right center;
   color: var(--darkWww-input-text, #575e75);
   font-weight: normal;
 }
 .action-bar .inner .dropdown:hover {
-  background-image: var(--darkWww-input-caretHover, url("%addon-self-dir%/assets/caret_hover.svg"));
+  background-image: var(--darkWww-input-caretHover, url("./assets/caret_hover.svg"));
 }
 .action-bar .inner .dropdown:focus,
 .action-bar .inner .dropdown.open {
-  background-image: var(--darkWww-input-caretHover, url("%addon-self-dir%/assets/caret_hover.svg"));
+  background-image: var(--darkWww-input-caretHover, url("./assets/caret_hover.svg"));
   border-color: var(--darkWww-button, #855cd6);
 }
 .action-bar .inner .dropdown .dropdown-toggle {

@@ -197,7 +197,7 @@ select {
   transition: border-color 0.5s ease;
   border-radius: 5px;
   background-color: var(--darkWww-input, #fafafa);
-  background-image: var(--darkWww-input-caret, url("%addon-self-dir%/assets/caret.svg"));
+  background-image: var(--darkWww-input-caret, url("./assets/caret.svg"));
   background-repeat: no-repeat;
   background-position: right center;
   color: var(--darkWww-input-text, #575e75);
@@ -205,7 +205,7 @@ select {
 }
 select:hover,
 select:focus {
-  background-image: var(--darkWww-input-caretHover, url("%addon-self-dir%/assets/caret_hover.svg"));
+  background-image: var(--darkWww-input-caretHover, url("./assets/caret_hover.svg"));
 }
 select:focus {
   border-color: var(--darkWww-button, #855cd6);

@@ -39,10 +39,10 @@ body {
   filter: var(--darkWww-page-filter);
 }
 .project-loves::before {
-  background-image: url("%addon-self-dir%/assets/love_transparent.svg");
+  background-image: url("./assets/love_transparent.svg");
 }
 .project-favorites::before {
-  background-image: url("%addon-self-dir%/assets/favorite_transparent.svg");
+  background-image: url("./assets/favorite_transparent.svg");
 }
 .project-loves.loved::before,
 .project-favorites.favorited::before {
@@ -824,11 +824,11 @@ p.callout,
 /* Miscellaneous styles */
 
 :root {
-  /* URLs defined here because addon.json can't use %addon-self-dir% */
-  --darkWww-caretBlack: url("%addon-self-dir%/assets/caret_transparent.svg");
-  --darkWww-caretWhite: url("%addon-self-dir%/assets/caret_white.svg");
-  --darkWww-caretBlackHover: url("%addon-self-dir%/assets/caret_transparent_hover.svg");
-  --darkWww-caretWhiteHover: url("%addon-self-dir%/assets/caret_white_hover.svg");
+  /* URLs defined here because addon.json can't use . */
+  --darkWww-caretBlack: url("./assets/caret_transparent.svg");
+  --darkWww-caretWhite: url("./assets/caret_white.svg");
+  --darkWww-caretBlackHover: url("./assets/caret_transparent_hover.svg");
+  --darkWww-caretWhiteHover: url("./assets/caret_white_hover.svg");
 }
 
 h1,
@@ -871,13 +871,13 @@ p {
 }
 
 .emoji[src$="meow.png"] {
-  content: url(%addon-self-dir%/assets/meow.png);
+  content: url(./assets/meow.png);
 }
 .emoji[src$="gobo.png"] {
-  content: url(%addon-self-dir%/assets/gobo.png);
+  content: url(./assets/gobo.png);
 }
 .emoji[src$="waffle.png"] {
-  content: url(%addon-self-dir%/assets/waffle.png);
+  content: url(./assets/waffle.png);
 }
 
 .banner /* confirm email */ {

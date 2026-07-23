@@ -84,7 +84,7 @@
   opacity: 0.7;
 }
 .tabs button .tab-icon.projects {
-  background-image: url("%addon-self-dir%/assets/green_flag_gray.png");
+  background-image: url("./assets/green_flag_gray.png");
 }
 .tabs button .tab-icon.studios {
   background-image: url("https://cdn.scratch.mit.edu/scratchr2/static/images/icons_sm.png");

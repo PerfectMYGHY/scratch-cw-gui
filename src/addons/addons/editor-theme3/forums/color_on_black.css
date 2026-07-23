@@ -1,4 +1,4 @@
-@import "%addon-self-dir%/forums/colored_text.css";
+@import "./forums/colored_text.css";
 
 svg[class*="scratchblocks-style-scratch3"] .sb3-motion,
 svg[class*="scratchblocks-style-scratch3"] .sb3-looks,

@@ -1,4 +1,4 @@
-@import url("%addon-self-dir%/../../libraries/common/cs/spinner.css");
+@import url("./../../libraries/common/cs/spinner.css");
 
 body > #pagewrapper {
   min-height: 0;
@@ -420,7 +420,7 @@ body > #pagewrapper {
 .sa-forum-toolbar-center > a {
   background-image: var(
     --darkWww-page-forumCenterButton,
-    url("%addon-self-dir%/../forum-toolbar/text_align_center.png")
+    url("./../forum-toolbar/text_align_center.png")
   ) !important;
 }
 .markItUpButton13 > a {
