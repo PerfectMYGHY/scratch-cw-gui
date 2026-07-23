@@ -48,7 +48,9 @@ const clone = obj => JSON.parse(JSON.stringify(obj));
 const repoPath = pathUtil.resolve(__dirname, 'ScratchAddons');
 if (!process.argv.includes('-')) {
     rimraf.sync(repoPath);
-    childProcess.execSync(`git clone --depth=1 --branch=tw https://github.com/TurboWarp/addons ${repoPath}`);
+    childProcess.execSync(
+        `git clone --depth=1 --branch=tw git@github.com:PerfectMYGHY/scratch-cw-addons.git ${repoPath}`
+    );
 }
 
 let {newAddons} = require('./addons.js'); // CW
@@ -537,9 +539,7 @@ for (const file of l10nFiles) {
         allUpstreamMessageIds.add(id);
     }
     fs.writeFileSync(runtimePath, JSON.stringify(runtime, null, 4));
-    if (fixedName !== 'en') {
-        fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 4));
-    }
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 4));
 }
 
 for (const id of SKIP_MESSAGES) {
