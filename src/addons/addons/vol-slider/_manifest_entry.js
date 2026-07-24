@@ -57,6 +57,7 @@ const manifest = {
   ],
   "relatedAddons": [
     "mute-project"
-  ]
+  ],
+  "enabledByDefault": true
 };
 export default manifest;

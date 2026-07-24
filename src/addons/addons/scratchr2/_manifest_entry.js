@@ -44,6 +44,7 @@ const manifest = {
       ],
       "default": "box"
     }
-  ]
+  ],
+  "enabledByDefault": true
 };
 export default manifest;

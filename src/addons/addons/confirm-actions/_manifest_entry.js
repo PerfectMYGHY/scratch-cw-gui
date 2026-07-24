@@ -61,6 +61,6 @@ const manifest = {
   "relatedAddons": [
     "no-sprite-confirm"
   ],
-  "enabledByDefault": false
+  "enabledByDefault": true
 };
 export default manifest;

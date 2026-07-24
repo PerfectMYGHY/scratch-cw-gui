@@ -45,6 +45,6 @@ const manifest = {
     "columns",
     "recolor-custom-blocks"
   ],
-  "enabledByDefault": false
+  "enabledByDefault": true
 };
 export default manifest;

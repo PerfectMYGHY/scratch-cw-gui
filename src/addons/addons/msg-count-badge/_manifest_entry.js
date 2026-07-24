@@ -6,7 +6,7 @@ const manifest = {
     "recommended",
     "new"
   ],
-  "enabledByDefault": false,
+  "enabledByDefault": true,
   "info": [
     {
       "type": "info",

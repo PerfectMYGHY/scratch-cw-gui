@@ -50,6 +50,6 @@ const manifest = {
     "fps",
     "debugger"
   ],
-  "enabledByDefault": false
+  "enabledByDefault": true
 };
 export default manifest;
