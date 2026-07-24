@@ -113,7 +113,7 @@ export default async function ({ addon, console, msg }) {
     });
   });
   compilerWarning.className = "sa-debugger-log sa-debugger-compiler-warning";
-  compilerWarning.textContent = "The debugger works best when the compiler is disabled.";
+  compilerWarning.textContent = msg("debuger-complier-warning");
   const updateCompilerWarningVisibility = () => {
     compilerWarning.hidden = !vm.runtime.compilerOptions.enabled;
   };

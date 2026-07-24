@@ -61,6 +61,7 @@
     "debugger/close": "Close",
     "debugger/console": "Logs",
     "debugger/debug": "Debug",
+    "debugger/debuger-complier-warning": "The debugger works best when the compiler is disabled.",
     "debugger/empty-string": "(empty string)",
     "debugger/enter-format": "Enter export format:",
     "debugger/export": "Export",

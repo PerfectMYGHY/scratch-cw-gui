@@ -3,6 +3,13 @@ const manifest = {
   "noTranslations": true,
   "name": "Remove feedback button",
   "description": "Removes the feedback button from the menu bar.",
+  "info": [
+    {
+      "type": "warning",
+      "text": "The feedback button does not exist in the modified TurboWarp editor by Scratch CW, so this addon likely has no effect.",
+      "id": "scratch_cw"
+    }
+  ],
   "userstyles": [
     {
       "url": "remove-feedback.css"
