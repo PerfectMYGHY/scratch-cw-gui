@@ -1,11 +1,9 @@
-import { updateAllBlocks } from "../../libraries/common/cs/update-all-blocks.js";
-
 export default async function ({ addon, msg, console }) {
+  const vm = addon.tab.traps.vm;
   const ScratchBlocks = await addon.tab.traps.getBlockly();
 
-  const renderMethodName = ScratchBlocks.registry ? "renderEfficiently" : "render";
-  const originalRender = ScratchBlocks.BlockSvg.prototype[renderMethodName];
-  ScratchBlocks.BlockSvg.prototype[renderMethodName] = function (...args) {
+  const originalRender = ScratchBlocks.BlockSvg.prototype.render;
+  ScratchBlocks.BlockSvg.prototype.render = function (opt_bubble) {
     // Any changes that affect block striping should bubble to the top block of the script.
     // The top block of the script is responsible for striping all of its children.
     // This way stripes are computed exactly once.
@@ -27,22 +25,9 @@ export default async function ({ addon, msg, console }) {
         }
         stripeState.set(block, isStriped);
 
-        const elements = [];
-        if (block.pathObject) {
-          // new Blockly
-          elements.push(block.pathObject.svgPath);
-          if (block.pathObject.svgPathSelected) {
-            elements.push(block.pathObject.svgPathSelected);
-          }
-          for (const outlinePath of block.pathObject.outlines.values()) {
-            elements.push(outlinePath);
-          }
-        } else {
-          elements.push(block.svgPath_);
-        }
+        const elements = [block.svgPath_];
         for (const input of block.inputList) {
           if (input.outlinePath) {
-            // old Blockly
             elements.push(input.outlinePath);
           }
           for (const field of input.fieldRow) {
@@ -56,10 +41,12 @@ export default async function ({ addon, msg, console }) {
         }
       }
     }
-    return originalRender.call(this, ...args);
+    return originalRender.call(this, opt_bubble);
   };
 
-  updateAllBlocks(addon.tab, { updateFlyout: false });
+  if (vm.editingTarget) {
+    vm.emitWorkspaceUpdate();
+  }
 
   // The replacement glow filter's ID is randomly generated and changes
   // when the workspace is reloaded (which includes loading the page and
@@ -74,8 +61,7 @@ export default async function ({ addon, msg, console }) {
         "scratch-gui/mode/SET_PLAYER",
         "fontsLoaded/SET_FONTS_LOADED",
         "scratch-gui/locales/SELECT_LOCALE",
-        "scratch-gui/settings/SET_COLOR_MODE",
-        "scratch-gui/settings/SET_THEME",
+        "scratch-gui/theme/SET_THEME",
       ],
       reduxCondition: (state) => !state.scratchGui.mode.isPlayerOnly,
     });

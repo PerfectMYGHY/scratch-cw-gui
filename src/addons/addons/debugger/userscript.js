@@ -23,7 +23,6 @@ export default async function ({ addon, console, msg }) {
       messagesLoggedBeforeLogsTabLoaded.push(args);
     }
   };
-  window._scratch3_debugger_logMessage = logMessage;
 
   let hasLoggedPauseError = false;
   const pause = (_, thread) => {
@@ -114,7 +113,7 @@ export default async function ({ addon, console, msg }) {
     });
   });
   compilerWarning.className = "sa-debugger-log sa-debugger-compiler-warning";
-  compilerWarning.textContent = msg("debuger-complier-warning");
+  compilerWarning.textContent = "The debugger works best when the compiler is disabled.";
   const updateCompilerWarningVisibility = () => {
     compilerWarning.hidden = !vm.runtime.compilerOptions.enabled;
   };

@@ -14,11 +14,6 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "userstyles": [
-    {
-      "url": "../../libraries/common/cs/react-tooltip.css"
-    }
-  ],
   "settings": [
     {
       "dynamic": true,
@@ -123,9 +118,8 @@ const manifest = {
   ],
   "dynamicDisable": true,
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
-  "enabledByDefault": true
+  "enabledByDefault": false
 };
 export default manifest;

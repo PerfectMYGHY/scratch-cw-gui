@@ -20,9 +20,7 @@ const manifest = {
       "default": "#0000ff"
     }
   ],
-  "tags": [
-    "new"
-  ],
+  "tags": [],
   "enabledByDefault": false
 };
 export default manifest;

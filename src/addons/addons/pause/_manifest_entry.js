@@ -28,8 +28,7 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
   "enabledByDefault": true
 };

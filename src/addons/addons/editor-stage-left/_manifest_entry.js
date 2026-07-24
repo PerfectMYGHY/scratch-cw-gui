@@ -28,11 +28,6 @@ const manifest = {
   "tags": [
     "theme"
   ],
-  "relatedAddons": [
-    "scratch3to2",
-    "editor-buttons-reverse-order",
-    "columns"
-  ],
   "enabledByDefault": false
 };
 export default manifest;

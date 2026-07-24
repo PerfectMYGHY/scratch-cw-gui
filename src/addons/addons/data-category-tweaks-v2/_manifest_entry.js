@@ -38,13 +38,8 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
-  "relatedAddons": [
-    "columns",
-    "recolor-custom-blocks"
-  ],
-  "enabledByDefault": true
+  "enabledByDefault": false
 };
 export default manifest;

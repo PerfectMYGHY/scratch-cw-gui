@@ -11,11 +11,7 @@ const manifest = {
     }
   ],
   "tags": [
-    "theme",
-    "new"
-  ],
-  "relatedAddons": [
-    "custom-block-shape"
+    "theme"
   ],
   "userscripts": [
     {

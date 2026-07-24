@@ -3,16 +3,14 @@ const manifest = {
   "editorOnly": true,
   "noTranslations": true,
   "enabledByDefault": true,
-  "name": "Pick stage colors with eyedropper",
+  "name": "Pick colors on stage with eyedropper",
   "description": "Allows the eyedropper in the costume editor to also pick colors from the stage.",
   "credits": [
     {
       "name": "GarboMuffin"
     }
   ],
-  "tags": [
-    "new"
-  ],
+  "tags": [],
   "userscripts": [
     {
       "url": "userscript.js"

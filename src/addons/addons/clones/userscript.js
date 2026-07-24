@@ -9,12 +9,12 @@ export default async function ({ addon, console, msg }) {
   addSmallStageClass();
 
   let countContainerContainer = document.createElement("div");
+  addon.tab.displayNoneWhileDisabled(countContainerContainer);
 
   let countContainer = document.createElement("div");
   let count = document.createElement("span");
   let icon = document.createElement("span");
 
-  addon.tab.displayNoneWhileDisabled(countContainerContainer);
   countContainerContainer.className = "clone-container-container";
   countContainer.className = "clone-container";
   count.className = "clone-count";
@@ -34,12 +34,11 @@ export default async function ({ addon, console, msg }) {
     const v = vm.runtime._cloneCounter;
     // performance
     if (v === lastChecked && !force) return;
-    // TW: change count property to be either 0/300/blank for compat with infinite (or custom) clone limit
     lastChecked = v;
     if (v === 0) {
-      countContainerContainer.dataset.count = "0";
+      countContainerContainer.dataset.count = "none";
     } else if (v >= vm.runtime.runtimeOptions.maxClones) {
-      countContainerContainer.dataset.count = "300";
+      countContainerContainer.dataset.count = "full";
     } else {
       countContainerContainer.dataset.count = "";
     }
@@ -49,10 +48,8 @@ export default async function ({ addon, console, msg }) {
       count.dataset.str = cache[v] || msg("clones", { cloneCount: v });
     }
 
-    countContainerContainer.classList.toggle(
-      "show",
-      v !== 0 && (addon.tab.editorMode === "editor" || showOnProjectPage)
-    );
+    if (v === 0 || (addon.tab.editorMode !== "editor" && !showOnProjectPage)) countContainerContainer.style.display = "none";
+    else countContainerContainer.style.display = "flex";
   }
 
   addon.settings.addEventListener("change", () => {
@@ -61,13 +58,6 @@ export default async function ({ addon, console, msg }) {
     doCloneChecks(true);
   });
 
-  // TW: we fixed the bug this works around
-  /*
-  vm.runtime.on("targetWasRemoved", (t) => {
-    // Fix bug with inaccurate clone counter
-    if (t.isOriginal) vm.runtime.changeCloneCounter(1);
-  });
-  */
   const oldStep = vm.runtime._step;
   vm.runtime._step = function (...args) {
     const ret = oldStep.call(this, ...args);
@@ -75,7 +65,6 @@ export default async function ({ addon, console, msg }) {
     return ret;
   };
 
-  // TW: we fixed the bug this works around
   /*
   if (addon.self.enabledLate) {
     // Clone count might be inaccurate if the user deleted sprites
@@ -94,7 +83,9 @@ export default async function ({ addon, console, msg }) {
       reduxEvents: ["scratch-gui/mode/SET_PLAYER", "fontsLoaded/SET_FONTS_LOADED", "scratch-gui/locales/SELECT_LOCALE"],
     });
 
-    addon.tab.appendToSharedSpace({ space: "afterStopButton", element: countContainerContainer, order: 2 });
-    doCloneChecks(true);
+    if (showOnProjectPage || addon.tab.editorMode === "editor" || addon.tab.redux.state.scratchGui.mode.isEmbedded) {
+      addon.tab.appendToSharedSpace({ space: "afterStopButton", element: countContainerContainer, order: 2 });
+      doCloneChecks(true);
+    }
   }
 }

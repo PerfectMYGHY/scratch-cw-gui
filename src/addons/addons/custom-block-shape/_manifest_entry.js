@@ -5,8 +5,7 @@ const manifest = {
   "name": "Customizable block shape",
   "description": "Adjust the padding, corner radius, and notch height of blocks.",
   "tags": [
-    "theme",
-    "new"
+    "theme"
   ],
   "credits": [
     {
@@ -22,20 +21,11 @@ const manifest = {
       "link": "https://scratch.mit.edu/users/GarboMuffin/"
     }
   ],
-  "relatedAddons": [
-    "editor-theme3",
-    "editor-square-inputs",
-    "custom-block-text",
-    "cat-blocks"
-  ],
   "enabledByDefault": false,
   "dynamicDisable": true,
   "userscripts": [
     {
       "url": "userscript.js"
-    },
-    {
-      "url": "modern-blockly.js"
     }
   ],
   "info": [

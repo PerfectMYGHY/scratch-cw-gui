@@ -111,7 +111,7 @@ export default async function ({ addon, console }) {
       elementToClick.click();
     },
     {
-      capture: true,
+      bubble: true,
     }
   );
   document.body.addEventListener(

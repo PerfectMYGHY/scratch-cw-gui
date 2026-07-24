@@ -17,7 +17,6 @@ export default async function (api) {
   addon.settings.addEventListener("change", () => setGuideColor(addon.settings.get("guide-color")));
 
   if (isSelectTool(tool)) {
-    // TW: pass vm for custom stage size
     updateSelectTool(paper, tool, addon.tab.traps.vm);
     updateScaleTool(paper, tool, addon.tab.traps.vm);
   }

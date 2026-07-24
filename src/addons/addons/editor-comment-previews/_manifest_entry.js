@@ -4,12 +4,7 @@ const manifest = {
   "noTranslations": true,
   "name": "Editor comment previews",
   "description": "Allows you to preview the contents of comments by hovering over collapsed comments and blocks. You can use this to view comments that are off-screen, identify a loop block from the bottom by its preview, fit many long comments in a small space, and more.",
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "fix-editor-comments"
-  ],
+  "tags": [],
   "credits": [
     {
       "name": "lisa_wolfgang",
@@ -48,7 +43,6 @@ const manifest = {
       "dynamic": true,
       "name": "Hover custom blocks to preview definition comments",
       "id": "hover-view-procedure",
-      "description": "Hover over a custom block to preview the comment attached to its definition.",
       "type": "boolean",
       "default": true
     },
@@ -56,7 +50,6 @@ const manifest = {
       "dynamic": true,
       "name": "Delay duration",
       "id": "delay",
-      "description": "The delay before the preview is displayed.",
       "type": "select",
       "potentialValues": [
         {
@@ -78,7 +71,6 @@ const manifest = {
       "dynamic": true,
       "name": "Follow mouse",
       "id": "follow-mouse",
-      "description": "Comment previews will move with the mouse.",
       "type": "boolean",
       "default": true
     },

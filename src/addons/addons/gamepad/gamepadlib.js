@@ -1,7 +1,5 @@
 import EventTarget from "../../event-target.js"; /* inserted by pull.js */
 
-import { isFirefox } from "../../libraries/common/cs/detect-browser.js";
-
 let console = window.console;
 
 /*
@@ -16,7 +14,6 @@ The high/low distinction is necessary for axes. Buttons will only use high
 
 type: "mousedown" maps a button to control whether the mouse is down or not
 deadZone: 0.5 controls the minimum value to trigger a mousedown
-// TW: allow other mouse buttons
 button: 0, 1, 2, etc. controls which button to press
 
 type: "virtual_cursor" maps a button to control the "virtual cursor"
@@ -99,7 +96,6 @@ const transformAndCopyMapping = (mapping) => {
     if (typeof copy.deadZone === "undefined") {
       copy.deadZone = 0.5;
     }
-    // TW: allow other mouse buttons
     if (typeof copy.button === "undefined") {
       copy.button = 0;
     }
@@ -163,7 +159,7 @@ class GamepadData {
   }
 
   resetMappings() {
-    this.hints = this.gamepadLib.getHints(this.gamepad.id, this.gamepad.index);
+    this.hints = this.gamepadLib.getHints();
     this.buttonMappings = this.getDefaultButtonMappings().map(transformAndCopyMapping);
     this.axesMappings = this.getDefaultAxisMappings().map(transformAndCopyMapping);
   }
@@ -435,7 +431,6 @@ class GamepadLib extends EventTarget {
     this.keysPressedThisFrame = new Set();
     this.oldKeysPressed = new Set();
 
-    // TW: allow other mouse buttons
     this.mouseButtonsPressedThisFrame = new Set();
     this.oldMouseDown = new Set();
 
@@ -461,11 +456,11 @@ class GamepadLib extends EventTarget {
     });
   }
 
-  getHints(gamepadId, gamepadIndex) {
-    return Object.assign(defaultHints(), this.getUserHints(gamepadId, gamepadIndex));
+  getHints() {
+    return Object.assign(defaultHints(), this.getUserHints());
   }
 
-  getUserHints(gamepadId, gamepadIndex) {
+  getUserHints() {
     // to be overridden by users
     return {};
   }
@@ -520,7 +515,6 @@ class GamepadLib extends EventTarget {
     }
   }
 
-  // TW: allow other mouse buttons
   dispatchMouse(button, down) {
     if (down) {
       this.dispatchEvent(new CustomEvent("mousedown", { detail: button }));
@@ -547,7 +541,6 @@ class GamepadLib extends EventTarget {
     } else if (mapping.type === "mousedown") {
       const isDown = Math.abs(value) >= mapping.deadZone;
       if (isDown) {
-        // TW: allow other mouse buttons
         this.mouseButtonsPressedThisFrame.add(mapping.button);
       }
     } else if (mapping.type === "virtual_cursor") {
@@ -575,10 +568,9 @@ class GamepadLib extends EventTarget {
 
   update(time) {
     this.oldKeysPressed = this.keysPressedThisFrame;
-    // TW: allow other mouse buttons
     this.oldMouseButtonsPressed = this.mouseButtonsPressedThisFrame;
-    this.mouseButtonsPressedThisFrame = new Set();
     this.keysPressedThisFrame = new Set();
+    this.mouseButtonsPressedThisFrame = new Set();
 
     if (this.currentTime === null) {
       this.deltaTime = 0; // doesn't matter what this is, it's just the first frame
@@ -628,7 +620,6 @@ class GamepadLib extends EventTarget {
       }
     }
 
-    // TW: allow other mouse buttons
     for (const button of this.mouseButtonsPressedThisFrame) {
       if (!this.oldMouseButtonsPressed.has(button)) {
         this.dispatchMouse(button, true);
@@ -674,7 +665,7 @@ GamepadLib.browserHasBrokenGamepadAPI = () => {
   // Firefox on Linux before version 123 has a broken gamepad API that results in strange and unusable mappings
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1680982
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1643835
-  if (isFirefox() && navigator.userAgent.includes("Linux")) {
+  if (navigator.userAgent.includes("Firefox") && navigator.userAgent.includes("Linux")) {
     const agentMatch = navigator.userAgent.match(/Firefox\/(\d+)/);
     // If we couldn't find the version number, we'll assume that this is some distant future version of
     // Firefox that we just can't comprehend with the technology of today. Surely gamepad will work well
@@ -684,7 +675,7 @@ GamepadLib.browserHasBrokenGamepadAPI = () => {
   }
   // Firefox on macOS has other bugs that result in strange and unusable mappings
   // eg. https://bugzilla.mozilla.org/show_bug.cgi?id=1434408
-  if (isFirefox() && navigator.userAgent.includes("Mac OS")) {
+  if (navigator.userAgent.includes("Firefox") && navigator.userAgent.includes("Mac OS")) {
     return true;
   }
   return false;
@@ -776,11 +767,10 @@ class GamepadEditor extends EventTarget {
     if (key === "ArrowLeft") return this.msg("key-left");
     if (key === "ArrowRight") return this.msg("key-right");
     if (key === "Enter") return this.msg("key-enter");
-    // TW: support more keys
     if (key.length === 1) {
       return key.toUpperCase();
     }
-    // TW: Convert eg. "PageUp" -> "Page Up"
+    // Convert eg. "PageUp" -> "Page Up"
     return key.replace(/[a-z]([A-Z])/, (n) => `${n[0]} ${n[1]}`)
   }
 
@@ -802,7 +792,6 @@ class GamepadEditor extends EventTarget {
           input.value = this.keyToString(mapping[property]);
         }
       } else if (mapping.type === "mousedown") {
-        // TW: allow other mouse buttons
         let value = this.msg("key-click");
         if (mapping.button !== 0) {
           value += ` (${mapping.button})`;
@@ -831,7 +820,6 @@ class GamepadEditor extends EventTarget {
         if (allowClick) {
           const mapping = mappingList[index];
           mapping.type = "mousedown";
-          // TW: allow other mouse buttons
           mapping.button = e.button;
           changedMapping();
         } else {
@@ -853,13 +841,13 @@ class GamepadEditor extends EventTarget {
           return;
         }
         const mapping = mappingList[index];
-        // TW: support more keys
         const KEYS = [
           "ArrowUp",
           "ArrowDown",
           "ArrowRight",
           "ArrowLeft",
           "Enter",
+          // TW: We support more keys
           // "Backspace",
           // "Delete",
           "Shift",
@@ -887,12 +875,11 @@ class GamepadEditor extends EventTarget {
       }
     };
 
-    // TW: need to ignore shift/control on way down as that may be an intermediate step
-    // TW: when trying to get to shift+something
     const MODIFIER_KEYS = ["Shift", "Control"];
     const handleKeyDown = (e) => {
       if (!MODIFIER_KEYS.includes(e.key)) handleKeyEvent(e);
     };
+
     const handleKeyUp = (e) => {
       if (MODIFIER_KEYS.includes(e.key)) handleKeyEvent(e);
     };
@@ -905,13 +892,13 @@ class GamepadEditor extends EventTarget {
       }
     };
 
-    // TW: disable contextmenu so we get right click event
     input.addEventListener("contextmenu", (e) => {
       e.preventDefault();
     });
+
     input.addEventListener("mouseup", handleClick);
-    input.addEventListener("keyup", handleKeyUp);
     input.addEventListener("keydown", handleKeyDown);
+    input.addEventListener("keyup", handleKeyUp);
     input.addEventListener("blur", handleBlur);
     update();
 
@@ -1153,21 +1140,19 @@ class GamepadEditor extends EventTarget {
     }
   }
 
-  exportSettings() {
-    const settingsMap = new Map();
-    // Add information about each gamepad to gamepadArray
-    this.gamepadLib.gamepads.forEach((gamepadData, gamepadKey, map) => {
-      // Add the gamepad's id (type), index, and current mappings to gamepadArray
-      settingsMap.set(gamepadKey, {
-        id: gamepadData.gamepad.id,
-        index: gamepadData.gamepad.index,
-        settings: {
-          axes: gamepadData.axesMappings.map(prepareAxisMappingForExport),
-          buttons: gamepadData.buttonMappings.map(prepareButtonMappingForExport),
-        },
-      });
-    });
-    return settingsMap;
+  export() {
+    const selectedId = this.selector.value;
+    if (!selectedId) {
+      return null;
+    }
+    const gamepadData = this.gamepadLib.gamepads.get(selectedId);
+    if (!gamepadData) {
+      return null;
+    }
+    return {
+      axes: gamepadData.axesMappings.map(prepareAxisMappingForExport),
+      buttons: gamepadData.buttonMappings.map(prepareButtonMappingForExport),
+    };
   }
 
   changed() {

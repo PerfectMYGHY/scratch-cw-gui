@@ -22,17 +22,11 @@ const manifest = {
       "text": "The text labels may be automatically replaced by icons on smaller windows."
     }
   ],
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "discuss-button",
-    "editor-compact"
-  ],
+  "tags": [],
   "settings": [
     {
       "dynamic": true,
-      "name": "Menu button appearance",
+      "name": "Show menu...",
       "id": "menu-labels",
       "type": "select",
       "potentialValues": [

@@ -436,6 +436,7 @@ class TokenTypeStringEnum extends TokenType {
    * @typedef StringEnumValue
    * @property {string} value The string that needs to be in the query
    * @property {string} lower Cached value.toLowerCase()
+   * @property {string[]} parts lower, split up by ignoreable characters.
    */
 
   /**
@@ -449,29 +450,44 @@ class TokenTypeStringEnum extends TokenType {
     this.values = [];
     for (const value of values) {
       let lower = value.string.toLowerCase();
-
-      this.values.push({ lower, value });
+      const parts = [];
+      {
+        let lastPart = 0;
+        for (let i = 0; i <= lower.length; i++) {
+          const char = lower[i];
+          if (QueryInfo.IGNORABLE_CHARS.indexOf(char) !== -1 || !char) {
+            parts.push(lower.substring(lastPart, i));
+            i = QueryInfo.skipIgnorable(lower, i);
+            lastPart = i;
+          }
+        }
+      }
+      this.values.push({ lower, parts, value });
     }
   }
 
   *parseTokens(query, idx, depth) {
     for (let valueIdx = 0; valueIdx < this.values.length; valueIdx++) {
       const valueInfo = this.values[valueIdx];
+      let yieldedToken = false;
 
       const remainingChar = query.length - idx;
       const substr = query.lowercase.substring(idx);
 
+      // If all we have is a string which could be a number, it doesn't count as a defining feature.
+      // This is to get rid of "10" constantly suggesting "10 ^ of ()"
+      let isDefiningFeature = !TokenTypeNumberLiteral.isValidNumber(substr);
+
       if (remainingChar < valueInfo.lower.length) {
         if (valueInfo.lower.startsWith(substr)) {
-          // If all we have is a string which could be a number, it doesn't count as a defining feature.
-          // This is to get rid of "10" constantly suggesting "10 ^ of ()"
-          let isDefiningFeature = !TokenTypeNumberLiteral.isValidNumber(substr);
           const end = remainingChar < 0 ? 0 : query.length;
           yield new Token(idx, end, this, valueInfo, { isTruncated: true, isDefiningFeature });
+          yieldedToken = true;
         }
       } else {
         if (query.lowercase.startsWith(valueInfo.lower, idx)) {
-          yield new Token(idx, idx + valueInfo.lower.length, this, valueInfo, { isDefiningFeature: true });
+          yield new Token(idx, idx + valueInfo.lower.length, this, valueInfo, { isDefiningFeature });
+          yieldedToken = true;
         }
       }
     }
@@ -530,7 +546,7 @@ class TokenTypeStringLiteral extends TokenType {
     for (let i = idx; i <= query.length; i++) {
       const isTerminator = TokenTypeStringLiteral.isTerminator(query.str[i]);
       const isIgnorable = QueryInfo.IGNORABLE_CHARS.includes(query.str[i]);
-      if ((wasTerminator !== isTerminator || i === query.length) && !wasIgnorable && i !== idx && i !== quoteEnd) {
+      if ((wasTerminator !== isTerminator || i == query.length) && !wasIgnorable && i !== idx && i !== quoteEnd) {
         const value = query.str.substring(idx, i);
         yield new Token(idx, i, this, value);
       }
@@ -587,7 +603,7 @@ class TokenTypeColor extends TokenType {
   }
 
   createText(token, query, endOnly) {
-    return query.str.substring(token.start, token.end);
+    return query.query.substring(token.start, token.end);
   }
 }
 
@@ -710,50 +726,18 @@ class TokenTypeBlock extends TokenType {
     this.stringForms = [];
 
     const enumerateStringForms = (partIdx = 0, strings = [], inputs = [], length = 0) => {
-      /**
-       * @param {string} value
-       * @returns string[]
-       */
-      function splitIntoString(value) {
-        const strings = [];
-
-        let lastPart = 0;
-        const valueLower = value.toLowerCase();
-        for (let i = 0; i <= valueLower.length; i++) {
-          const char = valueLower[i];
-
-          if (!char) {
-            // End of string
-            strings.push(valueLower.substring(lastPart, i));
-            break;
-          } else if (QueryInfo.IGNORABLE_CHARS.indexOf(char) !== -1) {
-            // Ignorable char
-            strings.push(valueLower.substring(lastPart, i));
-            i = QueryInfo.skipIgnorable(valueLower, i);
-            lastPart = i;
-          } else if (QueryInfo.SPECIAL_CHARS.indexOf(char) !== -1) {
-            // Special char
-            strings.push(valueLower.substring(lastPart, i + 1));
-            lastPart = i + 1;
-          }
-        }
-        return strings;
-      }
-
       for (; partIdx < block.parts.length; partIdx++) {
         let blockPart = block.parts[partIdx];
         if (typeof blockPart === "string") {
           length += blockPart.length;
-
-          // Split the string up into parts
-          strings.push(...splitIntoString(blockPart));
+          strings.push(...blockPart.toLowerCase().split(" "));
         } else if (blockPart.type === BlockInputType.ENUM) {
           for (const enumValue of blockPart.values) {
             if (this.stringForms.length >= WorkspaceQuerier.MAX_RESULTS) return;
 
             enumerateStringForms(
               partIdx + 1,
-              [...strings, ...splitIntoString(enumValue.string)],
+              [...strings, ...enumValue.string.toLowerCase().split(" ")],
               [...inputs, enumValue],
               length + enumValue.string.length
             );
@@ -763,7 +747,6 @@ class TokenTypeBlock extends TokenType {
           inputs.push(null);
         }
       }
-
       this.stringForms.push({ strings, inputs, length });
     };
 
@@ -806,14 +789,7 @@ class TokenTypeBlock extends TokenType {
       while (true) {
         i = query.skipIgnorable(i);
 
-        let wordEnd;
-
-        // Special chars get their own string part
-        if (QueryInfo.SPECIAL_CHARS.indexOf(query.lowercase[i]) !== -1) {
-          if (i < query.lowercase.length) wordEnd = i + 1;
-        } else {
-          wordEnd = query.skipUnignorable(i);
-        }
+        const wordEnd = query.skipUnignorable(i);
 
         if (wordEnd === i) {
           if (hasDefiningFeature)
@@ -892,8 +868,6 @@ class TokenTypeBlock extends TokenType {
    * @yields {Token[]}
    */
   *_parseSubtokens(query, idx, subtokenProviders, depth, tokenProviderIdx = 0, parseNextToken = true) {
-    if (tokenProviderIdx >= subtokenProviders.length) return;
-
     idx = query.skipIgnorable(idx);
     let tokenProvider = subtokenProviders[tokenProviderIdx];
 
@@ -1080,7 +1054,7 @@ export class QueryResult {
           } else if (part instanceof BlockInputString && input !== part.defaultValue) {
             // Make string inputs 100x their real length so they appear at the bottom
             stringLength += ("" + input).length * 100;
-          } else if (input !== null) {
+          } else if (input != null) {
             stringLength += ("" + input).length;
           }
         }
@@ -1103,14 +1077,10 @@ class QueryInfo {
   /** Characters that can be safely skipped over. */
   static IGNORABLE_CHARS = [" "];
 
-  /** Characters which are treated as dividing string into 'parts' for partial matching */
-  static SPECIAL_CHARS = ["!", "@", "#", "$", "%", "^", "&", "_", "'", '"', ".", ","];
-
   constructor(querier, query, id) {
     /** @type {WorkspaceQuerier} */
     this.querier = querier;
     /** @type {string} The query */
-    // TW: avoid replaceAll for browser compatibility reasons
     this.str = query.replace(/\u00a0/g, " ");
     /** @type {string} A lowercase version of the query. Used for case insensitive comparisons. */
     this.lowercase = this.str.toLowerCase();
@@ -1292,7 +1262,7 @@ export default class WorkspaceQuerier {
     validResults = validResults.sort((a, b) => {
       const aLengths = a.getLengths();
       const bLengths = b.getLengths();
-      if (aLengths.stringLength !== bLengths.stringLength) return aLengths.stringLength - bLengths.stringLength;
+      if (aLengths.stringLength != bLengths.stringLength) return aLengths.stringLength - bLengths.stringLength;
       return aLengths.tokenLength - bLengths.tokenLength;
     });
 

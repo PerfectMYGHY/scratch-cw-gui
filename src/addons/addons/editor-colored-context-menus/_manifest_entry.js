@@ -23,9 +23,6 @@ const manifest = {
   "tags": [
     "theme"
   ],
-  "relatedAddons": [
-    "editor-theme3"
-  ],
   "enabledByDefault": false
 };
 export default manifest;

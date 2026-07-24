@@ -21,12 +21,7 @@ const manifest = {
     }
   ],
   "dynamicDisable": true,
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "block-cherry-picking"
-  ],
+  "tags": [],
   "enabledByDefault": true
 };
 export default manifest;

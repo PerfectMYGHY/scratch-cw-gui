@@ -2,12 +2,7 @@
 const manifest = {
   "name": "Costume editor snapping",
   "description": "Snap objects in the costume editor to bounding boxes and vector nodes.",
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "script-snap"
-  ],
+  "tags": [],
   "userscripts": [
     {
       "url": "userscript.js"
@@ -43,7 +38,6 @@ const manifest = {
       "type": "boolean",
       "id": "pageAxes",
       "name": "Snap to page x and y axes",
-      "description": "Allow objects to snap to the midlines of the canvas.",
       "default": true
     },
     {
@@ -86,25 +80,22 @@ const manifest = {
       "type": "boolean",
       "id": "boxCenter",
       "name": "Snap from selection box center",
-      "description": "Allow the center of the selected group of objects to snap to other objects.",
       "default": true
     },
     {
       "type": "boolean",
       "id": "boxCorners",
       "name": "Snap from selection box corners",
-      "description": "Allow the corners of the selected group of objects to snap to other objects.",
       "default": false
     },
     {
       "type": "boolean",
       "id": "boxEdgeMids",
       "name": "Snap from selection box edge midpoints",
-      "description": "Allow the edge midpoints of the selected group of objects to snap to other objects.",
       "default": false
     },
     {
-      "type": "integer",
+      "type": "positive_integer",
       "id": "threshold",
       "name": "Snapping distance",
       "default": 10,

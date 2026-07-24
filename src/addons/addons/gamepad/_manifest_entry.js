@@ -29,9 +29,7 @@ const manifest = {
       "id": "hide"
     }
   ],
-  "tags": [
-    "new"
-  ],
+  "tags": [],
   "enabledByDefault": false,
   "dynamicDisable": true
 };

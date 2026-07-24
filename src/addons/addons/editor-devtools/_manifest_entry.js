@@ -2,18 +2,22 @@
 const manifest = {
   "editorOnly": true,
   "name": "Developer tools",
-  "description": "Adds options to copy/cut/paste blocks, swap variables, and make space to the right click context menu.",
+  "description": "Adds new menu options to the editor: copy/paste blocks, better clean up, and more!",
   "credits": [
     {
       "name": "griffpatch"
-    },
-    {
-      "name": "Chrome_Cat",
-      "link": "https://scratch.mit.edu/users/Chrome_Cat/"
     }
   ],
   "settings": [
     {
+      "dynamic": true,
+      "name": "Enhance \"Clean up Blocks\"",
+      "id": "enableCleanUpPlus",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "dynamic": true,
       "name": "Paste blocks at mouse cursor",
       "id": "enablePasteBlocksAtMouse",
       "type": "boolean",
@@ -25,14 +29,8 @@ const manifest = {
       "url": "userscript.js"
     }
   ],
-  "userstyles": [
-    {
-      "url": "../../libraries/common/cs/blockly-menu-separators.css"
-    }
-  ],
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
   "enabledByDefault": true
 };

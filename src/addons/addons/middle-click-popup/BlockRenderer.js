@@ -195,7 +195,6 @@ function createBlockContainer() {
  * Creates a block component from a container containing all its components.
  * @param {SVGElement} container The block container, created by {@link createBlockContainer}.
  * @param {object} shape An object containing information of the shape of the block to be created. From the {@link BlockShapes} object.
- * TW: category class may not exist for extensions
  * @param {string|null} categoryClass The category of the block, used for filling the background.
  * @param {string} fill
  * @param {string} stroke
@@ -203,7 +202,6 @@ function createBlockContainer() {
  */
 function createBlockComponent(container, shape, categoryClass, fill, stroke, width) {
   if (width < shape.minWidth) width = shape.minWidth;
-  // TW: category class may not exist for extensions
   container.classList.add("sa-block-color");
   if (categoryClass) {
     container.classList.add(categoryClass);
@@ -260,7 +258,6 @@ function _renderBlock(block, container, parentCategory, isVertical) {
   const shape = getShapeInfo(block.typeInfo.shape, isVertical);
   const category = block.typeInfo.category;
 
-  // TW: custom extensions won't have a category class
   const COLOR_CLASSES = [
     "motion",
     "looks",

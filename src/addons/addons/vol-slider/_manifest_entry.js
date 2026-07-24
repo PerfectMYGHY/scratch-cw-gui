@@ -5,15 +5,14 @@ const manifest = {
   "description": "Adds a volume slider next to the green flag controls.",
   "credits": [
     {
-      "name": "Samq64",
-      "link": "https://github.com/Samq64"
+      "name": "samq64",
+      "link": "https://scratch.mit.edu/users/samq64/"
     },
     {
       "name": "GarboMuffin"
     },
     {
-      "name": "DNin01",
-      "link": "https://scratch.mit.edu/users/D-ScratchNinja/"
+      "name": "DNin01"
     }
   ],
   "userscripts": [
@@ -52,12 +51,7 @@ const manifest = {
   ],
   "dynamicDisable": true,
   "tags": [
-    "recommended",
-    "new"
-  ],
-  "relatedAddons": [
-    "mute-project"
-  ],
-  "enabledByDefault": true
+    "recommended"
+  ]
 };
 export default manifest;

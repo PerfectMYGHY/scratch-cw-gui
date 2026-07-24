@@ -118,9 +118,7 @@ const manifest = {
     }
   ],
   "tags": [
-    "recommended",
-    "new"
-  ],
-  "enabledByDefault": true
+    "recommended"
+  ]
 };
 export default manifest;

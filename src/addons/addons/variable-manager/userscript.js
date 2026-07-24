@@ -44,12 +44,12 @@ export default async function ({ addon, console, msg }) {
   manager.appendChild(globalVars);
 
   const varTab = document.createElement("li");
-  addon.tab.displayNoneWhileDisabled(varTab);
+  addon.tab.displayNoneWhileDisabled(varTab, { display: "flex" });
   varTab.classList.add(addon.tab.scratchClass("react-tabs_react-tabs__tab"), addon.tab.scratchClass("gui_tab"));
   // Cannot use number due to conflict after leaving and re-entering editor
   varTab.id = "react-tabs-sa-variable-manager";
 
-  const varTabIcon = document.createElement("img");
+  const varTabIcon = addon.tab.recolorable();
   varTabIcon.draggable = false;
   varTabIcon.src = addon.self.getResource("/icon.svg") /* rewritten by pull.js */;
 
@@ -157,7 +157,7 @@ export default async function ({ addon, console, msg }) {
       label.htmlFor = id;
       const onLabelOut = (e) => {
         e.preventDefault();
-        const workspace = addon.tab.traps.getWorkspace();
+        const workspace = Blockly.getMainWorkspace();
 
         let newName = label.value;
         if (newName === this.scratchVariable.name) {
@@ -185,15 +185,14 @@ export default async function ({ addon, console, msg }) {
           nameAlreadyUsed = existingNames.includes(newName);
         } else {
           // Local variables must not conflict with any global variables or local variables in this sprite.
-          nameAlreadyUsed = !!workspace.getVariableMap().getVariable(newName, this.scratchVariable.type);
+          nameAlreadyUsed = !!workspace.getVariable(newName, this.scratchVariable.type);
         }
 
         const isEmpty = !newName.trim();
         if (isEmpty || nameAlreadyUsed) {
           label.value = this.scratchVariable.name;
         } else {
-          const blocklyVariable = workspace.getVariableMap().getVariableById(this.scratchVariable.id);
-          workspace.getVariableMap().renameVariable(blocklyVariable, newName);
+          workspace.renameVariableById(this.scratchVariable.id, newName);
           // Only update the input's value when we need to to avoid resetting undo history.
           if (label.value !== newName) {
             label.value = newName;

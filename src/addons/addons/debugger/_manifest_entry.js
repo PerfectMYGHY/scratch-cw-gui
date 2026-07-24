@@ -2,7 +2,7 @@
 const manifest = {
   "editorOnly": true,
   "name": "Debugger",
-  "description": "Adds a new \"debugger\" window to the editor. Allows for logging into the \"Logs\" tab of the debugger window using the \"log\", \"warn\" and \"error\" blocks. The \"breakpoint\" block will pause the project when executed. All running stacks of blocks can be viewed in the \"Threads\" tab of the debugger window, and when paused the \"Step\" button can be used to execute the next block. A graph of frames per second and number of clones can be viewed in the \"Performance\" tab. Allows for timing sections of your code with the \"start timing\" and \"stop timing\" block. Timing results and more are accessible from the \"Timing\" tab.",
+  "description": "Adds a new \"debugger\" window to the editor. Allows for logging into the \"Logs\" tab of the debugger window using the \"log\", \"warn\" and \"error\" blocks. The \"breakpoint\" block will pause the project when executed. All running stacks of blocks can be viewed in the \"Threads\" tab of the debugger window, and when paused the \"Step\" button can be used to execute the next block. A graph of frames per second and number of clones can be viewed in the \"Performance\" tab.",
   "credits": [
     {
       "name": "Tacodiva",
@@ -37,21 +37,21 @@ const manifest = {
       "name": "Clear logs on green flag",
       "id": "log_clear_greenflag",
       "type": "boolean",
-      "default": true
+      "default": false
     },
     {
       "dynamic": true,
       "name": "Log green flag clicks",
       "id": "log_greenflag",
       "type": "boolean",
-      "default": true
+      "default": false
     },
     {
       "dynamic": true,
       "name": "Log clone creation",
       "id": "log_clone_create",
       "type": "boolean",
-      "default": true
+      "default": false
     },
     {
       "name": "Log when clone limit exceeded",
@@ -64,7 +64,7 @@ const manifest = {
       "name": "Log broadcasts",
       "id": "log_broadcasts",
       "type": "boolean",
-      "default": true
+      "default": false
     },
     {
       "name": "Log when max list length exceeded",
@@ -76,22 +76,15 @@ const manifest = {
       "name": "Log invalid cloud variable values",
       "id": "log_invalid_cloud_data",
       "type": "boolean",
-      "default": true
+      "default": false
     },
     {
       "name": "Animated graphs (may affect performance)",
       "id": "fancy_graphs",
       "type": "boolean",
-      "default": true
+      "default": false
     }
   ],
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "fps",
-    "clones"
-  ],
-  "enabledByDefault": true
+  "tags": []
 };
 export default manifest;

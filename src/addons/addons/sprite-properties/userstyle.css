@@ -52,7 +52,8 @@
 }
 
 .sa-sprite-properties-info-btn {
-  display: flex;
+  /* !important to override displayNoneWhileDisabled's inline styles */
+  display: flex !important;
   position: absolute;
   justify-content: center;
   align-items: center;
@@ -69,7 +70,7 @@
   right: -2px;
 }
 .sa-show-sprite-properties .sa-sprite-properties-info-btn {
-  display: none;
+  display: none !important;
 }
 
 .sa-sprite-properties-info-btn img {

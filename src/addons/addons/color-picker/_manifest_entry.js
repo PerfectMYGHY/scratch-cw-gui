@@ -4,8 +4,7 @@ const manifest = {
   "name": "Hex color picker",
   "description": "Adds hex code inputs to color pickers.",
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
   "credits": [
     {

@@ -4,13 +4,7 @@ const manifest = {
   "noTranslations": true,
   "name": "Snap scripts to grid",
   "description": "Drag a script to automatically align its position to the code area dots.",
-  "tags": [
-    "new"
-  ],
-  "relatedAddons": [
-    "paint-snap",
-    "workspace-dots"
-  ],
+  "tags": [],
   "credits": [
     {
       "name": "CST1229",

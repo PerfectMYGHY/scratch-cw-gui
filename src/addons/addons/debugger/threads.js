@@ -65,7 +65,7 @@ export default async function createThreadsTab({ debug, addon, console, msg }) {
     if (row.type === "compiled") {
       const el = document.createElement('div');
       el.className = "sa-debugger-thread-compiled";
-      el.textContent = "编译后的线程无法步进，并且没有堆栈信息。";
+      el.textContent = "Compiled threads can't be stepped and have no stack information.";
       root.appendChild(el);
     }
 

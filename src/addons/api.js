@@ -115,24 +115,24 @@ const getEditorMode = () => {
     return 'editor';
 };
 
-let language;
-
-const updateLanguage = () => {
-    language = reduxInstance.state.locales.locale.split('-')[0];
-    if (!l10nEntries[language]) {
-        language = reduxInstance.state.locales.locale;
+/**
+ * @returns {string} Locale code
+ */
+const getLocale = () => {
+    const locale = reduxInstance.state.locales.locale;
+    if (Object.prototype.hasOwnProperty.call(l10nEntries, locale)) {
+        return locale;
     }
+    return locale.split('-')[0];
 };
-
-updateLanguage();
+const language = getLocale();
 
 const getTranslations = async () => {
-    if (l10nEntries[language]) {
+    if (Object.prototype.hasOwnProperty.call(l10nEntries, language)) {
         const localeMessages = await l10nEntries[language]();
         Object.assign(addonMessages, localeMessages);
     }
 };
-
 const addonMessagesPromise = getTranslations();
 
 const untilInEditor = () => {
@@ -261,9 +261,7 @@ class Tab extends EventTargetShim {
             const firstQuery = document.querySelectorAll(selector);
             for (const element of firstQuery) {
                 if (this._seenElements.has(element)) continue;
-                if (markAsSeen) {
-                    this._seenElements.add(element);
-                }
+                if (markAsSeen) this._seenElements.add(element);
                 return Promise.resolve(element);
             }
         }
@@ -784,17 +782,9 @@ class AddonRunner {
 
     getResource (path) {
         const withoutSlash = path.substring(1);
-        let url = this.resources[withoutSlash];
+        const url = this.resources[withoutSlash];
         if (typeof url !== 'string') {
-            for (const [key, value] of Object.entries(this.resources)) {
-                if (key.replaceAll('\\', '/') === withoutSlash.replaceAll('\\', '/')) {
-                    url = value;
-                    break;
-                }
-            }
-            if (typeof url !== 'string') {
-                throw new Error(`Unknown asset: ${path}`);
-            }
+            throw new Error(`Unknown asset: ${path}`);
         }
         return url;
     }
@@ -927,8 +917,8 @@ class AddonRunner {
             await addonMessagesPromise;
         }
 
-        // 乘以大数，因为第一个用户样式是+0，第二个是+1，第三个是+2，以此类推。
-        // 这个数字必须大于单个插件中用户样式的最大数量。
+        // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
+        // This number just has to be larger than the maximum number of userstyles in a single addon.
         const baseStylePrecedence = getPrecedence(this.id) * 100;
 
         if (this.manifest.userstyles) {
@@ -992,7 +982,6 @@ SettingsStore.addEventListener('addon-changed', e => {
         }
     }
 });
-
 
 for (const id of Object.keys(addons)) {
     if (!SettingsStore.getAddonEnabled(id)) {

@@ -46,8 +46,7 @@ const removeHighlight = (element, highlighter) => {
 };
 
 class Highlighter {
-  constructor(addon, priority, color) {
-    this.addon = addon;
+  constructor(priority, color) {
     this.priority = priority;
 
     const id = `sa_glower_filter${nextGlowerId++}`;
@@ -104,9 +103,8 @@ class Highlighter {
   }
 
   setGlowingThreads(threads) {
-    if (this.addon.tab?.editorMode !== "editor") return;
     const elementsToHighlight = new Set();
-    const workspace = this.addon.tab.traps.getWorkspace();
+    const workspace = Blockly.getMainWorkspace();
 
     if (workspace) {
       for (const thread of threads) {
@@ -123,12 +121,9 @@ class Highlighter {
             }
             return false;
           });
-          if (!childblock) {
-            let svgPath;
-            if (block.pathObject)
-              svgPath = block.pathObject.svgPath; // new Blockly
-            else svgPath = block.svgPath_;
-            if (svgPath) elementsToHighlight.add(svgPath);
+          if (!childblock && block.svgPath_) {
+            const svgPath = block.svgPath_;
+            elementsToHighlight.add(svgPath);
           }
         });
       }

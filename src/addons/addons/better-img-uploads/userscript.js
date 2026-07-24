@@ -19,7 +19,7 @@ export default async function ({ addon, console, msg }) {
     const img = Object.assign(document.createElement("img"), {
       className: `${addon.tab.scratchClass("action-menu_more-icon")} sa-better-img-uploader`,
       draggable: "false",
-      src: addon.self.getResource(`/icon.svg`) /* rewritten by pull.js */,
+      src: addon.self.getResource("/icon.svg") /* rewritten by pull.js */,
       height: "10",
       width: "10",
     });
@@ -51,7 +51,7 @@ export default async function ({ addon, console, msg }) {
     //Catch all upload menus as they are created
     const spriteSelector = '[class*="sprite-selector_sprite-selector_"] [class*="action-menu_more-buttons_"]';
     const stageSelector = '[class*="stage-selector_stage-selector_"] [class*="action-menu_more-buttons_"]';
-    const costumeSelector = '[class*="gui_tabs_"] > :nth-child(3) [class*="action-menu_more-buttons_"]';
+    const costumeSelector = '[data-tabs] > :nth-child(3) [class*="action-menu_more-buttons_"]';
     let menu = await addon.tab.waitForElement(`${spriteSelector}, ${stageSelector}, ${costumeSelector}`, {
       markAsSeen: true,
       reduxCondition: (state) => !state.scratchGui.mode.isPlayerOnly,

@@ -2,18 +2,16 @@ import addSmallStageClass from "../../libraries/common/cs/small-stage.js";
 
 export default async function ({ addon, console }) {
   var posContainerContainer = document.createElement("div");
-  addon.tab.displayNoneWhileDisabled(posContainerContainer);
+  addon.tab.displayNoneWhileDisabled(posContainerContainer, { display: "flex" });
 
   var posContainer = document.createElement("div");
-  var xPos = document.createElement("span");
-  var yPos = document.createElement("span");
+  var pos = document.createElement("span");
 
   posContainerContainer.className = "pos-container-container";
   posContainer.className = "pos-container";
 
   posContainerContainer.appendChild(posContainer);
-  posContainer.appendChild(xPos);
-  posContainer.appendChild(yPos);
+  posContainer.appendChild(pos);
 
   const vm = addon.tab.traps.vm;
 
@@ -23,10 +21,7 @@ export default async function ({ addon, console }) {
   var x = vm.runtime.ioDevices.mouse.__scratchX ? vm.runtime.ioDevices.mouse.__scratchX : 0;
   var y = vm.runtime.ioDevices.mouse.__scratchY ? vm.runtime.ioDevices.mouse.__scratchY : 0;
 
-  const showUpdatedValue = () => {
-    xPos.setAttribute("data-content", `${Math.round(x)},`);
-    yPos.setAttribute("data-content", `${Math.round(y)}`);
-  };
+  const showUpdatedValue = () => pos.setAttribute("data-content", `${Math.round(x)}, ${Math.round(y)}`);
 
   Object.defineProperty(vm.runtime.ioDevices.mouse, "_scratchX", {
     get: function () {

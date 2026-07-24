@@ -1,43 +1,29 @@
+.blocklyDropDownDiv .goog-menuitem-checkbox {
+  filter: brightness(0) invert(1);
+}
 .u-dropdown-searchbar {
   border-color: rgba(255, 255, 255, 0.15);
 }
 .u-dropdown-searchbar:focus {
   background-color: var(--editorTheme3-hoveredItem);
 }
-.blocklyMenuItemSelected .blocklyMenuItemCheckbox {
-  filter: brightness(0) invert(1);
-}
 
 .scratchCommentRect {
   fill: #282828;
 }
 .scratchCommentBody,
-.scratchCommentTextarea,
-.blocklyComment .blocklyTextarea {
+.scratchCommentTextarea {
   background-color: #282828;
 }
 .scratchWorkspaceCommentBorder {
   stroke: var(--editorTheme3-commentColor);
 }
-.blocklyComment {
-  --colour-commentBorder: var(--editorTheme3-commentColor);
-}
-.blocklyCommentTopbarBackground {
-  fill: #202020;
-}
-.scratchCommentTextarea::placeholder,
-.blocklyCommentText::placeholder {
+.scratchCommentTextarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-.scratchCommentText,
-.scratch-renderer.default-theme .blocklyComment .blocklyTextarea {
+.scratchCommentText {
   fill: #ffffff;
   color: #ffffff;
-}
-
-.blocklyCommentTopbar > image,
-.scratchCommentTopBar ~ image {
-  filter: brightness(0) invert(1);
 }
 
 /* Compatibility */

@@ -2,11 +2,10 @@
 const manifest = {
   "editorOnly": true,
   "noTranslations": true,
-  "name": "Arrow key incrementation",
+  "name": "Arrow key incrementation in editor",
   "description": "Use the up and down arrow keys to increase or decrease number values in numeric input fields such as those in blocks or the sprite properties area.",
   "tags": [
-    "recommended",
-    "new"
+    "recommended"
   ],
   "userscripts": [
     {
@@ -172,7 +171,6 @@ const manifest = {
       "name": "World_Languages"
     }
   ],
-  "dynamicDisable": true,
-  "enabledByDefault": true
+  "dynamicDisable": true
 };
 export default manifest;

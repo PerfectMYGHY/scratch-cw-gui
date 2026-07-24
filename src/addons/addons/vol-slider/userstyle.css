@@ -1,5 +1,4 @@
 .sa-vol-slider {
-  display: flex;
   /* Same lateral padding as .clone-container-container */
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -31,7 +30,10 @@
 
 .sa-small-stage .sa-vol-slider-input,
 .sa-small-stage .sa-vol-slider-icon:not([data-icon="mute"]) {
-  display: none;
+  display: none !important;
+}
+.sa-small-stage .sa-vol-slider {
+  width: 0;
 }
 
 .sa-vol-slider-input {
@@ -67,4 +69,8 @@
   border: none;
   border-radius: 50%;
   background-color: #c234c2;
+}
+
+.sa-mute-project-icon {
+  display: none !important;
 }

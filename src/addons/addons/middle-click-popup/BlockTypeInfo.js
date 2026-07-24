@@ -3,11 +3,6 @@
  * and provides a more friendly way to create instances blocks with some inputs.
  */
 
-// TW: switched to VM addon block API instead of this import
-/*
-import * as SABlocks from "../../addon-api/content-script/blocks.js";
-*/
-
 /**
  * A numeric value to represent the type of an {@link BlockInput}
  * @readonly
@@ -212,7 +207,6 @@ export class BlockInputEnum extends BlockInput {
     this.values = [];
     for (let i = 0; i < options.length; i++) {
       if (typeof options[i][1] === "string" && BlockInputEnum.INVALID_VALUES.indexOf(options[i][1]) === -1) {
-        // TW: avoid replaceAll for browser support reasons
         this.values.push({ value: options[i][1], string: options[i][0].replace(/\u00a0/g, " ") });
       }
     }
@@ -267,7 +261,7 @@ export class BlockInstance {
     this.inputs = inputs;
 
     for (let i = 0; i < this.typeInfo.inputs.length; i++) {
-      if (!this.inputs[i]) this.inputs[i] = this.typeInfo.inputs[i].defaultValue;
+      if (this.inputs[i] == null) this.inputs[i] = this.typeInfo.inputs[i].defaultValue;
     }
   }
 
@@ -285,7 +279,7 @@ export class BlockInstance {
     const block = this.typeInfo.Blockly.Xml.domToBlock(this.typeInfo.domForm, this.typeInfo.workspace);
     for (let i = 0; i < this.typeInfo.inputs.length; i++) {
       const inputValue = this.inputs[i];
-      if (inputValue !== null) this.typeInfo.inputs[i].setValue(block, inputValue);
+      if (inputValue != null) this.typeInfo.inputs[i].setValue(block, inputValue);
     }
 
     return block;
@@ -304,11 +298,11 @@ export class BlockShape {
   static Stack = new BlockShape(true, true, false);
 
   static getBlockShape(workspaceBlock) {
-    if (workspaceBlock.getOutputShape() === 2) {
+    if (workspaceBlock.edgeShape_ === 2) {
       return BlockShape.Round;
-    } else if (workspaceBlock.getOutputShape() === 1) {
+    } else if (workspaceBlock.edgeShape_ === 1) {
       return BlockShape.Boolean;
-    } else if (!workspaceBlock.previousConnection) {
+    } else if (workspaceBlock.startHat_) {
       return BlockShape.Hat;
     } else if (!workspaceBlock.nextConnection) {
       return BlockShape.End;
@@ -349,25 +343,18 @@ export class BlockTypeInfo {
     let name;
 
     if (block.type === "procedures_call") {
-      // TW: use VM API instead of the SABlocks import
       if (vm.getAddonBlock(block.getProcCode())) name = "addon-custom-block";
       else name = "more";
-      // TW: changed extension for indicating default colors
     } else if (block.usesDefaultExtensionColors) name = "pen";
     else if (block.type === "sensing_of") name = "sensing";
     else if (block.type === "event_whenbackdropswitchesto") name = "events";
-    else name = block.styleName_ ?? block.category_;
-    name =
-      {
-        event: "events",
-        data_lists: "data-lists",
-      }[name] || name;
+    else name = block.category_;
 
     return {
       name,
-      colorPrimary: block.getColour(),
-      colorSecondary: block.getColourSecondary(),
-      colorTertiary: block.getColourTertiary(),
+      colorPrimary: block.colour_,
+      colorSecondary: block.colourSecondary_,
+      colorTertiary: block.colourTertiary_,
     };
   }
 
@@ -380,7 +367,7 @@ export class BlockTypeInfo {
    * @returns {BlockTypeInfo[]}
    */
   static getBlocks(Blockly, vm, workspace, locale) {
-    const flyoutWorkspace = workspace.getFlyout()?.getWorkspace();
+    const flyoutWorkspace = workspace.getToolbox()?.flyout_.getWorkspace();
     if (!flyoutWorkspace) return [];
 
     const blocks = [];
@@ -388,7 +375,7 @@ export class BlockTypeInfo {
     const flyoutDom = Blockly.Xml.workspaceToDom(flyoutWorkspace);
     const flyoutDomBlockMap = {};
     for (const blockDom of flyoutDom.children) {
-      if (blockDom.tagName.toUpperCase() === "BLOCK") {
+      if (blockDom.tagName === "BLOCK") {
         let id = blockDom.getAttribute("id");
         flyoutDomBlockMap[id] = blockDom;
       }
@@ -419,11 +406,11 @@ export class BlockTypeInfo {
     };
 
     const addFieldInputs = (field, inputIdx, fieldIdx) => {
-      if (field instanceof Blockly.FieldDropdown) {
+      if (field.className_ === "blocklyText blocklyDropdownText") {
         const options = field.getOptions();
         addInput(new BlockInputEnum(options, inputIdx, fieldIdx, fieldIdx === -1));
       } else if (field instanceof Blockly.FieldImage) {
-        switch (field.getValue().split("/").pop()) {
+        switch (field.src_.split("/").pop()) {
           case "green-flag.svg":
             parts.push(locale("/_general/blocks/green-flag"));
             break;
@@ -435,31 +422,14 @@ export class BlockTypeInfo {
             break;
         }
       } else {
-        let FieldColourSlider;
-        let FieldNumber;
-        let FieldVerticalSeparator;
-        if (Blockly.registry) {
-          // new Blockly
-          FieldColourSlider = Blockly.registry.getClass(Blockly.registry.Type.FIELD, "field_colour_slider");
-          FieldNumber = Blockly.registry.getClass(Blockly.registry.Type.FIELD, "field_number");
-          FieldVerticalSeparator = Blockly.registry.getClass(Blockly.registry.Type.FIELD, "field_vertical_separator");
-        } else {
-          FieldColourSlider = Blockly.FieldColourSlider;
-          FieldNumber = Blockly.FieldNumber;
-          FieldVerticalSeparator = Blockly.FieldVerticalSeparator;
-        }
-        if (
-          field instanceof Blockly.FieldLabel ||
-          field instanceof FieldVerticalSeparator ||
-          (!Blockly.registry && field instanceof Blockly.FieldVariableGetter)
-        ) {
+        if (!field.argType_) {
           if (field.getText().trim().length !== 0) parts.push(field.getText());
-        } else if (field instanceof FieldColourSlider) {
+        } else if (field.argType_[0] === "colour") {
           addInput(new BlockInputColour(inputIdx, fieldIdx));
-        } else if (field instanceof FieldNumber) {
-          addInput(new BlockInputNumber(inputIdx, fieldIdx, field.getText()));
+        } else if (field.argType_[1] === "number") {
+          addInput(new BlockInputNumber(inputIdx, fieldIdx, field.text_));
         } else {
-          addInput(new BlockInputString(inputIdx, fieldIdx, field.getText()));
+          addInput(new BlockInputString(inputIdx, fieldIdx, field.text_));
         }
       }
     };
@@ -478,7 +448,7 @@ export class BlockTypeInfo {
           let innerField = innerBlock.inputList[0].fieldRow[0];
           addFieldInputs(innerField, inputIdx, -1);
         } else {
-          if (input.type === Blockly.INPUT_VALUE) {
+          if (input.outlinePath) {
             addInput(new BlockInputBoolean(inputIdx, -1));
           } else {
             addInput(new BlockInputBlock(inputIdx, -1));
@@ -487,7 +457,7 @@ export class BlockTypeInfo {
       }
     }
 
-    if (workspaceForm.type === "sensing_of") {
+    if (workspaceForm.id === "of") {
       let blocks = [];
 
       let baseVarInputIdx, baseTargetInputIdx;
@@ -555,7 +525,7 @@ export class BlockTypeInfo {
       }
 
       return blocks;
-    } else if (workspaceForm.type === "control_stop") {
+    } else if (workspaceForm.id === "control_stop") {
       // This block is special because when "other scripts in sprite" is selected the block
       //  needs to be BlockShape.End.
       const oldInput = inputs[0];
@@ -582,7 +552,7 @@ export class BlockTypeInfo {
 
   constructor(workspace, Blockly, vm, workspaceForm, domForm, parts, inputs, shape) {
     /** @type {string} */
-    this.id = workspaceForm.type;
+    this.id = workspaceForm.id;
     this.workspaceForm = workspaceForm;
     this.domForm = domForm;
     /** @type {BlockShape} */

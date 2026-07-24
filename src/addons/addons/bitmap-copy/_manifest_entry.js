@@ -2,7 +2,7 @@
 const manifest = {
   "editorOnly": true,
   "noTranslations": true,
-  "name": "Bitmap image copying",
+  "name": "Bitmap images copying",
   "description": "Allows you to copy a bitmap image from the costume editor into the system clipboard, so that you can paste it in other websites or software.",
   "info": [
     {
@@ -17,9 +17,7 @@ const manifest = {
     }
   ],
   "dynamicDisable": true,
-  "tags": [
-    "new"
-  ],
+  "tags": [],
   "enabledByDefault": true
 };
 import {clipboardSupported} from "../../environment";

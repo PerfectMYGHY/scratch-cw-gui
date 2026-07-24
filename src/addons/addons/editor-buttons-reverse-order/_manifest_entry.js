@@ -5,11 +5,6 @@ const manifest = {
   "tags": [
     "theme"
   ],
-  "relatedAddons": [
-    "editor-stage-left",
-    "scratch3to2",
-    "columns"
-  ],
   "dynamicDisable": true,
   "userstyles": [
     {
