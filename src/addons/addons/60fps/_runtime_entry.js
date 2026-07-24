@@ -3,5 +3,5 @@ import _js from "./userscript.js";
 import _asset from "!url-loader!./svg/fast-flag.svg";
 export const resources = {
   "userscript.js": _js,
-  "svg\\fast-flag.svg": _asset,
+  "svg/fast-flag.svg": _asset,
 };

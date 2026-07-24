@@ -7,11 +7,11 @@ import _asset5 from "!url-loader!./assets/zoom_in.svg";
 import _asset6 from "!url-loader!./assets/zoom_out.svg";
 import _asset7 from "!url-loader!./assets/zoom_reset.svg";
 export const resources = {
-  "assets\\caret.svg": _asset,
-  "assets\\caret_hover.svg": _asset2,
-  "assets\\dots.svg": _asset3,
-  "assets\\dots_first.svg": _asset4,
-  "assets\\zoom_in.svg": _asset5,
-  "assets\\zoom_out.svg": _asset6,
-  "assets\\zoom_reset.svg": _asset7,
+  "assets/caret.svg": _asset,
+  "assets/caret_hover.svg": _asset2,
+  "assets/dots.svg": _asset3,
+  "assets/dots_first.svg": _asset4,
+  "assets/zoom_in.svg": _asset5,
+  "assets/zoom_out.svg": _asset6,
+  "assets/zoom_reset.svg": _asset7,
 };

@@ -23,5 +23,5 @@ export const resources = {
   "paper.css": _css2,
   "stage.css": _css3,
   "stage_compact_scrollbars.css": _css4,
-  "assets\\translate_white.svg": _asset,
+  "assets/translate_white.svg": _asset,
 };

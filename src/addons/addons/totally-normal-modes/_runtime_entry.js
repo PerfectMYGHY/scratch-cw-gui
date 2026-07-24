@@ -16,8 +16,8 @@ export const resources = {
   "oldtimey.css": _css3,
   "prehistoric.css": _css4,
   "mystery.css": _css5,
-  "assets\\90s-logo.svg": _asset,
-  "assets\\90s-shapes.svg": _asset2,
-  "assets\\oldtimey-logo.svg": _asset3,
-  "assets\\prehistoric-logo.svg": _asset4,
+  "assets/90s-logo.svg": _asset,
+  "assets/90s-shapes.svg": _asset2,
+  "assets/oldtimey-logo.svg": _asset3,
+  "assets/prehistoric-logo.svg": _asset4,
 };

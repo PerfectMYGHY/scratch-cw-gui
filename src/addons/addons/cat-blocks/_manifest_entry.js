@@ -37,6 +37,11 @@ const manifest = {
     "theme",
     "new"
   ],
+  "dynamicDisable": false,
+  "relatedAddons": [
+    "custom-block-shape",
+    "editor-theme3"
+  ],
   "enabledByDefault": true
 };
 export default manifest;

@@ -5,5 +5,5 @@ import _asset from "!url-loader!./assets/checkmark.svg";
 export const resources = {
   "userscript.js": _js,
   "userstyle.css": _css,
-  "assets\\checkmark.svg": _asset,
+  "assets/checkmark.svg": _asset,
 };
