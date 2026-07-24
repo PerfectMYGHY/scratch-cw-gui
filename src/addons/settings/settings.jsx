@@ -1121,7 +1121,7 @@ class AddonSettingsComponent extends React.Component {
                 <div className={styles.addons}>
                     {!this.state.loading && (
                         <div className={styles.section}>
-                            <p>站长提示：本插件原本全是英文，最多仅支持繁体中文，后经站长改良，使用【百度翻译】翻译成简体中文（它原本的繁体中文的翻译不全，站长把缺少的翻译一个一个加进去的！）。所以翻译不准确并且你知道正确翻译的话，可以给我发邮箱告诉我，我会修改的。</p>
+                            <p>{'提示：本页面内容为站长使用高级翻译法则通过deepseek翻译。可能会出现属于不准确、漏翻等请看。如有发现，请告知站长以修复。'}</p>
                             <AddonList
                                 addons={addonState}
                                 search={this.state.search}
