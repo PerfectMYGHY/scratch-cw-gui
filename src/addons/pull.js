@@ -49,8 +49,11 @@ const repoPath = pathUtil.resolve(__dirname, 'ScratchAddons');
 if (!process.argv.includes('-')) {
     rimraf.sync(repoPath);
     childProcess.execSync(
-        `git clone --depth=1 --branch=tw git@github.com:PerfectMYGHY/scratch-cw-addons.git ${repoPath}`
-    );
+        `git clone --depth=1 --branch=tw git@github.com:PerfectMYGHY/scratch-cw-addons.git ${repoPath}`,
+        {
+            stdio: 'inherit'
+        }
+    ); // CW
 }
 
 let {newAddons} = require('./addons.js'); // CW
@@ -284,7 +287,7 @@ const generateRuntimeEntry = (id, manifest, assets) => {
 
     for (const assetName of assets) {
         const importName = importSection.add(`!url-loader!./${assetName}`, 'asset');
-        exportSection += `  ${JSON.stringify(assetName)}: ${importName},\n`;
+        exportSection += `  ${JSON.stringify(assetName.replaceAll('\\', '/'))}: ${importName},\n`;
     }
 
     exportSection += '};\n';
