@@ -57,11 +57,27 @@ if (process.env.ANNOUNCEMENT) {
     announcement.innerHTML = process.env.ANNOUNCEMENT;
 }
 
+const openNewWindow = (url, name, width = 1280, height = 800) => {
+    // 计算屏幕中心位置
+    const screenWidth = window.screen.availWidth;
+    const screenHeight = window.screen.availHeight;
+    width = Math.min(width, screenWidth);
+    height = Math.min(height, screenHeight);
+    const left = Math.round((screenWidth - width) / 2);
+    const top = Math.round((screenHeight - height) / 2);
+
+    window.open(
+        url,
+        name,
+        `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes`
+    );
+};
+
 const handleClickAddonSettings = addonId => {
     // addonId might be a string of the addon to focus on, undefined, or an event (treat like undefined)
     const path = process.env.ROUTING_STYLE === 'wildcard' ? 'addons' : 'addons.html';
     const url = `${process.env.ROOT}${path}${typeof addonId === 'string' ? `#${addonId}` : ''}`;
-    window.open(url);
+    openNewWindow(url, 'ScratchCWAddonsSettings');
 };
 
 const messages = defineMessages({
