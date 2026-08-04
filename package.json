@@ -165,7 +165,7 @@
     "redux-mock-store": "1.5.3",
     "rimraf": "2.7.1",
     "scratch-audio": "0.1.0-prerelease.20231221012053",
-    "scratch-blocks": "0.1.0-prerelease.20230527085947",
+    "scratch-blocks": "github:PerfectMYGHY/scratch-cw-blocks#develop",
     "scratch-cw-verify": "github:PerfectMYGHY/scratch-cw-verify#main",
     "scratch-l10n": "github:PerfectMYGHY/scratch-cw-l10n",
     "scratch-paint": "github:PerfectMYGHY/scratch-cw-paint#develop",
