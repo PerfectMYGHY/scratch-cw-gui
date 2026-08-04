@@ -17,7 +17,7 @@
     "edit:buildings:linux": "cp dist/js dist && bash move-chunks.sh",
     "edit:buildings": "copy dist\\js dist && move-chunks",
     "build:cp": "npm run clean && cross-env NODE_OPTIONS=--max-old-space-size=15360 NODE_ENV=production SOURCEMAP=source-map webpack --colors --bail && copy-stuff",
-    "build": "npm run clean && cross-env NODE_OPTIONS=--max-old-space-size=15360 NODE_ENV=production SOURCEMAP=source-map webpack --colors --bail",
+    "build": "npm run build:cp:dev",
     "build:cp:dev": "npm run clean && cross-env NODE_ENV=development BUILD_MODE=dist SOURCEMAP=cheap-module-source-map webpack --colors --bail && copy-stuff",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
