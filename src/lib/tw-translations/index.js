@@ -9,7 +9,9 @@ const addAdditionalTranslations = editorMessages => {
     }
 
     // We reuse our `es` translations for `es-419` instead of maintaining separate translations.
-    Object.assign(editorMessages['es-419'], twTranslations.es);
+    if (editorMessages['es-419']) {
+        Object.assign(editorMessages['es-419'], twTranslations.es);
+    }
 };
 
 export default addAdditionalTranslations;

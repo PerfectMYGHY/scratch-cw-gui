@@ -285,6 +285,7 @@ class Interface extends React.Component {
                         canSave
                         canShare
                         projectHost={process.env.PROJECT_HOST}
+                        onClickLogo={this.handleClickLogo}
                         {...props}
                     />
                     {isHomepage ? (
