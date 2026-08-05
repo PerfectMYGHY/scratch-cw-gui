@@ -21,7 +21,6 @@ import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {FormattedMessage, defineMessages, injectIntl, intlShape} from 'react-intl';
 import {getIsLoading} from '../reducers/project-state.js';
-import DOMElementRenderer from '../containers/dom-element-renderer.jsx';
 import AppStateHOC from '../lib/app-state-hoc.jsx';
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import TWProjectMetaFetcherHOC from '../lib/tw-project-meta-fetcher-hoc.jsx';
@@ -37,25 +36,16 @@ import FeaturedProjects from '../components/tw-featured-projects/featured-projec
 import Description from '../components/tw-description/description.jsx';
 import BrowserModal from '../components/browser-modal/browser-modal.jsx';
 import CloudVariableBadge from '../containers/tw-cloud-variable-badge.jsx';
+import TWWindchimeSubmitter from '../containers/tw-windchime-submitter.jsx';
 import {isBrowserSupported} from '../lib/tw-environment-support-prober';
 import AddonChannels from '../addons/channels';
 import {loadServiceWorker} from './load-service-worker';
+import InvalidEmbed from '../components/tw-invalid-embed/invalid-embed.jsx';
 import {APP_NAME} from '../lib/brand.js';
 
 import styles from './interface.css';
 
-if (window.parent !== window) {
-    // eslint-disable-next-line no-alert
-    alert(`This page contains an invalid ${APP_NAME} embed. Please read https://docs.turbowarp.org/embedding for instructions to create a working embed.`);
-    throw new Error('Invalid embed');
-}
-
-let announcement = null;
-if (process.env.ANNOUNCEMENT) {
-    announcement = document.createElement('p');
-    // This is safe because process.env.ANNOUNCEMENT is set at build time.
-    announcement.innerHTML = process.env.ANNOUNCEMENT;
-}
+const isInvalidEmbed = window.parent !== window;
 
 const openNewWindow = (url, name, width = 1280, height = 800) => {
     // 计算屏幕中心位置
@@ -111,11 +101,35 @@ const Footer = () => (
             <div className={styles.footerText}>
                 <FormattedMessage
                     // eslint-disable-next-line max-len
-                    defaultMessage="TurboWarp is not affiliated with Scratch, the Scratch Team, or the Scratch Foundation."
+                    defaultMessage="{APP_NAME} is not affiliated with Scratch, the Scratch Team, or the Scratch Foundation."
                     description="Disclaimer that TurboWarp is not connected to Scratch"
                     id="tw.footer.disclaimer"
+                    values={{
+                        APP_NAME
+                    }}
                 />
             </div>
+
+            <div className={styles.footerText}>
+                <FormattedMessage
+                    // eslint-disable-next-line max-len
+                    defaultMessage="Scratch is a project of the Scratch Foundation. It is available for free at {scratchDotOrg}."
+                    description="A disclaimer that Scratch requires when referring to Scratch. {scratchDotOrg} is a link with text 'https://scratch.org/'"
+                    id="tw.footer.scratchDisclaimer"
+                    values={{
+                        scratchDotOrg: (
+                            <a
+                                href="https://scratch.org/"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {'https://scratch.org/'}
+                            </a>
+                        )
+                    }}
+                />
+            </div>
+
             <div className={styles.footerColumns}>
                 <div className={styles.footerSection}>
                     <a href="credits.html">
@@ -123,13 +137,6 @@ const Footer = () => (
                             defaultMessage="Credits"
                             description="Credits link in footer"
                             id="tw.footer.credits"
-                        />
-                    </a>
-                    <a href="https://github.com/sponsors/GarboMuffin">
-                        <FormattedMessage
-                            defaultMessage="Donate"
-                            description="Donation link in footer"
-                            id="tw.footer.donate"
                         />
                     </a>
                 </div>
@@ -196,6 +203,7 @@ class Interface extends React.Component {
     constructor (props) {
         super(props);
         this.handleUpdateProjectTitle = this.handleUpdateProjectTitle.bind(this);
+        this.handleClickLogo = this.handleClickLogo.bind(this);
     }
     componentDidUpdate (prevProps) {
         if (prevProps.isLoading && !this.props.isLoading) {
@@ -209,7 +217,14 @@ class Interface extends React.Component {
             document.title = `${title} - ${APP_NAME}`;
         }
     }
+    handleClickLogo () {
+        window.location = '/';
+    }
     render () {
+        if (isInvalidEmbed) {
+            return <InvalidEmbed />;
+        }
+
         const {
             /* eslint-disable no-unused-vars */
             intl,
@@ -231,18 +246,18 @@ class Interface extends React.Component {
                     [styles.playerOnly]: isHomepage,
                     [styles.editor]: isEditor
                 })}
+                dir={isRtl ? 'rtl' : 'ltr'}
             >
+                <TWWindchimeSubmitter />
                 {isHomepage ? (
                     <div className={styles.menu}>
-                        {/* onClickAddonSettings={handleClickAddonSettings}*/}
                         <WrappedMenuBar
                             canChangeLanguage
                             canManageFiles
                             canChangeTheme
                             enableSeeInside
-                            onClickLogo={() => {
-                                window.location = '/';
-                            }}
+                            onClickLogo={this.handleClickLogo}
+                            onClickAddonSettings={handleClickAddonSettings}
                         />
                     </div>
                 ) : null}
@@ -253,17 +268,15 @@ class Interface extends React.Component {
                         width: `${Math.max(480, props.customStageSize.width) + 2}px`
                     }) : null}
                 >
-                    {isHomepage && announcement ? <DOMElementRenderer domElement={announcement} /> : null}
                     <GUI
                         onClickAddonSettings={handleClickAddonSettings}
                         onUpdateProjectTitle={this.handleUpdateProjectTitle}
-                        {...props}
-
+                        backpackVisible
+                        backpackHost={process.env.BACKPACK_HOST}
+                        
                         assetHost={process.env.ASSET_HOST}
                         authorId={18}
                         authorUsername="webmaster"
-                        backpackHost={process.env.BACKPACK_HOST}
-                        backpackVisible
                         basePath="/"
                         canCreateCopy
                         canCreateNew
@@ -272,6 +285,7 @@ class Interface extends React.Component {
                         canSave
                         canShare
                         projectHost={process.env.PROJECT_HOST}
+                        {...props}
                     />
                     {isHomepage ? (
                         <React.Fragment>

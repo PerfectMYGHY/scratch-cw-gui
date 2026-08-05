@@ -4,13 +4,13 @@ Nearly identical code appears in scratch-www, and the two should
 eventually be consolidated.
 */
 
+import classNames from 'classnames';
 import {FormattedMessage} from 'react-intl';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import MenuBarMenu from './menu-bar-menu.jsx';
 import {MenuSection} from '../menu/menu.jsx';
-import MenuLabel from './tw-menu-label.jsx';
 import MenuItemContainer from '../../containers/menu-item.jsx';
 import UserAvatar from './user-avatar.jsx';
 import dropdownCaret from './dropdown-caret.svg';
@@ -18,6 +18,7 @@ import dropdownCaret from './dropdown-caret.svg';
 import styles from './account-nav.css';
 
 const AccountNavComponent = ({
+    className,
     classroomId,
     isEducator,
     isOpen,
@@ -32,10 +33,12 @@ const AccountNavComponent = ({
     nickname
 }) => (
     <React.Fragment>
-        <MenuLabel
-            open={isOpen}
-            onClose={onClose}
-            onOpen={onClick}
+        <div
+            className={classNames(
+                styles.userInfo,
+                className
+            )}
+            onMouseUp={onClick}
         >
             {thumbnailUrl ? (
                 <UserAvatar
@@ -53,68 +56,69 @@ const AccountNavComponent = ({
                     draggable={false}
                 />
             </div>
-            <MenuBarMenu
-                className={menuBarMenuClassName}
-                open={isOpen}
-                // note: the Rtl styles are switched here, because this menu is justified
-                // opposite all the others
-                place={isRtl ? 'right' : 'left'}
-                onRequestClose={onClose}
-            >
-                <MenuItemContainer href={profileUrl}>
+        </div>
+        <MenuBarMenu
+            className={menuBarMenuClassName}
+            open={isOpen}
+            // note: the Rtl styles are switched here, because this menu is justified
+            // opposite all the others
+            place={isRtl ? 'right' : 'left'}
+            onRequestClose={onClose}
+        >
+            <MenuItemContainer href={profileUrl}>
+                <FormattedMessage
+                    defaultMessage="Profile"
+                    description="Text to link to my user profile, in the account navigation menu"
+                    id="gui.accountMenu.profile"
+                />
+            </MenuItemContainer>
+            <MenuItemContainer href="/mystuff/">
+                <FormattedMessage
+                    defaultMessage="My Stuff"
+                    description="Text to link to list of my projects, in the account navigation menu"
+                    id="gui.accountMenu.myStuff"
+                />
+            </MenuItemContainer>
+            {isEducator ? (
+                <MenuItemContainer href="/educators/classes/">
                     <FormattedMessage
-                        defaultMessage="Profile"
-                        description="Text to link to my user profile, in the account navigation menu"
-                        id="gui.accountMenu.profile"
+                        defaultMessage="My Classes"
+                        description="Text to link to my classes (if I am a teacher), in the account navigation menu"
+                        id="gui.accountMenu.myClasses"
                     />
                 </MenuItemContainer>
-                <MenuItemContainer href="/mystuff/">
+            ) : null}
+            {isStudent ? (
+                <MenuItemContainer href={`/classes/${classroomId}/`}>
                     <FormattedMessage
-                        defaultMessage="My Stuff"
-                        description="Text to link to list of my projects, in the account navigation menu"
-                        id="gui.accountMenu.myStuff"
+                        defaultMessage="My Class"
+                        description="Text to link to my class (if I am a student), in the account navigation menu"
+                        id="gui.accountMenu.myClass"
                     />
                 </MenuItemContainer>
-                {isEducator ? (
-                    <MenuItemContainer href="/educators/classes/">
-                        <FormattedMessage
-                            defaultMessage="My Classes"
-                            description="Text to link to my classes (if I am a teacher), in the account navigation menu"
-                            id="gui.accountMenu.myClasses"
-                        />
-                    </MenuItemContainer>
-                ) : null}
-                {isStudent ? (
-                    <MenuItemContainer href={`/classes/${classroomId}/`}>
-                        <FormattedMessage
-                            defaultMessage="My Class"
-                            description="Text to link to my class (if I am a student), in the account navigation menu"
-                            id="gui.accountMenu.myClass"
-                        />
-                    </MenuItemContainer>
-                ) : null}
-                <MenuItemContainer href="/accounts/settings/">
+            ) : null}
+            <MenuItemContainer href="/accounts/settings/">
+                <FormattedMessage
+                    defaultMessage="Account settings"
+                    description="Text to link to my account settings, in the account navigation menu"
+                    id="gui.accountMenu.accountSettings"
+                />
+            </MenuItemContainer>
+            <MenuSection>
+                <MenuItemContainer onClick={onLogOut}>
                     <FormattedMessage
-                        defaultMessage="Account settings"
-                        description="Text to link to my account settings, in the account navigation menu"
-                        id="gui.accountMenu.accountSettings"
+                        defaultMessage="Sign out"
+                        description="Text to link to sign out, in the account navigation menu"
+                        id="gui.accountMenu.signOut"
                     />
                 </MenuItemContainer>
-                <MenuSection>
-                    <MenuItemContainer onClick={onLogOut}>
-                        <FormattedMessage
-                            defaultMessage="Sign out"
-                            description="Text to link to sign out, in the account navigation menu"
-                            id="gui.accountMenu.signOut"
-                        />
-                    </MenuItemContainer>
-                </MenuSection>
-            </MenuBarMenu>
-        </MenuLabel>
+            </MenuSection>
+        </MenuBarMenu>
     </React.Fragment>
 );
 
 AccountNavComponent.propTypes = {
+    className: PropTypes.string,
     classroomId: PropTypes.string,
     isEducator: PropTypes.bool,
     isOpen: PropTypes.bool,

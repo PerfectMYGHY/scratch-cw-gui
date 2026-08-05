@@ -107,17 +107,6 @@ const base = {
             }
         },
         {
-            test: /\.js$/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    plugins: [
-                        '@babel/plugin-syntax-import-meta'
-                    ]
-                }
-            }
-        },
-        {
             test: /\.css$/,
             use: [{
                 loader: 'style-loader'
@@ -142,15 +131,6 @@ const base = {
                     }
                 }
             }]
-        },
-        {
-            test: /\.hex$/,
-            use: [{
-                loader: 'url-loader',
-                options: {
-                    limit: 16 * 1024
-                }
-            }]
         }]
     },
     plugins: [
@@ -173,7 +153,8 @@ const base = {
             'process.env.SCRATCH_ENV': `"${process.env.SCRATCH_ENV || 'development'}"`,
             'process.env.BASE_HOST': `"${process.env.BASE_HOST}"`,
             'process.env.EXTENSION_HOST': `"${process.env.EXTENSION_HOST || 'https://extensions.turbowarp.org'}"`,
-            'process.env.EXTENSION_HOST_OLD': `"${process.env.EXTENSION_HOST_OLD || 'https://extensions.turbowarp.org'}"`
+            'process.env.EXTENSION_HOST_OLD': `"${process.env.EXTENSION_HOST_OLD || 'https://extensions.turbowarp.org'}"`,
+            'process.env.ENABLE_WINDCHIMES': JSON.stringify(process.env.ENABLE_WINDCHIMES || '')
         }),
         new CopyWebpackPlugin({
             patterns: [
@@ -220,7 +201,7 @@ module.exports = [
         module: {
             rules: base.module.rules.concat([
                 {
-                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2|avif)$/,
+                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2|hex)$/,
                     loader: 'url-loader',
                     options: {
                         limit: 2048,
@@ -280,7 +261,6 @@ module.exports = [
                 template: 'src/playground/simple.ejs',
                 filename: 'credits.html',
                 title: `${APP_NAME} Credits`,
-                noSplash: true,
                 ...htmlWebpackPluginCommon
             }),
             new CopyWebpackPlugin({
@@ -333,7 +313,7 @@ module.exports = [
             module: {
                 rules: base.module.rules.concat([
                     {
-                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2|avif)$/,
+                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2|hex)$/,
                         loader: 'url-loader',
                         options: {
                             limit: 2048,

@@ -57,8 +57,8 @@ const fetchLibrary = async () => {
         iconURL: `${process.env.EXTENSION_HOST}/${extension.image || 'images/unknown.svg'}`,
         tags: ['tw'],
         credits: [
-            ...(extension.by || []),
-            ...(extension.original || [])
+            ...(extension.original || []),
+            ...(extension.by || [])
         ].map(credit => {
             if (credit.link) {
                 return (
@@ -76,10 +76,11 @@ const fetchLibrary = async () => {
         }),
         docsURI: extension.docs ? `${process.env.EXTENSION_HOST}/${extension.slug}` : null,
         samples: extension.samples ? extension.samples.map(sample => ({
+            // eslint-disable-next-line max-len
             href: `/projects/editor?project_url=${process.env.EXTENSION_HOST}/samples/${encodeURIComponent(sample)}.sb3`,
             text: sample
         })) : null,
-        incompatibleWithScratch: true,
+        incompatibleWithScratch: !extension.scratchCompatible,
         featured: true
     }));
 };
@@ -166,6 +167,7 @@ class ExtensionLibrary extends React.PureComponent {
                 const locale = this.props.intl.locale;
                 library.push(
                     ...this.state.gallery
+                        .filter(i => i.extensionId !== 'faceSensing')
                         .map(i => translateGalleryItem(i, locale))
                         .map(toLibraryItem)
                 );

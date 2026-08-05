@@ -51,6 +51,7 @@ class LibraryItem extends React.PureComponent {
         if (
             !this.props.favorite &&
             this.props.incompatibleWithScratch &&
+            !e.shiftKey &&
             // eslint-disable-next-line no-alert
             !confirm(this.props.intl.formatMessage(messages.incompatible))
         ) {
@@ -138,7 +139,7 @@ class LibraryItem extends React.PureComponent {
     render () {
         const iconMd5 = this.curIconMd5();
         const iconURL = iconMd5 ?
-            `${process.env.ASSET_HOST || "https://assets.scratch.mit.edu"}/internalapi/asset/${iconMd5}/get/` :
+            `${process.env.ASSET_HOST || 'https://assets.scratch.mit.edu'}/internalapi/asset/${iconMd5}/get/` :
             this.props.iconRawURL;
         return (
             <LibraryItemComponent

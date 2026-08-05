@@ -8,16 +8,8 @@ import {APP_NAME} from '../../lib/brand';
 
 const hosts = [
     {
-        name: 'US East',
-        cloudHost: 'wss://clouddata.turbowarp.org'
-    },
-    {
-        name: 'EU',
-        cloudHost: 'wss://clouddata-eu.turbowarp.org',
-        provider: {
-            name: '9gr',
-            href: 'https://scratch.mit.edu/users/9gr/'
-        }
+        name: 'Scratch CW',
+        cloudHost: 'wss://cloud.scratch-cw.top'
     }
 ];
 
@@ -63,7 +55,7 @@ const CloudVariableBadge = props => {
                 }}
             />
     
-            {selectedHost ? (
+            {selectedHost && hosts.length > 1 ? (
                 <div className={styles.servers}>
                     <FormattedMessage
                         defaultMessage="Pick a server near you:"
@@ -80,6 +72,9 @@ const CloudVariableBadge = props => {
                         />
                     ))}
                 </div>
+            ) : selectedHost ? (
+                // No options, so don't render anything
+                null
             ) : (
                 <FormattedMessage
                     defaultMessage="Using a custom cloud variable server: {server}"

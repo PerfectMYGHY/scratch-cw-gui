@@ -31,6 +31,7 @@ const contributors = [
         username: 'CST1229'
     },
     {
+        userID: '128887584',
         username: 'FurryR'
     },
     {
@@ -50,6 +51,7 @@ const contributors = [
         username: 'Tacodiva7729'
     },
     {
+        userID: '141930175',
         username: 'SimonShiki'
     },
     {
@@ -184,10 +186,14 @@ const extensionDevelopers = [
         username: 'aleb2005'
     },
     {
+        userID: '129742989',
+        username: 'BludIsAnLemon'
+    },
+    {
         username: 'BlueDome77'
     },
     {
-        username: 'ClaytonTDM'
+        username: 'clay-rip'
     },
     {
         userID: '37070511',
@@ -206,7 +212,15 @@ const extensionDevelopers = [
         username: 'D-ScratchNinja'
     },
     {
+        userID: '20632822',
+        username: 'dogeiscut'
+    },
+    {
         username: 'DT'
+    },
+    {
+        userID: '54392956',
+        username: 'Fath11'
     },
     {
         userID: '1882674',
@@ -221,11 +235,26 @@ const extensionDevelopers = [
         username: 'LilyMakesThings'
     },
     {
+        userID: '29571977',
+        username: 'man-o-valor'
+    },
+    {
         username: 'MikeDEV'
+    },
+    {
+        userID: '74246431',
+        username: '0znzw'
+    },
+    {
+        userID: '62325737',
+        username: 'mybearworld'
     },
     {
         userID: '62950341',
         username: 'NamelessCat'
+    },
+    {
+        username: 'NishiOwO'
     },
     {
         username: 'NOname-awa'
@@ -235,9 +264,17 @@ const extensionDevelopers = [
         username: 'pinksheep2917'
     },
     {
+        username: 'Pen-Group'
+    },
+    {
         username: 'pumpkinhasapatch'
     },
     {
+        userID: '126715567',
+        username: 'PwLDev'
+    },
+    {
+        userID: '139929771',
         username: 'qxsck'
     },
     {
@@ -261,11 +298,16 @@ const extensionDevelopers = [
         username: 'shreder95ua'
     },
     {
+        userID: '72467731',
         username: 'Skyhigh173'
     },
     {
         userID: '52066199',
         username: 'softed'
+    },
+    {
+        userID: '166646203',
+        username: 'Staevski_G'
     },
     {
         username: 'TheShovel'
@@ -288,6 +330,10 @@ const extensionDevelopers = [
     {
         userID: '3318598',
         username: 'plant2014'
+    },
+    {
+        userID: '128778351',
+        username: 'XmerOriginals'
     },
     {
         username: 'ZXMushroom63'

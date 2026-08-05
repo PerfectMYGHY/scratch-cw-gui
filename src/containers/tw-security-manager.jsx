@@ -5,6 +5,7 @@ import log from '../lib/log';
 import bindAll from 'lodash.bindall';
 import SecurityManagerModal from '../components/tw-security-manager-modal/security-manager-modal.jsx';
 import SecurityModals from '../lib/tw-security-manager-constants';
+import {getPersistedUnsandboxed, setPersistedUnsandboxed} from '../lib/tw-persisted-unsandboxed.js';
 
 /* eslint-disable require-atomic-updates */
 
@@ -27,26 +28,32 @@ const isTrustedExtension = url => (
     url.startsWith('https://extensions.turbowarp.org/') ||
 
     // For development.
-    url.startsWith('http://192.168.8.104:8007/') ||
-
-    // 配置
-    url.startsWith(process.env.EXTENSION_HOST) ||
-    url.startsWith(process.env.EXTENSION_HOST_OLD) ||
+    url.startsWith('http://localhost:8000/') ||
 
     extensionsTrustedByUser.has(url)
 );
 
 /**
- * Set of fetch resource origins that were manually trusted by the user.
+ * Set of fetch resource hosts that were manually trusted by the user.
  * @type {Set<string>}
  */
-const fetchOriginsTrustedByUser = new Set();
+const fetchHostsTrustedByUser = new Set();
 
 /**
- * Set of origins manually trusted by the user for embedding.
+ * Set of hosts manually trusted by the user for embedding.
  * @type {Set<string>}
  */
-const embedOriginsTrustedByUser = new Set();
+const embedHostsTrustedByUser = new Set();
+
+/**
+ * @param {URL} parsed Parsed URL object
+ * @returns {boolean} True if path is untrusted.
+ */
+const isUntrustedPath = parsed => (
+    // Cloudflare serves stuff on /cdn-cgi/ that we don't want to let projects access without showing
+    // a permission prompt to a non-trusted domain (/cdn-cgi/trace contains IP)
+    /^\/cdn-cgi\//i.test(parsed.pathname)
+);
 
 /**
  * @param {URL} parsed Parsed URL object
@@ -60,20 +67,11 @@ const isAlwaysTrustedForFetching = parsed => (
     parsed.origin === 'https://turbowarp.org' ||
     parsed.origin.endsWith('.turbowarp.org') ||
     parsed.origin.endsWith('.turbowarp.xyz') ||
-    
-    // 任何 Scratch创世界 服务器的插件
-    parsed.origin === 'http://scratch-cw.top' ||
-    parsed.origin.endsWith('.scratch-cw.top') ||
-    parsed.origin.endsWith('.scratch-cw.top') ||
-    
-    // 任何 Scratch创世界 本地调试服务器的插件
-    parsed.origin === 'http://192.168.8.104:8007' ||
-    parsed.origin.endsWith('192.168.8.104:8007') ||
-    parsed.origin.endsWith('192.168.8.104:8007') ||
 
     // GitHub API
     // GitHub Pages allows redirects, so not included here.
     parsed.origin === 'https://raw.githubusercontent.com' ||
+    parsed.origin === 'https://gist.githubusercontent.com' ||
     parsed.origin === 'https://api.github.com' ||
 
     // GitLab API
@@ -83,31 +81,42 @@ const isAlwaysTrustedForFetching = parsed => (
     // Sourcehut Pages
     parsed.origin.endsWith('.srht.site') ||
 
-    // Itch
-    parsed.origin.endsWith('.itch.io') ||
-
     // GameJolt
-    parsed.origin === 'https://api.gamejolt.com' ||
-
-    // httpbin
-    parsed.origin === 'https://httpbin.org' ||
-
-    // ScratchDB
-    parsed.origin === 'https://scratchdb.lefty.one'
+    parsed.origin === 'https://api.gamejolt.com'
 );
+
+const FETCHABLE_PROTOCOLS = [
+    'http:',
+    'https:',
+    'data:',
+    'blob:',
+    'ws:',
+    'wss:'
+];
+
+const VISITABLE_PROTOCOLS = [
+    // The important one we want to exclude is javascript:
+    'http:',
+    'https:',
+    'data:',
+    'blob:',
+    'mailto:',
+    'steam:',
+    'calculator:'
+];
 
 /**
  * @param {string} url Original URL string
+ * @param {string[]} protocols List of allowed protocols
  * @returns {URL|null} A URL object if it is valid and of a known protocol, otherwise null.
  */
-const parseURL = url => {
+const parseURL = (url, protocols) => {
     let parsed;
     try {
         parsed = new URL(url);
     } catch (e) {
         return null;
     }
-    const protocols = ['http:', 'https:', 'ws:', 'wss:', 'data:', 'blob:'];
     if (!protocols.includes(parsed.protocol)) {
         return null;
     }
@@ -131,7 +140,8 @@ const SECURITY_MANAGER_METHODS = [
     'canReadClipboard',
     'canNotify',
     'canGeolocate',
-    'canEmbed'
+    'canEmbed',
+    'canDownload'
 ];
 
 class TWSecurityManagerComponent extends React.Component {
@@ -148,7 +158,6 @@ class TWSecurityManagerComponent extends React.Component {
             type: null,
             data: null,
             callback: null,
-            persistedUnsandboxed: false,
             modalCount: 0
         };
     }
@@ -255,15 +264,15 @@ class TWSecurityManagerComponent extends React.Component {
         if (url.startsWith('data:')) {
             const allowed = await showModal(SecurityModals.LoadExtension, {
                 url,
-                unsandboxed: this.state.persistedUnsandboxed,
+                unsandboxed: getPersistedUnsandboxed(),
                 onChangeUnsandboxed: this.handleChangeUnsandboxed.bind(this)
             });
-            if (this.state.data.unsandboxed) {
+            if (allowed) {
+                setPersistedUnsandboxed(this.state.data.unsandboxed);
+            }
+            if (allowed && this.state.data.unsandboxed) {
                 manuallyTrustExtension(url);
             }
-            this.setState({
-                persistedUnsandboxed: this.state.data.unsandboxed
-            });
             return allowed;
         }
         return showModal(SecurityModals.LoadExtension, {
@@ -277,23 +286,31 @@ class TWSecurityManagerComponent extends React.Component {
      * @returns {Promise<boolean>} True if the resource is allowed to be fetched
      */
     async canFetch (url) {
-        const parsed = parseURL(url);
+        const parsed = parseURL(url, FETCHABLE_PROTOCOLS);
         if (!parsed) {
             return false;
         }
         if (isAlwaysTrustedForFetching(parsed)) {
-            return true;
+            // For untrusted paths, don't even show a dialog, just auto-reject because users won't understand
+            // what the dialog actually does.
+            return !isUntrustedPath(parsed);
         }
         const {showModal, releaseLock} = await this.acquireModalLock();
-        if (fetchOriginsTrustedByUser.has(origin)) {
+        const host = (
+            parsed.protocol === 'http:' ||
+            parsed.protocol === 'https:' ||
+            parsed.protocol === 'ws:' ||
+            parsed.protocol === 'wss:'
+        ) ? parsed.host : null;
+        if (host && fetchHostsTrustedByUser.has(host)) {
             releaseLock();
             return true;
         }
         const allowed = await showModal(SecurityModals.Fetch, {
             url
         });
-        if (allowed) {
-            fetchOriginsTrustedByUser.add(origin);
+        if (host && allowed) {
+            fetchHostsTrustedByUser.add(host);
         }
         return allowed;
     }
@@ -303,7 +320,7 @@ class TWSecurityManagerComponent extends React.Component {
      * @returns {Promise<boolean>} True if the website can be opened
      */
     async canOpenWindow (url) {
-        const parsed = parseURL(url);
+        const parsed = parseURL(url, VISITABLE_PROTOCOLS);
         if (!parsed) {
             return false;
         }
@@ -318,7 +335,7 @@ class TWSecurityManagerComponent extends React.Component {
      * @returns {Promise<boolean>} True if the website can be redirected to
      */
     async canRedirect (url) {
-        const parsed = parseURL(url);
+        const parsed = parseURL(url, VISITABLE_PROTOCOLS);
         if (!parsed) {
             return false;
         }
@@ -388,21 +405,38 @@ class TWSecurityManagerComponent extends React.Component {
      * @returns {Promise<boolean>} True if embed is allowed.
      */
     async canEmbed (url) {
-        const parsed = parseURL(url);
+        const parsed = parseURL(url, FETCHABLE_PROTOCOLS);
         if (!parsed) {
             return false;
         }
-        const origin = (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? parsed.origin : null;
+        const host = (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? parsed.host : null;
         const {showModal, releaseLock} = await this.acquireModalLock();
-        if (origin && embedOriginsTrustedByUser.has(origin)) {
+        if (host && embedHostsTrustedByUser.has(host)) {
             releaseLock();
             return true;
         }
         const allowed = await showModal(SecurityModals.Embed, {url});
-        if (origin && allowed) {
-            embedOriginsTrustedByUser.add(origin);
+        if (host && allowed) {
+            embedHostsTrustedByUser.add(host);
         }
         return allowed;
+    }
+
+    /**
+     * @param {string} url URL to download
+     * @param {string} name Name to download as
+     * @returns {Promise<boolean>} True if allowed
+     */
+    async canDownload (url, name) {
+        const parsed = parseURL(url, FETCHABLE_PROTOCOLS);
+        if (!parsed) {
+            return false;
+        }
+        const {showModal} = await this.acquireModalLock();
+        return showModal(SecurityModals.Download, {
+            url,
+            name
+        });
     }
 
     render () {

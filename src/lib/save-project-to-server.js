@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import xhr from 'xhr';
-import storage from '../lib/storage';
+import storage from './storage';
 import verify from 'scratch-cw-verify';
 
 /**
@@ -66,6 +66,6 @@ export default function (projectId, vmState, params) {
                 }
                 resolve(body);
             });
-        })
+        });
     });
 }

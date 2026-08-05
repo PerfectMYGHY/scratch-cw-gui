@@ -4,7 +4,6 @@ import {Provider} from 'react-redux';
 import {createStore, combineReducers, compose} from 'redux';
 import ConnectedIntlProvider from './connected-intl-provider.jsx';
 import AddonHooks from '../addons/hooks';
-import runAddons from '../addons/entry';
 
 import localesReducer, {initLocale, localesInitialState} from '../reducers/locales';
 
@@ -94,8 +93,8 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
                 initialState,
                 enhancer
             );
+            window.ReduxStore = this.store;
             AddonHooks.appStateStore = this.store;
-            runAddons();
         }
         componentDidUpdate (prevProps) {
             if (localesOnly) return;
