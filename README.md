@@ -10,7 +10,7 @@ Scratch创世界编辑器，改编自`TurboWarp`的`scratch-gui`，修改处：
 
 ## scratch-gui/addons
 
-汉化了整个插件，并且修复了插件的多语言判断的bug。
+汉化了整个插件，并添加了更良好的多语言支持。
 
 ## 使用方法
 
