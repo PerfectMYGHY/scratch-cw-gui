@@ -31,7 +31,9 @@
     "test:lint": "eslint . --ext .js,.jsx",
     "test:unit": "jest test[\\\\/]unit[\\\\/]addons",
     "test:smoke": "jest --runInBand test[\\\\/]smoke",
-    "watch": "webpack --colors --watch",
+    "watch": "npm run watch:dist",
+    "watch:dev": "webpack --colors --watch --progress",
+    "watch:dist": "cross-env NODE_ENV=development BUILD_MODE=dist SOURCEMAP=cheap-module-source-map webpack --colors --watch --progress",
     "download:assets": "node scripts/download-assets.js"
   },
   "config": {
