@@ -1,7 +1,7 @@
 import React from 'react';
 import runAddons from '../addons/entry';
 
-/*
+/**
  * Higher Order Component to run TurboWarp Addons
  * @param {React.Component} WrappedComponent - component to run Addons
  * @returns {React.Component} component with auto run Addons
