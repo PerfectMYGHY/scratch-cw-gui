@@ -907,96 +907,84 @@ class AddonRunner {
     }
 
     async run () {
+        if (this.manifest.editorOnly) {
+            await untilInEditor();
+        }
+
+        const mod = await addonEntries[this.id]();
+        this.resources = mod.resources;
+
+        if (!this.manifest.noTranslations) {
+            await addonMessagesPromise;
+        }
+
+        // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
+        // This number just has to be larger than the maximum number of userstyles in a single addon.
+        const baseStylePrecedence = getPrecedence(this.id) * 100;
+
+        if (this.manifest.userstyles) {
+            for (let i = 0; i < this.manifest.userstyles.length; i++) {
+                const userstyle = this.manifest.userstyles[i];
+                const userstylePrecedence = baseStylePrecedence + i;
+                const userstyleCondition = () => (
+                    !this.publicAPI.addon.self.disabled &&
+                    SettingsStore.evaluateCondition(this.id, userstyle.if)
+                );
+
+                for (const [moduleId, cssText] of this.resources[userstyle.url]) {
+                    const sheet = conditionalStyles.create(moduleId, cssText);
+                    sheet.addDependent(this.id, userstylePrecedence, userstyleCondition);
+                }
+            }
+
+        }
+
+        const disabledCSS = `.${getDisplayNoneWhileDisabledClass(this.id)}{display:none !important;}`;
+        const disabledStylesheet = conditionalStyles.create(`_disabled/${this.id}`, disabledCSS);
+        disabledStylesheet.addDependent(this.id, baseStylePrecedence, () => this.publicAPI.addon.self.disabled);
+
+        this.updateCssVariables();
+
         let task = null;
-        let initialPCState = null;
+
+        if (this.manifest.userscripts) {
+            // Promise 列表
+            const scripts = [];
+            
+            for (const userscript of this.manifest.userscripts) {
+                if (!SettingsStore.evaluateCondition(userscript.if)) {
+                    continue;
+                }
+                const fn = this.resources[userscript.url];
+                const result = fn(this.publicAPI);
+                if (result instanceof Promise) {
+                    scripts.push(result);
+                }
+            }
+
+            // 生成总等待
+            task = Promise.all(scripts);
+
+            const TIMEOUT = 50;
+
+            // 创建一个超时 Promise
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => {
+                    reject(new Error(`Addon ${this.id} userscripts timeout after ${TIMEOUT}ms`));
+                }, TIMEOUT); // 指定秒数超时
+            });
+
+            task = Promise.race([task, timeoutPromise]);
+        }
+
+        this.loading = false;
 
         try {
-            if (this.manifest.editorOnly) {
-                await untilInEditor();
-            }
-
-            const mod = await addonEntries[this.id]();
-            this.resources = mod.resources;
-
-            if (!this.manifest.noTranslations) {
-                await addonMessagesPromise;
-            }
-
-            // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
-            // This number just has to be larger than the maximum number of userstyles in a single addon.
-            const baseStylePrecedence = getPrecedence(this.id) * 100;
-
-            if (this.manifest.userstyles) {
-                for (let i = 0; i < this.manifest.userstyles.length; i++) {
-                    const userstyle = this.manifest.userstyles[i];
-                    const userstylePrecedence = baseStylePrecedence + i;
-                    const userstyleCondition = () => (
-                        !this.publicAPI.addon.self.disabled &&
-                        SettingsStore.evaluateCondition(this.id, userstyle.if)
-                    );
-
-                    for (const [moduleId, cssText] of this.resources[userstyle.url]) {
-                        const sheet = conditionalStyles.create(moduleId, cssText);
-                        sheet.addDependent(this.id, userstylePrecedence, userstyleCondition);
-                    }
-                }
-
-            }
-
-            const disabledCSS = `.${getDisplayNoneWhileDisabledClass(this.id)}{display:none !important;}`;
-            const disabledStylesheet = conditionalStyles.create(`_disabled/${this.id}`, disabledCSS);
-            disabledStylesheet.addDependent(this.id, baseStylePrecedence, () => this.publicAPI.addon.self.disabled);
-
-            this.updateCssVariables();
-
-            if (this.manifest.userscripts) {
-                // 记录初始 PC 状态
-                initialPCState = reduxInstance.state.scratchGui.projectChanged;
-
-                // Promise 列表
-                const scripts = [];
-                
-                for (const userscript of this.manifest.userscripts) {
-                    if (!SettingsStore.evaluateCondition(userscript.if)) {
-                        continue;
-                    }
-                    const fn = this.resources[userscript.url];
-                    const result = fn(this.publicAPI);
-                    if (result instanceof Promise) {
-                        scripts.push(result);
-                    }
-                }
-
-                // 生成总等待
-                task = Promise.all(scripts);
-
-                const TIMEOUT = 100;
-
-                // 创建一个超时 Promise
-                const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => {
-                        reject(new Error(`Addon ${this.id} userscripts timeout after ${TIMEOUT}ms`));
-                    }, TIMEOUT); // 指定秒数超时
-                });
-
-                task = Promise.race([task, timeoutPromise]);
-            }
-
-            this.loading = false;
-
-            try {
-                // 在结束后等待并恢复PC状态
-                await task;
-            } catch (error) {
-                // 如果是超时错误，记录日志但不影响状态恢复
-                console.warn(`Addon ${this.id} userscripts timeout or error:`, error);
-                if (!(error instanceof Error && error.message.includes('userscripts timeout after'))) {
-                    throw error; // 交给外层处理
-                }
-            }
-        } finally {
-            if (task && initialPCState !== null) {
-                reduxInstance.dispatch(setProjectChangedStatus(initialPCState));
+            // 在结束后等待并恢复PC状态
+            await task;
+        } catch (error) {
+            if (!(error instanceof Error && error.message.includes('userscripts timeout after'))) {
+                throw error; // 交给外层处理
             }
         }
     }
@@ -1005,7 +993,7 @@ AddonRunner.instances = [];
 
 const runAddon = addonId => {
     const runner = new AddonRunner(addonId);
-    runner.run();
+    return runner.run();
 };
 
 SettingsStore.addEventListener('addon-changed', e => {
@@ -1027,9 +1015,32 @@ SettingsStore.addEventListener('addon-changed', e => {
     }
 });
 
-for (const id of Object.keys(addons)) {
-    if (!SettingsStore.getAddonEnabled(id)) {
-        continue;
+(async () => {
+    const initialPCState = reduxInstance.state.scratchGui.projectChanged;
+    const tasks = [];
+    for (const id of Object.keys(addons)) {
+        if (!SettingsStore.getAddonEnabled(id)) {
+            continue;
+        }
+        tasks.push(runAddon(id));
     }
-    runAddon(id);
-}
+
+    let stop = false;
+
+    const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
+
+    const setter = async () => {
+        while (!stop) {
+            reduxInstance.dispatch(setProjectChangedStatus(initialPCState));
+            await sleep(10);
+        }
+    }
+
+    const setterTask = setter();
+
+    await Promise.all(tasks);
+
+    stop = true;
+
+    await setterTask;
+})();
