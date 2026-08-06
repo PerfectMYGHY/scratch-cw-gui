@@ -19,10 +19,20 @@ const setProjectUnchanged = () => ({
     type: SET_PROJECT_CHANGED,
     changed: false
 });
+/**
+ * 设置作品是否改变(PC)状态
+ * @param {boolean} projectChanged 作品是否改变
+ * @returns {any} Redux Action
+ */
+const setProjectChangedStatus = projectChanged => ({
+    type: SET_PROJECT_CHANGED,
+    changed: projectChanged
+});
 
 export {
     reducer as default,
     initialState as projectChangedInitialState,
     setProjectChanged,
-    setProjectUnchanged
+    setProjectUnchanged,
+    setProjectChangedStatus
 };

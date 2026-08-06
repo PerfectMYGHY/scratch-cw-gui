@@ -25,6 +25,7 @@ import {
     openExtensionLibrary
 } from '../reducers/modals';
 
+import AddonsRunnerHOC from '../lib/addons-runner-hoc.jsx';
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
 import LocalizationHOC from '../lib/localization-hoc.jsx';
 import SBFileUploaderHOC from '../lib/sb-file-uploader-hoc.jsx';
@@ -40,7 +41,6 @@ import GUIComponent from '../components/gui/gui.jsx';
 import {setIsScratchDesktop} from '../lib/isScratchDesktop.js';
 import TWFullScreenResizerHOC from '../lib/tw-fullscreen-resizer-hoc.jsx';
 import TWThemeManagerHOC from './tw-theme-manager-hoc.jsx';
-import runAddons from '../addons/entry';
 
 const {RequestMetadata, setMetadata, unsetMetadata} = storage.scratchFetch;
 
@@ -60,7 +60,6 @@ class GUI extends React.Component {
         this.props.onStorageInit(storage);
         this.props.onVmInit(this.props.vm);
         setProjectIdMetadata(this.props.projectId);
-        runAddons();
     }
     componentDidUpdate (prevProps) {
         if (this.props.projectId !== prevProps.projectId) {
@@ -202,6 +201,7 @@ const ConnectedGUI = injectIntl(connect(
 // the hierarchy of HOC constructor calls clearer here; it has nothing to do with redux's
 // ability to compose reducers.
 const WrappedGui = compose(
+    AddonsRunnerHOC, // ScratchCW: 自动在早期启动TW插件
     LocalizationHOC,
     ErrorBoundaryHOC('Top Level App'),
     TWThemeManagerHOC, // componentDidUpdate() needs to run very early for icons to update immediately
