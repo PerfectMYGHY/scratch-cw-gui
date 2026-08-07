@@ -1024,9 +1024,8 @@ AddonRunner.stopPCRestore = false;
 
 AddonRunner.PCStateRestorer = async () => {
     while (!AddonRunner.stopPCRestore && AddonRunner.initialPCState !== null) {
-        console.log('set to', AddonRunner.initialPCState);
         reduxInstance.dispatch(setProjectChangedStatus(AddonRunner.initialPCState));
-        await sleep(0);
+        await sleep(0); // 让出主线程，以允许其他协程进行操作
     }
 }
 
