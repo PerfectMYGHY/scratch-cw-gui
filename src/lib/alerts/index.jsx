@@ -271,7 +271,7 @@ const alerts = [
         clearList: ['cloudInfo'],
         content: (
             <FormattedMessage
-                defaultMessage="Please note, Scratch CW's cloud variables support not only numbers, but also letters and symbols. {learnMoreLink}" // eslint-disable-line max-len
+                defaultMessage="Please note, cloud variables in ScratchCW support not only numbers, but also letters or symbols. {learnMoreLink}" // eslint-disable-line max-len
                 description="Info about cloud variable limitations"
                 id="gui.alerts.cloudInfo"
                 values={{
