@@ -907,93 +907,135 @@ class AddonRunner {
     }
 
     async run () {
-        if (this.manifest.editorOnly) {
-            await untilInEditor();
-        }
-
-        const mod = await addonEntries[this.id]();
-        this.resources = mod.resources;
-
-        if (!this.manifest.noTranslations) {
-            await addonMessagesPromise;
-        }
-
-        // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
-        // This number just has to be larger than the maximum number of userstyles in a single addon.
-        const baseStylePrecedence = getPrecedence(this.id) * 100;
-
-        if (this.manifest.userstyles) {
-            for (let i = 0; i < this.manifest.userstyles.length; i++) {
-                const userstyle = this.manifest.userstyles[i];
-                const userstylePrecedence = baseStylePrecedence + i;
-                const userstyleCondition = () => (
-                    !this.publicAPI.addon.self.disabled &&
-                    SettingsStore.evaluateCondition(this.id, userstyle.if)
-                );
-
-                for (const [moduleId, cssText] of this.resources[userstyle.url]) {
-                    const sheet = conditionalStyles.create(moduleId, cssText);
-                    sheet.addDependent(this.id, userstylePrecedence, userstyleCondition);
-                }
-            }
-
-        }
-
-        const disabledCSS = `.${getDisplayNoneWhileDisabledClass(this.id)}{display:none !important;}`;
-        const disabledStylesheet = conditionalStyles.create(`_disabled/${this.id}`, disabledCSS);
-        disabledStylesheet.addDependent(this.id, baseStylePrecedence, () => this.publicAPI.addon.self.disabled);
-
-        this.updateCssVariables();
-
         let task = null;
 
-        if (this.manifest.userscripts) {
-            // Promise 列表
-            const scripts = [];
-            
-            for (const userscript of this.manifest.userscripts) {
-                if (!SettingsStore.evaluateCondition(userscript.if)) {
-                    continue;
-                }
-                const fn = this.resources[userscript.url];
-                const result = fn(this.publicAPI);
-                if (result instanceof Promise) {
-                    scripts.push(result);
-                }
+        try {
+            if (this.manifest.editorOnly) {
+                await untilInEditor();
             }
 
-            // 生成总等待
-            task = Promise.all(scripts);
+            const mod = await addonEntries[this.id]();
+            this.resources = mod.resources;
 
-            const TIMEOUT = 50;
+            if (!this.manifest.noTranslations) {
+                await addonMessagesPromise;
+            }
 
-            // 创建一个超时 Promise
-            const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => {
-                    reject(new Error(`Addon ${this.id} userscripts timeout after ${TIMEOUT}ms`));
-                }, TIMEOUT); // 指定秒数超时
-            });
+            // Multiply by big number because the first userstyle is + 0, second is + 1, third is + 2, etc.
+            // This number just has to be larger than the maximum number of userstyles in a single addon.
+            const baseStylePrecedence = getPrecedence(this.id) * 100;
 
-            task = Promise.race([task, timeoutPromise]);
-        }
+            if (this.manifest.userstyles) {
+                for (let i = 0; i < this.manifest.userstyles.length; i++) {
+                    const userstyle = this.manifest.userstyles[i];
+                    const userstylePrecedence = baseStylePrecedence + i;
+                    const userstyleCondition = () => (
+                        !this.publicAPI.addon.self.disabled &&
+                        SettingsStore.evaluateCondition(this.id, userstyle.if)
+                    );
 
-        this.loading = false;
+                    for (const [moduleId, cssText] of this.resources[userstyle.url]) {
+                        const sheet = conditionalStyles.create(moduleId, cssText);
+                        sheet.addDependent(this.id, userstylePrecedence, userstyleCondition);
+                    }
+                }
 
-        try {
-            // 在结束后等待并恢复PC状态
-            await task;
-        } catch (error) {
-            if (!(error instanceof Error && error.message.includes('userscripts timeout after'))) {
-                throw error; // 交给外层处理
+            }
+
+            const disabledCSS = `.${getDisplayNoneWhileDisabledClass(this.id)}{display:none !important;}`;
+            const disabledStylesheet = conditionalStyles.create(`_disabled/${this.id}`, disabledCSS);
+            disabledStylesheet.addDependent(this.id, baseStylePrecedence, () => this.publicAPI.addon.self.disabled);
+
+            this.updateCssVariables();
+
+            if (this.manifest.userscripts) {
+                if (AddonRunner.loadingAddons === 0) {
+                    AddonRunner.initialPCState = reduxInstance.state.scratchGui.projectChanged;
+                    AddonRunner.stopPCRestore = false;
+                    AddonRunner.PCStateRestorerTask = AddonRunner.PCStateRestorer();
+                }
+
+                AddonRunner.loadingAddons++;
+
+                // Promise 列表
+                const scripts = [];
+                
+                for (const userscript of this.manifest.userscripts) {
+                    if (!SettingsStore.evaluateCondition(userscript.if)) {
+                        continue;
+                    }
+                    const fn = this.resources[userscript.url];
+                    const result = fn(this.publicAPI);
+                    if (result instanceof Promise) {
+                        scripts.push(result);
+                    }
+                }
+
+                // 生成总等待
+                task = Promise.all(scripts);
+
+                const TIMEOUT = 1000; // 1s超时，留下足够时间让插件初始化
+
+                // 创建一个超时 Promise
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => {
+                        reject(new Error(`Addon ${this.id} userscripts timeout after ${TIMEOUT}ms`));
+                    }, TIMEOUT); // 指定秒数超时
+                });
+
+                task = Promise.race([task, timeoutPromise]);
+            }
+
+            this.loading = false;
+
+            try {
+                // 在结束后等待并恢复PC状态
+                await task;
+            } catch (error) {
+                if (!(error instanceof Error && error.message.includes('userscripts timeout after'))) {
+                    throw error; // 交给外层处理
+                }
+            }
+        } finally {
+            AddonRunner.loadingAddons--;
+
+            if (AddonRunner.loadingAddons === 0) {
+                AddonRunner.stopPCRestore = true;
+                await AddonRunner.PCStateRestorerTask;
             }
         }
     }
 }
 AddonRunner.instances = [];
+/**
+ * 记录一批插件启动时最初地projectChanged(PC)状态
+ * @type {boolean | null}
+ */
+AddonRunner.initialPCState = null;
+/**
+ * 记录目前正在加载地插件数量
+ * @type {number}
+ */
+AddonRunner.loadingAddons = 0;
+
+const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
+
+AddonRunner.stopPCRestore = false;
+
+AddonRunner.PCStateRestorer = async () => {
+    while (!AddonRunner.stopPCRestore && AddonRunner.initialPCState !== null) {
+        console.log('set to', AddonRunner.initialPCState);
+        reduxInstance.dispatch(setProjectChangedStatus(AddonRunner.initialPCState));
+        await sleep(0);
+    }
+}
+
+/** @type {Promise<any> | null} */
+AddonRunner.PCStateRestorerTask = null;
 
 const runAddon = addonId => {
     const runner = new AddonRunner(addonId);
-    return runner.run();
+    runner.run();
 };
 
 SettingsStore.addEventListener('addon-changed', e => {
@@ -1015,32 +1057,9 @@ SettingsStore.addEventListener('addon-changed', e => {
     }
 });
 
-(async () => {
-    const initialPCState = reduxInstance.state.scratchGui.projectChanged;
-    const tasks = [];
-    for (const id of Object.keys(addons)) {
-        if (!SettingsStore.getAddonEnabled(id)) {
-            continue;
-        }
-        tasks.push(runAddon(id));
+for (const id of Object.keys(addons)) {
+    if (!SettingsStore.getAddonEnabled(id)) {
+        continue;
     }
-
-    let stop = false;
-
-    const sleep = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
-
-    const setter = async () => {
-        while (!stop) {
-            reduxInstance.dispatch(setProjectChangedStatus(initialPCState));
-            await sleep(10);
-        }
-    }
-
-    const setterTask = setter();
-
-    await Promise.all(tasks);
-
-    stop = true;
-
-    await setterTask;
-})();
+    runAddon(id);
+}
