@@ -634,7 +634,7 @@ class Blocks extends React.Component {
         ws.toolbox_.scrollToCategoryById('myBlocks');
     }
     handleDrop (dragInfo) {
-        fetch(dragInfo.payload.bodyUrl)
+        fetch(dragInfo.payload.bodyUrl, {credentials: 'include'})
             .then(response => response.json())
             .then(payload => {
                 // based on https://github.com/ScratchAddons/ScratchAddons/pull/7028
