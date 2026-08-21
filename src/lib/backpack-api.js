@@ -4,6 +4,7 @@ import soundPayload from './backpack/sound-payload';
 import spritePayload from './backpack/sprite-payload';
 import codePayload from './backpack/code-payload';
 import localBackpackAPI from './tw-local-backpack-api';
+import verify from 'scratch-cw-verify';
 
 export const LOCAL_API = '_local_';
 
@@ -61,18 +62,21 @@ const saveBackpackObject = ({
             thumbnail
         }));
     }
-    xhr({
-        method: 'POST',
-        uri: `${host}/${username}`,
-        headers: {'x-token': token},
-        withCredentials: true,
-        json: {type, mime, name, body, thumbnail}
-    }, (error, response) => {
-        if (error || response.statusCode !== 200) {
-            return reject(new Error(response.status));
-        }
-        return resolve(includeFullUrls(response.body, host));
-    });
+    verify({uri: `${host}/${username}`})
+        .then(({csrf_token: csrfToken}) => {
+            xhr({
+                method: 'POST',
+                uri: `${host}/${username}`,
+                headers: {'x-token': token, 'X-CSRFToken': csrfToken},
+                withCredentials: true,
+                json: {type, mime, name, body, thumbnail}
+            }, (error, response) => {
+                if (error || response.statusCode !== 200) {
+                    return reject(new Error(response.status));
+                }
+                return resolve(includeFullUrls(response.body, host));
+            });
+        });
 });
 
 const deleteBackpackObject = ({
@@ -86,20 +90,20 @@ const deleteBackpackObject = ({
             id
         }));
     }
-    xhr({
-        method: 'DELETE',
-        uri: `${host}/${username}/${id}`,
-        withCredentials: true,
-        headers: {'x-token': token},
-        json: {
-            name
-        }
-    }, (error, response) => {
-        if (error || response.statusCode !== 200) {
-            return reject(new Error(response.status));
-        }
-        return resolve(response.body);
-    });
+    verify({uri: `${host}/${username}/${id}`})
+        .then(({csrf_token: csrfToken}) => {
+            xhr({
+                method: 'DELETE',
+                uri: `${host}/${username}/${id}`,
+                withCredentials: true,
+                headers: {'x-token': token, 'X-CSRFToken': csrfToken}
+            }, (error, response) => {
+                if (error || response.statusCode !== 200) {
+                    return reject(new Error(response.status));
+                }
+                return resolve(response.body);
+            });
+        });
 });
 
 const updateBackpackObject = ({
@@ -115,17 +119,23 @@ const updateBackpackObject = ({
             name
         }));
     }
-    xhr({
-        method: 'PUT',
-        uri: `${host}/${username}/${id}`,
-        withCredentials: true,
-        headers: {'x-token': token}
-    }, (error, response) => {
-        if (error || response.statusCode !== 200) {
-            return reject(new Error(response.status));
-        }
-        return resolve(response.body);
-    });
+    verify({uri: `${host}/${username}/${id}`})
+        .then(({csrf_token: csrfToken}) => {
+            xhr({
+                method: 'PUT',
+                uri: `${host}/${username}/${id}`,
+                withCredentials: true,
+                headers: {'x-token': token, 'X-CSRFToken': csrfToken},
+                json: {
+                    name
+                }
+            }, (error, response) => {
+                if (error || response.statusCode !== 200) {
+                    return reject(new Error(response.status));
+                }
+                return resolve(includeFullUrls(response.body, host));
+            });
+        });
 });
 
 // Two types of backpack items are not retreivable through storage
