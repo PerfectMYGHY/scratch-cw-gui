@@ -195,6 +195,8 @@ class Backpack extends React.Component {
         this.setState({loading: true}, () => {
             updateBackpackObject({
                 host: this.props.host,
+                username: this.props.username,
+                token: this.props.token,
                 ...item,
                 name: newName
             })

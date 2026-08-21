@@ -26,6 +26,7 @@ const manuallyTrustExtension = url => {
 const isTrustedExtension = url => (
     // Always trust our official extension repostiory.
     url.startsWith('https://extensions.turbowarp.org/') ||
+    url.startsWith('https://extensions.scratch-cw.top/') ||
 
     // For development.
     url.startsWith('http://localhost:8000/') ||
@@ -67,6 +68,7 @@ const isAlwaysTrustedForFetching = parsed => (
     parsed.origin === 'https://turbowarp.org' ||
     parsed.origin.endsWith('.turbowarp.org') ||
     parsed.origin.endsWith('.turbowarp.xyz') ||
+    parsed.origin.endsWith('.scratch-cw.top') ||
 
     // GitHub API
     // GitHub Pages allows redirects, so not included here.

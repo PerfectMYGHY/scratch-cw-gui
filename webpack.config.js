@@ -201,13 +201,22 @@ module.exports = [
         module: {
             rules: base.module.rules.concat([
                 {
-                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2|hex)$/,
+                    test: /\.(svg|png|wav|mp3|gif|jpg|woff2)$/,
                     loader: 'url-loader',
                     options: {
                         limit: 2048,
                         outputPath: 'static/assets/',
                         esModule: false
                     }
+                },
+                {
+                    test: /\.hex$/,
+                    use: [{
+                        loader: 'url-loader',
+                        options: {
+                            limit: 16 * 1024
+                        }
+                    }]
                 }
             ])
         },
@@ -313,7 +322,7 @@ module.exports = [
             module: {
                 rules: base.module.rules.concat([
                     {
-                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2|hex)$/,
+                        test: /\.(svg|png|wav|mp3|gif|jpg|woff2)$/,
                         loader: 'url-loader',
                         options: {
                             limit: 2048,
@@ -321,6 +330,15 @@ module.exports = [
                             publicPath: `${STATIC_PATH}/assets/`,
                             esModule: false
                         }
+                    },
+                    {
+                        test: /\.hex$/,
+                        use: [{
+                            loader: 'url-loader',
+                            options: {
+                                limit: 16 * 1024
+                            }
+                        }]
                     }
                 ])
             },

@@ -32,6 +32,7 @@ const getBackpackContents = ({
         method: 'GET',
         uri: `${host}/${username}?limit=${limit}&offset=${offset}`,
         headers: {'x-token': token},
+        withCredentials: true,
         json: true
     }, (error, response) => {
         if (error || response.statusCode !== 200) {
@@ -64,6 +65,7 @@ const saveBackpackObject = ({
         method: 'POST',
         uri: `${host}/${username}`,
         headers: {'x-token': token},
+        withCredentials: true,
         json: {type, mime, name, body, thumbnail}
     }, (error, response) => {
         if (error || response.statusCode !== 200) {
@@ -87,7 +89,11 @@ const deleteBackpackObject = ({
     xhr({
         method: 'DELETE',
         uri: `${host}/${username}/${id}`,
-        headers: {'x-token': token}
+        withCredentials: true,
+        headers: {'x-token': token},
+        json: {
+            name
+        }
     }, (error, response) => {
         if (error || response.statusCode !== 200) {
             return reject(new Error(response.status));
@@ -98,6 +104,8 @@ const deleteBackpackObject = ({
 
 const updateBackpackObject = ({
     host,
+    username,
+    token,
     id,
     name
 }) => new Promise((resolve, reject) => {
@@ -107,13 +115,23 @@ const updateBackpackObject = ({
             name
         }));
     }
-    reject(new Error('updateBackpackObject not supported'));
+    xhr({
+        method: 'PUT',
+        uri: `${host}/${username}/${id}`,
+        withCredentials: true,
+        headers: {'x-token': token}
+    }, (error, response) => {
+        if (error || response.statusCode !== 200) {
+            return reject(new Error(response.status));
+        }
+        return resolve(response.body);
+    });
 });
 
 // Two types of backpack items are not retreivable through storage
 // code, as json and sprite3 as arraybuffer zips.
 const fetchAs = (responseType, uri) => new Promise((resolve, reject) => {
-    xhr({uri, responseType}, (error, response) => {
+    xhr({uri, responseType, withCredentials: true}, (error, response) => {
         if (error || response.statusCode !== 200) {
             return reject(new Error(response.status));
         }
