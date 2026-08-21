@@ -20,7 +20,7 @@ if (root.length > 0 && !root.endsWith('/')) {
 }
 
 // ENV设置
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env.USE_ORIGIN) {
     const PROJECT_SERVER = 'https://projects.scratch-cw.top';
     const ASSET_SERVER = 'https://assets1.scratch-cw.top';
     process.env.PROJECT_HOST = PROJECT_SERVER;
